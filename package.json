@@ -25,6 +25,9 @@
         "sass-loader": "^11.0.1"
     },
     "dependencies": {
+        "@inertiajs/inertia": "^0.10.1",
+        "@inertiajs/inertia-react": "^0.7.1",
+        "@inertiajs/progress": "^0.2.6",
         "materialize-css": "^1.0.0-rc.2"
     }
 }
