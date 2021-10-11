@@ -1,0 +1,91 @@
+.notifi-box{
+    width: 300px;
+    position: absolute;
+    top: 63px;
+    right: 18%;
+    box-shadow: 0 4px 9px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    background-color: whitesmoke;
+    border-radius: 2%;
+    max-height: 0px;
+    opacity: 0;
+    transition: 1s opacity, 250ms height;
+    overflow: auto;
+}
+
+.notifi-box h2{
+    font-size: 14px;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    color: #999;
+    margin: 0px;
+}
+
+.notifi-box h2 span{
+    color: #f00;
+    margin-left: 15px;
+}
+
+.notifi-item{
+    display: flex;
+    border-bottom: 1px solid #eee;
+    padding: 15px 10px;
+    /* margin-bottom: 15px; */
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+}
+
+.notifi-item h4{
+    font-size: 13px;
+    margin-top: 10px;
+    color: #777;
+    margin: 0px;
+}
+
+.notifi-item h5{
+    font-size: 12px;
+    margin-top: 8px !important;
+    color: rgb(187, 180, 180);
+    margin: 0px;
+}
+
+.notifi-item p{
+    font-size: 12px;
+    color: #aaa;
+    margin: 0px;
+    cursor: pointer;
+}
+
+@media(max-width:1300px){
+    .notifi-box{
+        right: 15%
+    }
+  }
+
+@media only screen and (max-width : 1160px) {
+    .notifi-box{
+        right: 15%
+    }
+}
+
+@media only screen and (max-width: 900px){
+    .notifi-box{
+        right: 10%
+    }
+}
+
+@media only screen and (max-width: 600px){
+    .notifi-box{
+        right: 5%
+    }
+}
+
+#backgroundOverlay{
+    background-color:transparent;
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    display:none;
+}

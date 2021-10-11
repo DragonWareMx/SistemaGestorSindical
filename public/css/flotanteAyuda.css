@@ -1,0 +1,14 @@
+.little-modal{
+    width: 381px;
+}
+
+.modal-title{
+    font-size: 18px;
+    color: #134E39;
+    margin-bottom:12px;
+}
+
+.modal-text{
+    font-size: "14px";
+    color:#7E7E7E;
+}

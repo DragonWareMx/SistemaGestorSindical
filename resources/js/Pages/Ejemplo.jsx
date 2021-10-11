@@ -1,12 +1,15 @@
-import React from 'react';
+import Layout from '../layouts/Layout';
 
-const Welcome = () => {
-    return (
-        <div>
-            <h1>Welcome</h1>
-            <p style={{ fontFamily: "Atma" }}>Hello welcome to your first Inertia app!</p>
-        </div >
-    )
+
+const Ejemplo = ({}) => {
+
+        return (
+            <>
+            Hola, éste es un inicio de prueba
+            </>
+        )
 }
 
-export default Welcome
+Ejemplo.layout = page => <Layout children={page} title="Inicio" pageTitle="INICIO"/>
+
+export default Ejemplo

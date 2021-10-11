@@ -28,6 +28,8 @@
         "@inertiajs/inertia": "^0.10.1",
         "@inertiajs/inertia-react": "^0.7.1",
         "@inertiajs/progress": "^0.2.6",
-        "materialize-css": "^1.0.0-rc.2"
+        "materialize-css": "^1.0.0-rc.2",
+        "moment": "^2.29.1",
+        "ziggy-js": "^1.4.2"
     }
 }
