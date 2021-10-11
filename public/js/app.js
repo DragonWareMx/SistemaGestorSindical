@@ -4406,7 +4406,7 @@ function initializeTooltip() {
 }
 
 function MenuLateral() {
-  var _jsxs2, _jsxs3;
+  var _jsxs2, _jsxs3, _jsxs4;
 
   var auth = (0,_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__.usePage)().props.auth;
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
@@ -4471,18 +4471,9 @@ function MenuLateral() {
             }), "Inicio"]
           })
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("li", {
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__.InertiaLink, {
-            href: '#',
-            className: isUrl("usuarios") ? "icono-menu current-menu-text" : "icono-menu",
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("i", {
-              className: isUrl("usuarios") ? "material-icons icono-menu current-menu" : "material-icons icono-menu",
-              children: "people"
-            }), "Usuarios"]
-          })
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("li", {
           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("a", {
             className: "subheader division-menu",
-            children: "CURSOS"
+            children: "USUARIOS"
           })
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("li", {
           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__.InertiaLink, (_jsxs2 = {
@@ -4490,16 +4481,74 @@ function MenuLateral() {
             className: "icono-menu"
           }, _defineProperty(_jsxs2, "className", isUrl("cursos") ? "icono-menu current-menu-text" : "icono-menu"), _defineProperty(_jsxs2, "children", [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("i", {
             className: isUrl("cursos") ? "material-icons icono-menu current-menu" : "material-icons icono-menu",
-            children: "school"
-          }), "Mis cursos"]), _jsxs2))
+            children: "people"
+          }), "Usuarios"]), _jsxs2))
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("li", {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__.InertiaLink, (_jsxs3 = {
+            href: '#',
+            className: "icono-menu"
+          }, _defineProperty(_jsxs3, "className", isUrl("cursos") ? "icono-menu current-menu-text" : "icono-menu"), _defineProperty(_jsxs3, "children", [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("i", {
+            className: isUrl("cursos") ? "material-icons icono-menu current-menu" : "material-icons icono-menu",
+            children: "badge"
+          }), "Empleados"]), _jsxs3))
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("li", {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("a", {
+            className: "subheader division-menu",
+            children: "OFICINAS"
+          })
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("li", {
           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__.InertiaLink, {
             href: '#',
-            className: isUrl("buscar") ? "icono-menu current-menu-text" : "icono-menu",
+            className: isUrl("reportes") ? "icono-menu current-menu-text" : "icono-menu",
             children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("i", {
-              className: isUrl("buscar") ? "material-icons icono-menu current-menu" : "material-icons icono-menu",
-              children: "search"
-            }), "Buscar cursos"]
+              className: isUrl("reportes") ? "material-icons icono-menu current-menu" : "material-icons icono-menu",
+              children: "maps_home_work"
+            }), "Honor y Justicia"]
+          })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("li", {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__.InertiaLink, {
+            href: '#',
+            className: isUrl("solicitudes") ? "icono-menu current-menu-text" : "icono-menu",
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("i", {
+              className: isUrl("solicitudes") ? "material-icons icono-menu current-menu" : "material-icons icono-menu",
+              children: "maps_home_work"
+            }), "Conflictos"]
+          })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("li", {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__.InertiaLink, {
+            href: '#',
+            className: isUrl("solicitudes") ? "icono-menu current-menu-text" : "icono-menu",
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("i", {
+              className: isUrl("solicitudes") ? "material-icons icono-menu current-menu" : "material-icons icono-menu",
+              children: "maps_home_work"
+            }), "Secretar\xEDa del Interior"]
+          })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("li", {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__.InertiaLink, {
+            href: '#',
+            className: isUrl("solicitudes") ? "icono-menu current-menu-text" : "icono-menu",
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("i", {
+              className: isUrl("solicitudes") ? "material-icons icono-menu current-menu" : "material-icons icono-menu",
+              children: "maps_home_work"
+            }), "Secretar\xEDa del Trabajo"]
+          })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("li", {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__.InertiaLink, {
+            href: '#',
+            className: isUrl("solicitudes") ? "icono-menu current-menu-text" : "icono-menu",
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("i", {
+              className: isUrl("solicitudes") ? "material-icons icono-menu current-menu" : "material-icons icono-menu",
+              children: "maps_home_work"
+            }), "Acci\xF3n femenil"]
+          })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("li", {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__.InertiaLink, {
+            href: '#',
+            className: isUrl("solicitudes") ? "icono-menu current-menu-text" : "icono-menu",
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("i", {
+              className: isUrl("solicitudes") ? "material-icons icono-menu current-menu" : "material-icons icono-menu",
+              children: "maps_home_work"
+            }), "Admisi\xF3n y Cambios"]
           })
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("li", {
           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("a", {
@@ -4509,20 +4558,11 @@ function MenuLateral() {
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("li", {
           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__.InertiaLink, {
             href: '#',
-            className: isUrl("reportes") ? "icono-menu current-menu-text" : "icono-menu",
+            className: isUrl("log") ? "icono-menu current-menu-text" : "icono-menu",
             children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("i", {
-              className: isUrl("reportes") ? "material-icons icono-menu current-menu" : "material-icons icono-menu",
-              children: "assignment_late"
-            }), "Reportes"]
-          })
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("li", {
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__.InertiaLink, {
-            href: '#',
-            className: isUrl("solicitudes") ? "icono-menu current-menu-text" : "icono-menu",
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("i", {
-              className: isUrl("solicitudes") ? "material-icons icono-menu current-menu" : "material-icons icono-menu",
-              children: "create_new_folder"
-            }), "Solicitudes"]
+              className: isUrl("log") ? "material-icons icono-menu current-menu" : "material-icons icono-menu",
+              children: "manage_accounts"
+            }), "Roles"]
           })
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("li", {
           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__.InertiaLink, {
@@ -4534,13 +4574,13 @@ function MenuLateral() {
             }), "Bit\xE1cora"]
           })
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("li", {
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__.InertiaLink, (_jsxs3 = {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__.InertiaLink, (_jsxs4 = {
             href: '#',
             className: "icono-menu"
-          }, _defineProperty(_jsxs3, "className", isUrl("perfil") ? "icono-menu current-menu-text" : "icono-menu"), _defineProperty(_jsxs3, "children", [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("i", {
+          }, _defineProperty(_jsxs4, "className", isUrl("perfil") ? "icono-menu current-menu-text" : "icono-menu"), _defineProperty(_jsxs4, "children", [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("i", {
             className: isUrl("perfil") ? "material-icons icono-menu current-menu" : "material-icons icono-menu",
             children: "settings"
-          }), "Configuraci\xF3n"]), _jsxs3))
+          }), "Configuraci\xF3n"]), _jsxs4))
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("li", {
           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("button", {
             className: "icono-menu logout-grande modal-trigger",
@@ -4628,10 +4668,22 @@ function MenuLateral() {
           href: '#',
           className: "icono-menu",
           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("i", {
+            className: isUrl("usuarios") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto",
+            "data-position": "right",
+            "data-tooltip": "Empleados",
+            children: "badge"
+          })
+        })
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+        className: "col s12",
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__.InertiaLink, {
+          href: '#',
+          className: "icono-menu",
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("i", {
             className: isUrl("cursos") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto",
             "data-position": "right",
-            "data-tooltip": "Mis cursos",
-            children: "school"
+            "data-tooltip": "Honor y Justicia",
+            children: "maps_home_work"
           })
         })
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
@@ -4640,10 +4692,10 @@ function MenuLateral() {
           href: '#',
           className: "icono-menu",
           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("i", {
-            className: isUrl("buscar") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto",
+            className: isUrl("cursos") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto",
             "data-position": "right",
-            "data-tooltip": "Buscar cursos",
-            children: "search"
+            "data-tooltip": "Conflictos",
+            children: "maps_home_work"
           })
         })
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
@@ -4652,10 +4704,10 @@ function MenuLateral() {
           href: '#',
           className: "icono-menu",
           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("i", {
-            className: isUrl("reportes") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto",
+            className: isUrl("cursos") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto",
             "data-position": "right",
-            "data-tooltip": "Reportes",
-            children: "assignment_late"
+            "data-tooltip": "Secretar\xEDa del Interior",
+            children: "maps_home_work"
           })
         })
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
@@ -4664,10 +4716,46 @@ function MenuLateral() {
           href: '#',
           className: "icono-menu",
           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("i", {
-            className: isUrl("solicitudes") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto",
+            className: isUrl("cursos") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto",
             "data-position": "right",
-            "data-tooltip": "Solicitudes",
-            children: "create_new_folder"
+            "data-tooltip": "Secretar\xEDa del Trabajo",
+            children: "maps_home_work"
+          })
+        })
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+        className: "col s12",
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__.InertiaLink, {
+          href: '#',
+          className: "icono-menu",
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("i", {
+            className: isUrl("cursos") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto",
+            "data-position": "right",
+            "data-tooltip": "Acci\xF3n femenil",
+            children: "maps_home_work"
+          })
+        })
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+        className: "col s12",
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__.InertiaLink, {
+          href: '#',
+          className: "icono-menu",
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("i", {
+            className: isUrl("cursos") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto",
+            "data-position": "right",
+            "data-tooltip": "Admisi\xF3n y Cambios",
+            children: "maps_home_work"
+          })
+        })
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+        className: "col s12",
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__.InertiaLink, {
+          href: '#',
+          className: "icono-menu",
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("i", {
+            className: isUrl("log") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto",
+            "data-position": "right",
+            "data-tooltip": "Roles",
+            children: "manage_accounts"
           })
         })
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
