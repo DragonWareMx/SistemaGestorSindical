@@ -21,3 +21,7 @@ Route::get('/', function () {
 Route::get('/inertia', function () {
     return Inertia::render('Ejemplo');
 });
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
