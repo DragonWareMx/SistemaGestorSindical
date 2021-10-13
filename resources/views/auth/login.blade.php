@@ -37,12 +37,7 @@
                 </div>
             </div>
             <div class="col  hide-on-med-and-up s12" style="display: block; margin-bottom: 20px">
-                <ul class="tabs">
-                    <li class="tab col s6"><a href="{{ route('login') }}" target="_self" class="active">Ingresar</a>
-                    </li>
-                    <li class="tab col s6"><a href="{{ route('register') }}" target="_self">Registrarse</a>
-                    </li>
-                </ul>
+
             </div>
             <div class="form-login col s12">
                 <h1 style="margin-top:10px">INICIAR SESIÓN</h1>
@@ -107,11 +102,5 @@
         </div>
     </div>
 </body>
-
-<script>
-    $(document).ready(function(){
-        $('.tabs').tabs();
-    });
-</script>
 
 </html>
