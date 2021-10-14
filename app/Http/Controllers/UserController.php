@@ -78,9 +78,31 @@ class UserController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function edit(User $user)
+    public function edit($id, Request $request)
     {
-        //
+        //valida el rol del usuario
+        //\Gate::authorize('haveaccess', 'admin.perm');
+
+        return Inertia::render('Usuarios/Edit', [
+            'user' => User::withTrashed()->with([
+                    'category:id,nombre',
+                    'unit:id,nombre,regime_id', 
+                    'unit.regime:id,nombre',
+                    'roles:name'
+                ])
+                ->findOrFail($id),
+            'categories'=> fn () => Category::select('id','nombre')->get(),
+            'regimes'=> fn () => Regime::select('id','nombre')->get(),
+            'roles'=> fn () => Role::select('name')->get(),
+            'units'=>  Inertia::lazy(
+                fn () => Unit::select('units.id','units.nombre')
+                            ->leftJoin('regimes', 'regimes.id', '=', 'units.regime_id')
+                            ->when($request->regime, function ($query, $regime) {
+                                $query->where('regimes.nombre',$regime);
+                            })
+                            ->get()
+            )
+        ]);
     }
 
     /**
