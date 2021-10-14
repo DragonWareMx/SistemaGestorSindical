@@ -23,6 +23,9 @@ Route::get('/inertia', function () {
     return Inertia::render('Ejemplo');
 })->name('home')->middleware('auth');
 
+// RUTAS OFICINAS
+Route::get('/honor-y-justicia', [App\Http\Controllers\officesController::class, 'honor'])->name('honor');
+
 Auth::routes(['register' => false]);
 
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

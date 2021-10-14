@@ -1,0 +1,17 @@
+.cardUsers{
+    width: 100% !important;
+}
+
+.cardUsers .card-title{
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 21px;
+
+    color: #134E39;
+}
+
+/* .css-1480iag-MuiInputBase-root-MuiInput-root:hover:not(.Mui-disabled):before {
+    border-bottom: 0px solid white !important;
+} */
