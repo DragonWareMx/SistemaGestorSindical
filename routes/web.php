@@ -35,7 +35,7 @@ Route::name('users.')->middleware('auth')->group(function () {
 });
 
 // RUTAS OFICINAS
-Route::get('/honor-y-justicia', [App\Http\Controllers\officesController::class, 'honor'])->name('honor');
+Route::get('/honor-y-justicia', [App\Http\Controllers\issueController::class, 'index'])->name('honor');
 
 Auth::routes(['register' => false]);
 

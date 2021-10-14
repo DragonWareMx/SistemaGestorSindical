@@ -123,21 +123,35 @@ const honorJusticia = ({usuarios}) => {
             editable: false,
             flex: 0.5,
         },
+        // matricua,nombre,unidad de ascripcion
     ]
     const columns = [
         {
-            field: 'name',
-            headerName: 'NOMBRE',
-            editable: false,
-            disableColumnSelector:false,
-            flex: 1,
+          field: 'id',
+          headerName: 'No.',
+          editable: false,
+          disableColumnSelector:false,
+          flex: 0.5,
         },
         {
-            field: 'email',
-            headerName: 'MARCA',
-            editable: false,
-            flex: 0.5,
-        },
+          field: 'name',
+          headerName: 'Nombre',
+          editable: false,
+          disableColumnSelector:false,
+          flex: 1,
+      },
+      {
+          field: 'email',
+          headerName: 'Correo',
+          editable: false,
+          flex: 0.5,
+      },
+      {
+        field: 'password',
+        headerName: 'Unidad de ascripcion',
+        editable: false,
+        flex: 0.5,
+      },
     ]
     
       const [searchText, setSearchText] = React.useState('');
