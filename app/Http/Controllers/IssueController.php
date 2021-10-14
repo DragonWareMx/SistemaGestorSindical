@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Issue;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Auth;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class IssueController extends Controller
 {
@@ -14,7 +17,10 @@ class IssueController extends Controller
      */
     public function index()
     {
-        //
+        
+        $usuarios = User::get();
+        
+        return Inertia::render('Oficinas/honorJusticia',['usuarios' => $usuarios]);
     }
 
     /**
