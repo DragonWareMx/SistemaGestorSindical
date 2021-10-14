@@ -1,0 +1,139 @@
+.titles-sub{
+    color:#515b60;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 17px;
+    padding-bottom: 5px;
+    border-bottom: 3px solid #515b60;
+    width: fit-content;
+}
+.div-form-register .input-field{
+    margin: 0px;
+    margin-bottom: 8px;
+}
+
+#imageUpload{
+    display: none;
+}
+
+.imageUpload{
+    display: none;
+}
+
+#profileImage{
+    cursor: pointer;
+    width: 80px;
+    height: 80px;
+    border-radius: 100px !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-shadow: 0px 4px 4px white;
+    transition: all ease-in-out 0.25s;
+}
+#profileImage:hover{
+    box-shadow: 0px 4px 4px rgba(141, 141, 141, 0.25);
+    transition: all ease-in-out 0.25s;
+
+}
+
+#txt-profile{
+    cursor: pointer;
+    text-align:center; 
+    margin: 0px;
+    margin-left: auto;
+    margin-right: auto;
+    color: rgba(159, 157, 157, 0.6);
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: medium;
+    font-size: 13px;
+    transition: all ease-in-out 0.25s;
+}
+#txt-profile:hover{
+    color: #108058;
+    transition: all ease-in-out 0.25s;
+}
+.tabs-responsive-register{
+    display:none !important;
+}
+
+.invalid-feedback {
+    display: none;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 80%;
+    color: #e3342f;
+}
+.was-validated :invalid ~ .invalid-feedback,
+.was-validated :invalid ~ .invalid-tooltip,
+.is-invalid ~ .invalid-feedback,
+.is-invalid ~ .invalid-tooltip {
+  display: block;
+}
+
+.was-validated .form-check-input:invalid ~ .invalid-feedback,
+.was-validated .form-check-input:invalid ~ .invalid-tooltip, .form-check-input.is-invalid ~ .invalid-feedback,
+.form-check-input.is-invalid ~ .invalid-tooltip {
+  display: block;
+}
+
+.datalist-register::-webkit-calendar-picker-indicator {
+    display: none;
+  }
+
+
+@media(max-width:1000px){
+    .head-login .titulo1{
+        font-size: 25px !important;
+    }
+    .head-login .titulo2{
+        font-size: 16px !important;
+    }
+    .right img{
+        width: 60px !important;
+    }
+}
+@media(max-width:900px){
+    .div-info-esc{
+        display: none !important;
+    }
+    .head-login img{
+        display: block !important;
+    }
+    .head-login{
+        justify-content: right !important;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    .escHead{
+        display: block !important;
+        /* width: 100%; */
+        font-size: 15px;
+    }
+    .div-blanco-form{
+        width: 100% !important;
+    }
+    .tabs-responsive-register{
+        display:block !important;
+    }
+}
+
+@media(max-width:600px){
+    .div-division{
+        width: 100% !important;
+        border: none !important;
+        padding-left:0px !important;
+    }
+}
+@media(max-width:400px){
+    .input-50-re{
+        width: 100% !important;
+    }
+    .div-form-register .input-field{
+        margin-bottom: 12px;
+    }
+}

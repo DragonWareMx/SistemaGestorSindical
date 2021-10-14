@@ -96,7 +96,7 @@ export default function MenuLateral() {
           </li>
           {/* {auth && auth.roles && auth.roles.length > 0 && auth.roles[0].name != "Administrador" && */}
           <li>
-            <InertiaLink href={'#'} className="icono-menu" className={isUrl("cursos") ? "icono-menu current-menu-text" : "icono-menu"}>
+            <InertiaLink href={route('users.index')} className="icono-menu" className={isUrl("usuarios") ? "icono-menu current-menu-text" : "icono-menu"}>
               <i className={isUrl("cursos") ? "material-icons icono-menu current-menu" : "material-icons icono-menu"}>people</i>
               Usuarios
             </InertiaLink>

@@ -15,6 +15,12 @@ class CreateUnitsTable extends Migration
     {
         Schema::create('units', function (Blueprint $table) {
             $table->id();
+            $table->string('nombre')->unique();
+
+            $table->unsignedBigInteger('regime_id')->nullable();
+            $table->foreign('regime_id')->references('id')->on('regimes')->onDelete('cascade');
+
+            $table->softDeletes();
             $table->timestamps();
         });
     }
