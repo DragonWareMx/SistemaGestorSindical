@@ -25,10 +25,7 @@ const Create = ({ categories, regimes, units, roles }) => {
         fecha_de_nacimiento: "",
         sexo: "",
         antiguedad: "",
-        matricula: "",
-        categoria: "",
-        unidad: "",
-        regimen: "",
+
         estado: "",
         ciudad: "",
         colonia: "",
@@ -36,7 +33,16 @@ const Create = ({ categories, regimes, units, roles }) => {
         codigo_postal: "",
         numero_exterior: "",
         numero_interior: "",
-        tarjeton_de_pago: "",
+        telefono: "",
+
+        matricula: "",
+        regimen: "",
+        unidad: "",
+        categoria: "",
+
+        email: "",
+        contrasena: "",
+        confirmar_contrasena: "",
         foto: null,
         rol: ""
     })
@@ -91,18 +97,6 @@ const Create = ({ categories, regimes, units, roles }) => {
         }
     }
 
-    function changeTarjeton(e){
-        
-        var inputFotos = document.getElementById('tarjeton_de_pago');
-        if (inputFotos.files && inputFotos.files[0]) {
-            setValues(values => ({
-                ...values,
-                tarjeton_de_pago: inputFotos.files[0],
-            }))
-        }
-
-    }
-
     function initializeSelects() {
         var elems = document.querySelectorAll('select');
         var instances = M.FormSelect.init(elems);
@@ -144,8 +138,39 @@ const Create = ({ categories, regimes, units, roles }) => {
                     fecha_de_nacimiento: document.getElementById("fecha_de_nacimiento").value,
                 }))
             },
-          };
+        };
         const instancesDate = M.Datepicker.init(elems, options);
+
+        var elems2 = document.querySelectorAll('.datepicker2');
+        var options2 = {
+            format: 'yyyy-mm-dd',
+            setDefaultDate: false,
+            i18n: {
+                months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                monthsFull: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                weekdaysFull: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+                weekdaysAbbrev: ['D', 'L', 'M', 'Mi', 'J', 'V', 'S'],
+                selectMonths: true,
+                selectYears: 100, // Puedes cambiarlo para mostrar más o menos años
+                today: 'Hoy',
+                clear: 'Limpiar',
+                close: 'Ok',
+                cancel: 'Cancelar',
+                labelMonthNext: 'Siguiente mes',
+                labelMonthPrev: 'Mes anterior',
+                labelMonthSelect: 'Selecciona un mes',
+                labelYearSelect: 'Selecciona un año',
+            },
+            onClose: ()=>{
+                setValues(values => ({
+                    ...values,
+                    antiguedad: document.getElementById("antiguedad").value,
+                }))
+            },
+        };
+        const instancesDate2 = M.Datepicker.init(elems2, options2);
     }
 
     //se ejecuta cuando la pagina se renderiza
@@ -225,7 +250,7 @@ const Create = ({ categories, regimes, units, roles }) => {
                                     </div>
 
                                     <div className="input-field col s12 input-50-re">
-                                        <input id="antiguedad" type="text" className={errors.antiguedad ? "validate datepicker invalid" : "validate datepicker"} name="antiguedad" required autoComplete="antiguedad" value={values.antiguedad} readOnly />
+                                        <input id="antiguedad" type="text" className={errors.antiguedad ? "validate datepicker2 invalid" : "validate datepicker2"} name="antiguedad" required autoComplete="antiguedad" value={values.antiguedad} readOnly />
                                         <label htmlFor="antiguedad">Antigüedad</label>
                                         {
                                             errors.antiguedad &&
@@ -299,7 +324,7 @@ const Create = ({ categories, regimes, units, roles }) => {
                                     </div>
 
                                     <div className="input-field col s12 input-50-re">
-                                        <input  maxLength="10" id="telefono" type="text" className={errors.telefono ? "validate form-control invalid" : "validate"} name="telefono" value={values.telefono} autoComplete="telefono" onChange={handleChange} />
+                                        <input  maxLength="20" id="telefono" type="text" className={errors.telefono ? "validate form-control invalid" : "validate"} name="telefono" value={values.telefono} autoComplete="telefono" onChange={handleChange} />
                                         <label htmlFor="telefono">Teléfono (opcional)</label>
                                         {
                                             errors.telefono &&
@@ -394,7 +419,7 @@ const Create = ({ categories, regimes, units, roles }) => {
 
                                     <div className="input-field col s12">
                                         <i className="material-icons prefix">account_circle</i>
-                                        <input  id="email" type="email" className={errors.email ? "validate form-control invalid" : "validate form-control"} name="email" value={values.email} required onChange={handleChange} readOnly onFocus={(e) => {e.target.removeAttribute("readonly")}} />
+                                        <input  id="email" type="email" className={errors.email ? "validate form-control invalid" : "validate form-control"} name="email" value={values.email} onChange={handleChange} readOnly onFocus={(e) => {e.target.removeAttribute("readonly")}} />
                                         <label htmlFor="email">Correo electrónico</label>
                                         {
                                             errors.email &&
@@ -404,7 +429,7 @@ const Create = ({ categories, regimes, units, roles }) => {
 
                                     <div className="input-field col s12">
                                         <i className="material-icons prefix">lock</i>
-                                        <input  id="contrasena" type="password" className={errors.contrasena ? "validate form-control invalid" : "validate form-control"} name="contrasena" value={values.contrasena} required onChange={handleChange} />
+                                        <input  id="contrasena" type="password" className={errors.contrasena ? "validate form-control invalid" : "validate form-control"} name="contrasena" value={values.contrasena} onChange={handleChange} />
                                         <label htmlFor="contrasena">Contraseña</label>
                                         {
                                             errors.contrasena &&
@@ -414,7 +439,7 @@ const Create = ({ categories, regimes, units, roles }) => {
 
                                     <div className="input-field col s12">
                                         <i className="material-icons prefix">lock</i>
-                                        <input  id="confirmar_contrasena" type="password" className={errors.confirmar_contrasena ? "validate form-control invalid" : "validate form-control"} name="confirmar_contrasena" value={values.confirmar_contrasena} required onChange={handleChange} />
+                                        <input  id="confirmar_contrasena" type="password" className={errors.confirmar_contrasena ? "validate form-control invalid" : "validate form-control"} name="confirmar_contrasena" value={values.confirmar_contrasena} onChange={handleChange} />
                                         <label htmlFor="confirmar_contrasena">Confirmar contraseña</label>
                                         {
                                             errors.confirmar_contrasena &&
@@ -424,7 +449,7 @@ const Create = ({ categories, regimes, units, roles }) => {
 
                                     <div className="col s12">
                                         <div className="input-field select-wrapper">
-                                            <input placeholder="Selecciona un rol"  id="rol" list="roles" type="text" className={errors.rol ? "datalist-register validate form-control invalid" : "datalist-register validate"} value={values.rol} onChange={handleChange} required autoComplete="off" />
+                                            <input placeholder="Selecciona un rol"  id="rol" list="roles" type="text" className={errors.rol ? "datalist-register validate form-control invalid" : "datalist-register validate"} value={values.rol} onChange={handleChange} autoComplete="off" />
                                             <svg className="caret" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg>
                                             <label htmlFor="rol">Rol</label>
                                             {
