@@ -141,7 +141,7 @@ export default function BarraBusqueda() {
                         </div>
                         <div>
                             <InertiaLink href={'#'}>
-                                <img className="main-userimage" src={"/storage/fotos_perfil/"} alt="" />
+                                <img className="main-userimage" src={"/img/avatar1.png"} alt="" />
                             </InertiaLink>
                         </div>
                     </div>
