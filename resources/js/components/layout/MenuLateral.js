@@ -74,7 +74,7 @@ export default function MenuLateral() {
               </div>
               <InertiaLink href={'#'} className="icono-menu">
                 <div className="menu-profile-info">
-                  <img style={{ marginLeft: '10px' }} src={"/storage/fotos_perfil/"} className="main-userimage" />
+                  <img style={{ marginLeft: '10px' }} src={"/img/avatar1.png"} className="main-userimage" />
                   <div className="profile-info-name truncate">Pepito Pérez</div>
                 </div>
               </InertiaLink>
@@ -84,7 +84,7 @@ export default function MenuLateral() {
           <li>
             <InertiaLink href={'#'} className={isUrl("inicio") ? "icono-menu current-menu-text" : "icono-menu"}>
               <i className={isUrl("inicio") ? "material-icons icono-menu current-menu" : "material-icons icono-menu"}>home</i>
-                  Inicio
+              Inicio
             </InertiaLink>
           </li>
 
@@ -114,7 +114,7 @@ export default function MenuLateral() {
           {/* HONOR Y JUSTICIA */}
           {/* {auth && auth.roles && auth.roles.length > 0 && auth.roles[0].name == "Administrador" && */}
           <li>
-            <InertiaLink href={'#'} className={isUrl("reportes") ? "icono-menu current-menu-text" : "icono-menu"}>
+            <InertiaLink href={route('honor')} className={isUrl("reportes") ? "icono-menu current-menu-text" : "icono-menu"}>
               <i className={isUrl("reportes") ? "material-icons icono-menu current-menu" : "material-icons icono-menu"}>maps_home_work</i>Honor y Justicia
             </InertiaLink>
           </li>
@@ -182,7 +182,7 @@ export default function MenuLateral() {
           <li>
             <InertiaLink href={'#'} className="icono-menu" className={isUrl("perfil") ? "icono-menu current-menu-text" : "icono-menu"}>
               <i className={isUrl("perfil") ? "material-icons icono-menu current-menu" : "material-icons icono-menu"}>settings</i>Configuración
-              </InertiaLink>
+            </InertiaLink>
           </li>
 
           {/* CERRAR SESION */}
@@ -198,7 +198,7 @@ export default function MenuLateral() {
             </div>
             <div className="col s7 valign-wrapper" style={{ height: '64px' }}>
               Escuela Sindical
-              </div>
+            </div>
           </div>
         </ul>
       </div>
@@ -217,26 +217,26 @@ export default function MenuLateral() {
 
         {/* USUARIOS */}
         {/* {auth && auth.roles && auth.roles.length > 0 && auth.roles[0].name == "Administrador" && */}
-          <div className="col s12">
-            <InertiaLink href={'#'} className="icono-menu">
-              <i className={isUrl("usuarios") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Usuarios">people</i>
-            </InertiaLink>
-          </div>
+        <div className="col s12">
+          <InertiaLink href={'#'} className="icono-menu">
+            <i className={isUrl("usuarios") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Usuarios">people</i>
+          </InertiaLink>
+        </div>
         {/* } */}
 
         {/* EMPLEADOS */}
         {/* {auth && auth.roles && auth.roles.length > 0 && auth.roles[0].name == "Administrador" && */}
         <div className="col s12">
-            <InertiaLink href={'#'} className="icono-menu">
-              <i className={isUrl("usuarios") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Empleados">badge</i>
-            </InertiaLink>
-          </div>
+          <InertiaLink href={'#'} className="icono-menu">
+            <i className={isUrl("usuarios") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Empleados">badge</i>
+          </InertiaLink>
+        </div>
         {/* } */}
 
         {/* OFICINAS */}
         {/* HONOR Y JUSTICIA */}
         <div className="col s12">
-          <InertiaLink href={'#'} className="icono-menu">
+          <InertiaLink href={route('honor')} className="icono-menu">
             <i className={isUrl("cursos") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Honor y Justicia">maps_home_work</i>
           </InertiaLink>
         </div>
@@ -274,19 +274,19 @@ export default function MenuLateral() {
         {/* ROLES */}
         {/* {auth && auth.roles && auth.roles.length > 0 && auth.roles[0].name == "Administrador" && */}
         <div className="col s12">
-            <InertiaLink href={'#'} className="icono-menu">
-              <i className={isUrl("log") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Roles">manage_accounts</i>
-            </InertiaLink>
-          </div>
+          <InertiaLink href={'#'} className="icono-menu">
+            <i className={isUrl("log") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Roles">manage_accounts</i>
+          </InertiaLink>
+        </div>
         {/* } */}
 
         {/* BITACORA */}
         {/* {auth && auth.roles && auth.roles.length > 0 && auth.roles[0].name == "Administrador" && */}
-          <div className="col s12">
-            <InertiaLink href={'#'} className="icono-menu">
-              <i className={isUrl("log") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Bitácora">history</i>
-            </InertiaLink>
-          </div>
+        <div className="col s12">
+          <InertiaLink href={'#'} className="icono-menu">
+            <i className={isUrl("log") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Bitácora">history</i>
+          </InertiaLink>
+        </div>
         {/* } */}
 
         {/* CONFIGURACION */}

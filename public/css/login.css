@@ -41,8 +41,8 @@ body {
 }
 
 .head-login .titulo1{
-  font-size: 45px;
-  line-height: 55px;
+  font-size: 38px;
+  line-height: 50px;
   padding-top: 5px;
 }
 
@@ -181,13 +181,14 @@ body {
 .divright img{
 margin-top: auto;
 margin-bottom: auto;
-max-width:100%;height:auto;
+width: 100%;
+max-width:500px;height:auto;
 }
 
 @media(max-width:600px){
   .head-login .titulo1{
-    font-size: 38px;
-    line-height: 42px;
+    font-size: 33px;
+    line-height: 37px;
     padding-top: 3px;
   }
 
