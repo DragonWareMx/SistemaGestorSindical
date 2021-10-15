@@ -26,7 +26,6 @@ class CreateEmployeesTable extends Migration
             $table->date('fecha_nac');
             $table->enum('sexo',['h','m','o']);
             $table->date('antiguedad');
-            $table->text('foto')->nullable();
             
             //direccion
             $table->string('calle', 100);
@@ -36,7 +35,7 @@ class CreateEmployeesTable extends Migration
             $table->string('ciudad', 60);
             $table->string('estado', 50);
             $table->string('cp', 9);
-            $table->string('tel', 15);
+            $table->string('tel', 15)->nullable();
 
 
             //laves foraneas
