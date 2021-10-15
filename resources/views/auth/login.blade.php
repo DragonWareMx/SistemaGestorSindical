@@ -97,7 +97,7 @@
                 </div>
             </div>
             <div class="col s12">
-                <img src="{{ asset('img/imagenes/Onlinelearning-amico.svg') }}" alt="" srcset="">
+                <img src="{{ asset('img/imagenes/Floppy-disk-rafiki.svg') }}" alt="" srcset="">
             </div>
         </div>
     </div>
