@@ -31,6 +31,9 @@ class EmployeeController extends Controller
         ->when($request->deleted == "true", function ($query, $deleted) {
             return $query->onlyTrashed();
         })
+        ->when($request->user == "true", function ($query, $user) {
+            return $query->whereHas('user');
+        })
         ->get(['id', 'uuid', 'nombre', 'apellido_p', 'apellido_m', 'fecha_nac', 'sexo', 'antiguedad', 'estado', 'ciudad', 'colonia', 'calle', 'cp', 'num_ext', 'num_int', 'tel', 'matricula', 'category_id', 'unit_id']);
 
         return Inertia::render('Empleados/Index', [
@@ -227,6 +230,7 @@ class EmployeeController extends Controller
             $newEmployee->num_ext = $request->numero_exterior;
             $newEmployee->num_int = $request->numero_interior;
             $newEmployee->cp = $request->codigo_postal;
+            $newEmployee->tel = $request->telefono;
             
             //SE GUARDA EL NUEVO USUARIO
             $newEmployee->save();
@@ -351,6 +355,7 @@ class EmployeeController extends Controller
             'category:id,nombre',
             'unit:id,nombre,regime_id', 
             'unit.regime:id,nombre',
+            'user:id,email,foto,uuid'
         ])
         ->where('uuid', '=', $uuid)
         ->firstOrFail();
@@ -535,6 +540,7 @@ class EmployeeController extends Controller
             $newEmployee->num_ext = $request->numero_exterior;
             $newEmployee->num_int = $request->numero_interior;
             $newEmployee->cp = $request->codigo_postal;
+            $newEmployee->tel = $request->telefono;
             
             //SE GUARDA EL NUEVO USUARIO
             $newEmployee->save();

@@ -65,11 +65,18 @@ function QuickSearchToolbar(props) {
 const classes = useStyles();
 
 const [checked, setChecked] = React.useState(false);
+const [checkedU, setCheckedU] = React.useState(false);
   
 const handleChange = (event) => {
     setChecked(event.target.checked);
 
     Inertia.reload({data: {deleted: event.target.checked}})
+};
+
+const handleChangeU = (event) => {
+    setCheckedU(event.target.checked);
+
+    Inertia.reload({data: {user: event.target.checked}})
 };
 
 return (
@@ -78,19 +85,34 @@ return (
         <GridToolbarFilterButton />
         <GridToolbarDensitySelector />
 
-        <Grid style={{margin: 4}} >
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={checked}
-                  onChange={handleChange}
-                  name="checkedB"
-                  color="primary"
+        <Grid style={{margin: 4}} container>
+            <Grid row>
+                <FormControlLabel
+                control={
+                    <Checkbox
+                    checked={checked}
+                    onChange={handleChange}
+                    name="checkedB"
+                    color="primary"
+                    />
+                }
+                label="Ver eliminados"
                 />
-              }
-              label="Ver eliminados"
-            />
-          </Grid>
+            </Grid>
+            <Grid row>
+                <FormControlLabel
+                control={
+                    <Checkbox
+                    checked={checkedU}
+                    onChange={handleChangeU}
+                    name="checkedB"
+                    color="primary"
+                    />
+                }
+                label="Ver empleados con usuario"
+                />
+            </Grid>
+        </Grid>
     </div>
     <TextField
         variant="standard"
@@ -236,6 +258,11 @@ const columns = [
         valueGetter: getRegime,
         sortComparator: (v1, v2, cellParams1, cellParams2) =>
             getAddress(cellParams1).localeCompare(getAddress(cellParams2)),
+    },
+    {
+        field: 'tel',
+        headerName: 'TELÉFONO',
+        width: 120,
     },
     {
         field: 'direccion',

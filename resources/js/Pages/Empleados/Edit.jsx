@@ -11,6 +11,7 @@ import '/css/users.css'
 import route from 'ziggy-js';
 import { Inertia } from '@inertiajs/inertia';
 import { Container } from '@mui/material';
+import Grid from '@mui/material/Grid';
 
 //COMPONENTES
 import Alertas from '../../components/common/Alertas';
@@ -431,9 +432,24 @@ const Edit = ({ employee, categories, regimes, units }) => {
                                             }
                                         </div>
 
-                                        <p className="titles-sub" style={{ "margin": "1em 0px 1em 3%", "marginBottom":"20px" }}>CUENTA</p>
+                                        <p className="titles-sub" style={{ "margin": "1em 0px 1em 3%", "marginBottom":"20px" }}>USUARIO</p>
 
-                                        
+                                        {employee.user ?
+                                            <Grid container>
+                                                <InertiaLink href={route('users.edit', employee.user.uuid)} style={{width: "100%", textDecoration: "none", color: "rgba(0,0,0,0.87)"}}>
+                                                <div className="col s12" style={{ "display": "flex", "justifyContent": "center", "flexDirection": "column", "marginTop": "5px", "marginBottom": "5px" }}>
+                                                    <img id="profileImage" src={employee.user.foto ? "/img/storage/fotos_perfil/" + employee.user.foto : "/img/avatar1.png"}></img>
+                                                </div>
+                                                <div className="col s12" style={{ "display": "flex", "justifyContent": "center", "flexDirection": "column", "marginTop": "5px", "marginBottom": "5px", textAlign: "center" }}>
+                                                    {employee.user.email}
+                                                </div>
+                                                </InertiaLink>
+                                            </Grid>
+                                        :
+                                            <Grid container style={{padding: "0 .75rem"}}>
+                                                Este empleado no tiene usuario
+                                            </Grid>
+                                        }
                                     </div>
                                 </div>
                                 <div className="row container-buttons">
