@@ -1,0 +1,113 @@
+.div-collection-item{
+    border-bottom: 1px solid #DDDDDD !important;
+    margin-top:15px;
+}
+.P_collection_item{
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 0px;
+    margin-bottom:10px;
+    min-height: 70px;
+    align-items: center;
+}
+
+.P_collection_image{
+    border-radius: 50%;
+    margin-left: 0px;
+    margin-right: 15px;
+    object-fit: cover;
+}
+
+.P_collection_title{
+    color: #263238;
+    font-weight: normal;
+    font-size: 13px;
+}
+
+.P_collection_subtitle{
+    color: #848484;
+    font-weight: normal;
+    font-size: 12px;
+}
+
+.P_sub{
+    color: #585858;
+    font-weight: normal;
+    font-size: 14px;
+}
+
+
+/* SOLICITUDES */
+.div-item-solicitudes{
+    height: 65px;
+}
+[type="checkbox"]+span:not(.lever):before, [type="checkbox"]:not(.filled-in)+span:not(.lever):after{
+    border: 2px solid #b4b4b4;
+}
+[type="checkbox"]:checked+span:not(.lever):before{
+    border-bottom:2px solid #108058;
+    border-right:2px solid #108058;
+}
+.a-select-all{
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 15px;
+    text-decoration-line: underline;
+    color:#108058;
+    transition: all ease-in-out 0.25s;
+    margin-bottom: 15px;
+    cursor:pointer;
+}
+.link-solicitudes{
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 16px;
+    color: #8A8A8A;
+    transition: all ease-in-out 0.25s;
+    display:flex;
+    align-items: center !important;
+}
+.link-solicitudes:hover, .a-select-all:hover, .icon-back-course:hover{
+    transition: all ease-in-out 0.25s;
+    color: #134E39 !important;
+}
+.icon-back-course{
+    color: #8A8A8A !important;
+    transition: all ease-in-out 0.25s;
+    margin-right:10px;
+    margin-top:5px;
+}
+.z-depth-1, nav, .sidenav{
+    box-shadow:0px 0px 0px 0px white !important;
+}
+.input-search-user{
+    font-family: Montserrat !important;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px !important;
+    line-height: 17px;
+}
+.input-field input[type=search]:focus:not(.browser-default){
+    background-color:transparent !important;
+}
+.space-padding{
+    padding:0px 0px 0px 0px !important;
+}
+
+
+@media(max-width:500px){
+    .div-item-solicitudes{
+        height: 115px;
+    }
+}
+@media(max-width:400px){
+    .div-item-solicitudes{
+        height: 135px;
+    }
+}
+@media(max-width:395px){
+    .btn-rejacted-soli{
+        margin-right:0px !important;
+    }
+}

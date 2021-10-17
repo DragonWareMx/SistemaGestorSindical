@@ -34,7 +34,7 @@
             </div>
             <div class="col s12 head-login forgot left-align">
                 <div class="left">
-                    <div class="titulo1">Escuela Sindical</div>
+                    <div class="titulo1">Sistema Gestor de Datos</div>
                     <div class="titulo2">Sección XX Michoacán</div>
                 </div>
                 <div class="right">

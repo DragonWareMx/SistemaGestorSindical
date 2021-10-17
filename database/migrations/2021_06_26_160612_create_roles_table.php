@@ -3,8 +3,9 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use phpDocumentor\Reflection\Types\Nullable;
 
-class CreateUnitsTable extends Migration
+class CreateRolesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +14,13 @@ class CreateUnitsTable extends Migration
      */
     public function up()
     {
-        Schema::create('units', function (Blueprint $table) {
+        Schema::create('roles', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre')->unique();
-
-            $table->unsignedBigInteger('regime_id')->nullable();
-            $table->foreign('regime_id')->references('id')->on('regimes')->onDelete('cascade');
-
-            $table->softDeletes();
             $table->timestamps();
+            $table->string('name')->unique();
+            $table->string('slug')->unique();
+            $table->text('description')->nullable();
+            $table->enum('full-access',['yes','no'])->nullable();
         });
     }
 
@@ -32,6 +31,6 @@ class CreateUnitsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('units');
+        Schema::dropIfExists('roles');
     }
 }
