@@ -15,6 +15,7 @@ class CreateLogsTable extends Migration
     {
         Schema::create('logs', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique();
 
             $table->enum('categoria',['create','update','delete','restore']);
             $table->text('accion'); //guarda la informacion del log, es decir, lo que el usuario realizo

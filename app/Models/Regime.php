@@ -12,7 +12,7 @@ class Regime extends Model
 
     public function units()
     {
-        return $this->hasMany('App\Models\Unit');
+        return $this->hasMany(Unit::class);
     }
 
     use SoftDeletes;

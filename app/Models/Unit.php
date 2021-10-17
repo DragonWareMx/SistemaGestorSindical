@@ -12,12 +12,12 @@ class Unit extends Model
 
     public function regime()
     {
-        return $this->belongsTo('App\Models\Regime');
+        return $this->belongsTo(Regime::class);
     }
 
-    public function users()
+    public function employee()
     {
-        return $this->hasMany('App\Models\User');
+        return $this->hasMany(Employee::class);
     }
 
     use SoftDeletes;

@@ -12,6 +12,7 @@ use App\Models\Unit;
 use App\Models\User;
 use App\Models\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
 
 use Illuminate\Http\Request;
@@ -24,11 +25,17 @@ class EmployeeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $employees = Employee::get();
+        $employees = Employee::with('category:nombre,id', 'unit:nombre,id,regime_id', 'unit.regime:nombre,id')
+        ->when($request->deleted == "true", function ($query, $deleted) {
+            return $query->onlyTrashed();
+        })
+        ->get(['id', 'uuid', 'nombre', 'apellido_p', 'apellido_m', 'fecha_nac', 'sexo', 'antiguedad', 'estado', 'ciudad', 'colonia', 'calle', 'cp', 'num_ext', 'num_int', 'tel', 'matricula', 'category_id', 'unit_id']);
 
-        return $employees;
+        return Inertia::render('Empleados/Index', [
+            'employees' => $employees
+        ]);
     }
 
     /**
@@ -74,7 +81,7 @@ class EmployeeController extends Controller
             'apellido_materno' => ['nullable','max:255','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
             'fecha_de_nacimiento' => 'required|date|before:17 years ago',
             'sexo' => 'required|in:h,m,o',
-            'antiguedad' => 'required|date|before:tomorrow',
+            'antiguedad' => 'nullable|date|before:tomorrow',
             
             //---informacion institucional---            
             'matricula' => 'required|digits_between:7,10|numeric|unique:employees,matricula',
@@ -187,6 +194,7 @@ class EmployeeController extends Controller
 
                 $newUser->email = $request->email;
                 $newUser->password = \Hash::make($request->contrasena);
+                $newUser->uuid = Str::uuid();
                 $newUser->save();
 
                 // se asigna el rol
@@ -195,6 +203,8 @@ class EmployeeController extends Controller
 
             //SE CREA EL NUEVO EMPLEADO
             $newEmployee = new Employee;
+
+            $newEmployee->uuid = Str::uuid();
             
             //---informacion personal---
             $newEmployee->nombre = $request->nombre;
@@ -242,6 +252,8 @@ class EmployeeController extends Controller
 
             //SE CREA EL LOG
             $newLog = new Log;
+
+            $newLog->uuid = Str::uuid();
             
             $newLog->categoria = 'create';
             $newLog->user_id = Auth::id();
@@ -330,7 +342,7 @@ class EmployeeController extends Controller
      * @param  \App\Models\Employee  $employee
      * @return \Illuminate\Http\Response
      */
-    public function edit($id, Request $request)
+    public function edit($uuid, Request $request)
     {
         //valida el rol del usuario
         //\Gate::authorize('haveaccess', 'admin.perm');
@@ -340,7 +352,8 @@ class EmployeeController extends Controller
             'unit:id,nombre,regime_id', 
             'unit.regime:id,nombre',
         ])
-        ->findOrFail($id);
+        ->where('uuid', '=', $uuid)
+        ->firstOrFail();
 
         return Inertia::render('Empleados/Edit', [
             'employee' => $employee,
@@ -376,7 +389,7 @@ class EmployeeController extends Controller
             'apellido_materno' => ['nullable','max:255','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
             'fecha_de_nacimiento' => 'required|date|before:17 years ago',
             'sexo' => 'required|in:h,m,o',
-            'antiguedad' => 'required|date|before:tomorrow',
+            'antiguedad' => 'nullable|date|before:tomorrow',
             
             //---informacion institucional---            
             'matricula' => 'required|digits_between:7,10|numeric|unique:employees,matricula',
@@ -489,6 +502,7 @@ class EmployeeController extends Controller
 
                 $newUser->email = $request->email;
                 $newUser->password = \Hash::make($request->contrasena);
+                $newUser->uuid = Str::uuid();
                 $newUser->save();
 
                 // se asigna el rol
@@ -497,6 +511,8 @@ class EmployeeController extends Controller
 
             //SE CREA EL NUEVO EMPLEADO
             $newEmployee = new Employee;
+
+            $newEmployee->uuid = Str::uuid();
             
             //---informacion personal---
             $newEmployee->nombre = $request->nombre;
@@ -545,6 +561,8 @@ class EmployeeController extends Controller
             //SE CREA EL LOG
             $newLog = new Log;
             
+            $newLog->uuid = Str::uuid();
+
             $newLog->categoria = 'create';
             $newLog->user_id = Auth::id();
             $newLog->accion =
@@ -621,8 +639,100 @@ class EmployeeController extends Controller
      * @param  \App\Models\Employee  $employee
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Employee $employee)
+    public function destroy($id)
     {
-        //
+        //valida el rol del usuario
+        //\Gate::authorize('haveaccess', 'admin.perm');
+
+        DB::beginTransaction();
+        try{
+            $employee = Employee::find($id);
+
+            if(!$employee){
+                DB::rollBack();
+                return \Redirect::back()->with('error','Ha ocurrido un error al intentar eliminar el empleado, inténtelo más tarde.');
+            }
+
+            $userEmployee = Auth::user()->employee()->first();
+            if($userEmployee && $employee->id == Auth::user()->employee()->first()->id){
+                DB::rollBack();
+                return \Redirect::back()->with('message','¡No puedes eliminar tu propio empleado!');
+            }
+
+            $employee->delete();
+
+            //SE CREA EL LOG
+            $newLog = new Log;
+            $newLog->uuid = Str::uuid();
+
+            $newLog->categoria = 'delete';
+            $newLog->user_id = Auth::id();
+            $newLog->accion =
+            '{
+                employees: {
+                    id: ' . $id .
+                '}
+            }';
+
+            $newLog->descripcion = 'El usuario '.Auth::user()->email.' ha eliminado al empleado con matricula: '. $employee->matricula;
+
+            $newLog->save();
+
+            DB::commit();
+            return \Redirect::route('employees.index')->with('success','¡Empleado eliminado con éxito!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return \Redirect::back()->with('error','Ha ocurrido un error al intentar eliminar el empleado, inténtelo más tarde.');
+        }
+    }
+
+    /**
+     * Restore the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function restore($id)
+    {
+        //valida el rol del usuario
+        //\Gate::authorize('haveaccess', 'admin.perm');
+
+        DB::beginTransaction();
+        try{
+            $employee = Employee::withTrashed()->find($id);
+
+            if(!$employee){
+                DB::rollBack();
+                return \Redirect::back()->with('error','Ha ocurrido un error al intentar restaurar el empleado, inténtelo más tarde.');
+            }
+
+            $employee->restore();
+
+            //SE CREA EL LOG
+            $newLog = new Log;
+
+            $newLog->uuid = Str::uuid();
+
+            $newLog->categoria = 'restore';
+            $newLog->user_id = Auth::id();
+            $newLog->accion =
+            '{
+                employee: {
+                    id: ' . $id .
+                '}
+            }';
+
+            $newLog->descripcion = 'El usuario '.Auth::user()->email.' ha restaurado al empleado: '. $employee->matricula;
+
+            $newLog->save();
+
+            DB::commit();
+            return \Redirect::back()->with('success','¡Empleado restaurado con éxito!');
+            
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return \Redirect::back()->with('error','Ha ocurrido un error al intentar restaurar el empleado, inténtelo más tarde.');
+        }
     }
 }

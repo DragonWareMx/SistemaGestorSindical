@@ -15,6 +15,7 @@ class CreateEmployeesTable extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique();
 
             $table->string('matricula',10)->unique();
 

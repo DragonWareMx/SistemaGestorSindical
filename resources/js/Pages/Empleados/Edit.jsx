@@ -7,15 +7,15 @@ import '/css/infoAlumno.css'
 import '/css/modulos.css'
 import '/css/participantes.css'
 import '/css/register.css'
+import '/css/users.css'
 import route from 'ziggy-js';
 import { Inertia } from '@inertiajs/inertia';
+import { Container } from '@mui/material';
 
 //COMPONENTES
 import Alertas from '../../components/common/Alertas';
 import ModalEliminar from '../../components/common/ModalEliminar';
 import ModalRestaurar from '../../components/common/ModalRestaurar';
-
-
 
 const Edit = ({ employee, categories, regimes, units }) => {
     //errores de la validacion de laravel
@@ -24,18 +24,14 @@ const Edit = ({ employee, categories, regimes, units }) => {
     //valores para formulario
     const [values, setValues] = useState({
         _method: 'patch',
+
         nombre: employee.nombre || "",
         apellido_paterno: employee.apellido_p || "",
         apellido_materno: employee.apellido_m || "",
-        email: employee.email || "",
-        contrasena: "",
-        confirmar_contrasena: "",
         fecha_de_nacimiento: employee.fecha_nac || "",
         sexo: employee.sexo || "",
-        matricula: employee.matricula || "",
-        categoria: employee.category && employee.category.nombre || "",
-        unidad: employee.unit && employee.unit.nombre || "",
-        regimen: employee.unit && employee.unit.regime.nombre || "",
+        antiguedad: employee.antiguedad || "",
+        
         estado: employee.estado || "",
         ciudad: employee.ciudad || "",
         colonia: employee.colonia || "",
@@ -43,10 +39,15 @@ const Edit = ({ employee, categories, regimes, units }) => {
         codigo_postal: employee.cp || "",
         numero_exterior: employee.num_ext || "",
         numero_interior: employee.num_int || "",
+        telefono: employee.tel || "",
+
+        matricula: employee.matricula || "",
+        regimen: employee.unit && employee.unit.regime.nombre || "",
+        unidad: employee.unit && employee.unit.nombre || "",
+        categoria: employee.category && employee.category.nombre || "",
+
         created_at: parseFecha(employee.created_at),
-        foto: null,
         deleted_at: employee.deleted_at,
-        cambiar_contrasena: false
     })
 
     //actualiza los hooks cada vez que se modifica un input
@@ -89,21 +90,6 @@ const Edit = ({ employee, categories, regimes, units }) => {
     //boton de cancelar
     function cancelEditUser() {
         Inertia.get(route('employees.index'))
-    }
-
-    function clickFoto() {
-        document.getElementById("foto").click();
-    }
-
-    function changeFoto() {
-        var inputFotos = document.getElementById('foto');
-        if (inputFotos.files && inputFotos.files[0]) {
-            setValues(values => ({
-                ...values,
-                foto: inputFotos.files[0],
-            }))
-            document.getElementById("profileImage").src = window.URL.createObjectURL(inputFotos.files[0]);
-        }
     }
 
     function initializeSelects() {
@@ -169,22 +155,6 @@ const Edit = ({ employee, categories, regimes, units }) => {
         const instancesDate = M.Datepicker.init(elems, options);
     }
 
-    function cambiarContrasena(){
-        setValues(values => ({
-            ...values,
-            cambiar_contrasena: !values.cambiar_contrasena,
-        }))
-
-        if(!values.cambiar_contrasena == false)
-        {
-            setValues(values => ({
-                ...values,
-                contrasena: "",
-                confirmar_contrasena: ""
-            }))
-        }
-    }
-
     //para mostrar la fecha de registro
     function parseFecha(date) {
         var d = new Date(date),
@@ -210,6 +180,7 @@ const Edit = ({ employee, categories, regimes, units }) => {
     return (
         <>
             <div className="row">
+                <Container>
                 <div className="col contenedor s12">
                     <div className="card darken-1 cardUsers">
                         <div className="card-content">
@@ -217,7 +188,7 @@ const Edit = ({ employee, categories, regimes, units }) => {
                             <div className="col s12 m9 l10 xl10 titulo-modulo left" style={{marginTop:"15px"}}>
                                 {/* regresar */}
                                 <InertiaLink  href={route('employees.index')}  className="icon-back-course tooltipped" data-position="left" data-tooltip="Regresar"><i className="material-icons">keyboard_backspace</i></InertiaLink>
-                                EDITAR USUARIO
+                                EDITAR EMPLEADO
                             </div>
 
                             <div className="col s12">
@@ -230,7 +201,7 @@ const Edit = ({ employee, categories, regimes, units }) => {
                             <div className="errores col s12">
                                 <ul>
                                     <li className="alert_message">
-                                        <div className="col s11">Este usuario ha sido eliminado.</div>
+                                        <div className="col s11">Este empleado ha sido eliminado.</div>
                                         <button data-target="modalRestaurar" type="button" className="col s3 m2 center-align modal-trigger" style={{ "border": "none", "backgroundColor": "transparent", "color": "#515B60", "cursor": "pointer", marginLeft: "3%", marginRight: "auto" }}>Restaurar</button>
                                     </li>
                                 </ul>  
@@ -242,20 +213,6 @@ const Edit = ({ employee, categories, regimes, units }) => {
                                 <div className="row div-form-register" style={{ "padding": "3%" }}>
                                     <div className="col s12 m6 div-division user-form-border">
                                         <p className="titles-sub" style={{ "margin": "1em 0px 1em 3%" }}>INFORMACIÓN PERSONAL</p>
-
-                                        <div className="col s12" style={{ "display": "flex", "justifyContent": "center", "flexDirection": "column", "marginTop": "5px", "marginBottom": "5px" }}>
-                                            <img id="profileImage" onClick={clickFoto} src={employee.foto ? "/storage/fotos_perfil/"+employee.foto : "/storage/fotos_perfil/avatar1.jpg"}></img>
-                                            <p id="txt-profile" style={{ "cursor": "pointer" }} onClick={clickFoto}>Foto de perfil</p>
-                                        </div>
-
-                                        <div className="input-field">
-                                            <input id="foto" type="file" className={errors.foto ? "imageUpload validate form-control invalid" : "imageUpload validate form-control"}
-                                                name="foto" placeholder="Photo" accept="image/png, image/jpeg, image/jpg, image/gif" onChange={changeFoto}></input>
-                                            {
-                                                errors.foto &&
-                                                <span className="helper-text" data-error={errors.foto} style={{ "marginBottom": "125px", color: "#F44336", maxHeight: "18px" }}>{errors.foto}</span>
-                                            }
-                                        </div>
 
                                         <div className="input-field col s12">
                                             <input  id="nombre" type="text" className={errors.nombre ? "validate form-control invalid" : "validate form-control"} name="nombre" required autoComplete="nombre" value={values.nombre} onChange={handleChange} autoFocus maxLength="255" />
@@ -305,6 +262,15 @@ const Edit = ({ employee, categories, regimes, units }) => {
                                             {
                                                 errors.sexo &&
                                                 <span className="helper-text" data-error={errors.sexo} style={{ "marginBottom": "10px", color: "#F44336" }}>{errors.sexo}</span>
+                                            }
+                                        </div>
+
+                                        <div className="input-field col s12 input-50-re">
+                                            <input id="antiguedad" type="text" className={errors.antiguedad ? "validate datepicker2 invalid" : "validate datepicker2"} name="antiguedad" autoComplete="antiguedad" value={values.antiguedad} readOnly />
+                                            <label htmlFor="antiguedad">Antigüedad</label>
+                                            {
+                                                errors.antiguedad &&
+                                                <span className="helper-text" data-error={errors.antiguedad} style={{ "marginBottom": "10px" }}>{errors.antiguedad}</span>
                                             }
                                         </div>
 
@@ -370,6 +336,15 @@ const Edit = ({ employee, categories, regimes, units }) => {
                                             {
                                                 errors.numero_interior &&
                                                 <span className="helper-text" data-error={errors.numero_interior} style={{ "marginBottom": "10px" }}>{errors.numero_interior}</span>
+                                            }
+                                        </div>
+
+                                        <div className="input-field col s12 input-50-re">
+                                            <input  maxLength="25" id="telefono" type="text" className={errors.telefono ? "validate form-control invalid" : "validate"} name="telefono" value={values.telefono} autoComplete="telefono" onChange={handleChange} />
+                                            <label htmlFor="telefono">Teléfono (opcional)</label>
+                                            {
+                                                errors.telefono &&
+                                                <span className="helper-text" data-error={errors.telefono} style={{ "marginBottom": "10px" }}>{errors.telefono}</span>
                                             }
                                         </div>
 
@@ -458,6 +433,7 @@ const Edit = ({ employee, categories, regimes, units }) => {
 
                                         <p className="titles-sub" style={{ "margin": "1em 0px 1em 3%", "marginBottom":"20px" }}>CUENTA</p>
 
+                                        
                                     </div>
                                 </div>
                                 <div className="row container-buttons">
@@ -475,15 +451,16 @@ const Edit = ({ employee, categories, regimes, units }) => {
                         </div>
                     </div>
                 </div>
+                </Container>
             </div >
 
-            <ModalEliminar url={route('employees.delete', employee.id)} nombre={employee.nombre} tipo="usuario" />
+            <ModalEliminar url={route('employees.delete', employee.id)} nombre={employee.nombre} tipo="empleado" />
             
-            <ModalRestaurar url={route('employees.restore',employee.id)} nombre={employee.nombre} tipo="usuario" />
+            <ModalRestaurar url={route('employees.restore',employee.id)} nombre={employee.nombre} tipo="empleado" />
         </>
     )
 }
 
-Edit.layout = page => <Layout children={page} title="Escuela Sindical - Usuarios" pageTitle="USUARIOS" />
+Edit.layout = page => <Layout children={page} title="Escuela Sindical - Empleados" pageTitle="EMPLEADOS" />
 
 export default Edit
