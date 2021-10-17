@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class EmployeeSeeder extends Seeder
 {
@@ -13,6 +14,47 @@ class EmployeeSeeder extends Seeder
      */
     public function run()
     {
-        //
+        DB::table('employees')->insert([
+            'uuid'=>'1324356478',
+            'matricula' => '17121052',
+            'nombre'=>'John Doe',
+            'apellido_p'=>'Pérez',
+            'apellido_m'=>'Segundo',
+            'fecha_nac'=>'1997-10-15',
+            'sexo'=>'h',
+            'antiguedad'=>'2018-01-16',
+            'estado'=>'Michoacán',
+            'ciudad'=>'Morelia',
+            'colonia'=>'Colonia 1',
+            'calle'=>'calle 1',
+            'num_int'=>'16',
+            'num_ext'=>'596',
+            'cp'=>'58512',
+            'tel'=>'4434044444',
+            'user_id'=>'1',
+            'category_id'=>'1',
+            'unit_id'=>'1',
+        ]);
+        DB::table('employees')->insert([
+            'uuid'=>'1548765819',
+            'matricula' => '17121056',
+            'nombre'=>'Joaquín',
+            'apellido_p'=>'Dimitri',
+            'apellido_m'=>'Rodriguez',
+            'fecha_nac'=>'1988-11-23',
+            'sexo'=>'h',
+            'antiguedad'=>'2019-03-02',
+            'estado'=>'Michoacán',
+            'ciudad'=>'Morelia',
+            'colonia'=>'Colonia 1',
+            'calle'=>'calle 1',
+            'num_int'=>'16',
+            'num_ext'=>'596',
+            'cp'=>'58512',
+            'tel'=>'4434044444',
+            'user_id'=>'2',
+            'category_id'=>'2',
+            'unit_id'=>'2',
+        ]);
     }
 }

@@ -17,6 +17,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import SearchIcon from '@mui/icons-material/Search';
 import { createTheme } from '@mui/material/styles';
 import { createStyles, makeStyles } from '@mui/styles';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 // Hojas de estilos
 import '/css/usersStyle.css'
@@ -106,61 +107,72 @@ QuickSearchToolbar.propTypes = {
     value: PropTypes.string.isRequired,
   };
 
-const honorJusticia = ({usuarios}) => {
-    const classes = useStyles();
-    
-    const {data} = [
-        {
-            field: 'nombre',
-            headerName: 'NOMBRE',
-            editable: false,
-            disableColumnSelector:false,
-            flex: 1,
-        },
-        {
-            field: 'marca',
-            headerName: 'MARCA',
-            editable: false,
-            flex: 0.5,
-        },
-        // matricua,nombre,unidad de ascripcion
-    ]
+const honorJusticia = ({issues}) => {
+
     const columns = [
         {
           field: 'id',
-          headerName: 'No.',
+          headerName: 'NO.',
           editable: false,
           disableColumnSelector:false,
-          flex: 0.5,
+          flex: 0.1,
         },
         {
-          field: 'name',
-          headerName: 'Nombre',
+          field: 'num_oficio',
+          headerName: 'OFICIO',
           editable: false,
           disableColumnSelector:false,
-          flex: 1,
+          flex: 0.3,
       },
       {
-          field: 'email',
-          headerName: 'Correo',
+          field: 'matricula',
+          headerName: 'MATRICULA',
           editable: false,
-          flex: 0.5,
+          flex: 0.4,
       },
       {
-        field: 'password',
-        headerName: 'Unidad de ascripcion',
+        field: 'nombre',
+        headerName: 'NOMBRE',
         editable: false,
-        flex: 0.5,
+        flex: 0.4,
       },
+      {
+        field: 'apellido_p',
+        headerName: 'APELLIDO',
+        editable: false,
+        flex: 0.4,
+      },
+      {
+        field: 'inicio_sancion',
+        headerName: 'INICIO DE SANCION',
+        editable: false,
+        flex: 0.4,
+      },
+      {
+        field: 'termino_sancion',
+        headerName: 'TÉRMINO DE SANCION',
+        editable: false,
+        flex: 0.4,
+      },
+      {
+        field: "",
+        headerName: "VER",
+        flex: 0.2,
+        renderCell: (params) => (
+          <InertiaLink href={route('honor.issue', params.row.uuid)} style={{textDecoration: 'none', color: 'gray'}}><VisibilityIcon/></InertiaLink>
+        ),
+        sortable: false,
+        editable: false,
+      }
     ]
     
       const [searchText, setSearchText] = React.useState('');
-      const [rows, setRows] = React.useState(usuarios);
+      const [rows, setRows] = React.useState(issues);
     
       const requestSearch = (searchValue) => {
         setSearchText(searchValue);
         const searchRegex = new RegExp(escapeRegExp(searchValue), 'i');
-        const filteredRows = usuarios.filter((row) => {
+        const filteredRows = issues.filter((row) => {
           return Object.keys(row).some((field) => {
             return searchRegex.test(row[field].toString());
           });
@@ -169,8 +181,8 @@ const honorJusticia = ({usuarios}) => {
       };
     
       React.useEffect(() => {
-        setRows(usuarios);
-      }, [usuarios]);
+        setRows(issues);
+      }, [issues]);
     return (
         <> 
             <div className="row contenedor">
