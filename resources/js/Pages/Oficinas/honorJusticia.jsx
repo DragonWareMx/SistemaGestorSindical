@@ -79,7 +79,7 @@ function QuickSearchToolbar(props) {
           variant="standard"
           value={props.value}
           onChange={props.onChange}
-          placeholder="Search…"
+          placeholder="Buscar…"
           className={classes.textField}
           InputProps={{
             startAdornment: <SearchIcon fontSize="small" />,

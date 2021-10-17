@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             EmployeeSeeder::class,
             IssueSeeder::class,
+            ConflictSeeder::class,
         ]);
     }
 }
