@@ -15,6 +15,19 @@ class CreateConflictEmployeeTable extends Migration
     {
         Schema::create('conflict_employee', function (Blueprint $table) {
             $table->id();
+
+            $table->boolean('castigado')->default(false);
+            $table->date('inicio_sancion')->nullable();
+            $table->date('termino_sancion')->nullable();
+            $table->text('sancion')->nullable();
+            
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
+            $table->unsignedBigInteger('employee_id');
+            $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
+            
+            $table->softDeletes();
             $table->timestamps();
         });
     }
