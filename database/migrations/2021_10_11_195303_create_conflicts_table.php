@@ -16,10 +16,11 @@ class CreateConflictsTable extends Migration
         Schema::create('conflicts', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
-            $table->string('num_oficio');
-            $table->text('observaciones');
 
-            // $table->softDeletes();
+            $table->text('num_oficio'); //guarda la informacion del log, es decir, lo que el usuario realizo
+            $table->text('observaciones');
+            
+            $table->softDeletes();
             $table->timestamps();
         });
     }
