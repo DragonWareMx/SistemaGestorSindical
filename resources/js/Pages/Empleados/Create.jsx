@@ -324,7 +324,7 @@ const Create = ({ categories, regimes, units, roles }) => {
                                     </div>
 
                                     <div className="input-field col s12 input-50-re">
-                                        <input  maxLength="20" id="telefono" type="text" className={errors.telefono ? "validate form-control invalid" : "validate"} name="telefono" value={values.telefono} autoComplete="telefono" onChange={handleChange} />
+                                        <input  maxLength="25" id="telefono" type="text" className={errors.telefono ? "validate form-control invalid" : "validate"} name="telefono" value={values.telefono} autoComplete="telefono" onChange={handleChange} />
                                         <label htmlFor="telefono">Teléfono (opcional)</label>
                                         {
                                             errors.telefono &&
