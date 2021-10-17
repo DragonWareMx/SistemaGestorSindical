@@ -71,7 +71,7 @@ function QuickSearchToolbar(props) {
     return (
       <div className={classes.root}>
         <div>
-          {/* <GridToolbarFilterButton className={classes.textField} /> */}
+          <GridToolbarFilterButton />
           <GridToolbarDensitySelector />
         </div>
         <TextField
