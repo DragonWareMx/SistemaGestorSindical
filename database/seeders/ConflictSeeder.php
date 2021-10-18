@@ -33,8 +33,11 @@ class ConflictSeeder extends Seeder
         DB::table('conflict_employee')->insert([
             'employee_id'=>'2',
             'conflict_id' => '2',
-            'castigado'=>0,
+            'castigado'=>1,
             'resolutivo'=>'Lorem ip´sum dolor et inmune at et si',
+            'sancion'=>'lorem ipsum dolor ent sancion',
+            'inicio_sancion'=>'2021-11-26',
+            'termino_sancion'=>'2021-12-09',
         ]);
     }
 }

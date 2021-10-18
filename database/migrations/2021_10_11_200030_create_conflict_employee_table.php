@@ -21,10 +21,8 @@ class CreateConflictEmployeeTable extends Migration
             $table->date('termino_sancion')->nullable();
             $table->text('sancion')->nullable();
             
-            $table->softDeletes();
             $table->timestamps();
 
-            
             $table->unsignedBigInteger('employee_id');
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
 

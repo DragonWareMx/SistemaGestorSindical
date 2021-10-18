@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Conflict;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Auth;
+use Illuminate\Support\Facades\DB;
 
 class ConflictController extends Controller
 {
@@ -14,7 +17,16 @@ class ConflictController extends Controller
      */
     public function index()
     {
-        //
+        $conflicts = Conflict::
+            leftJoin('conflict_employee','conflicts.id','conflict_employee.conflict_id')
+            ->leftJoin('employees','conflict_employee.employee_id','employees.id')
+            ->select('num_oficio','employees.nombre','inicio_sancion','termino_sancion','matricula','apellido_p','conflict_employee.id as id','conflicts.uuid as uuid')
+            ->get();
+        return Inertia::render('Oficinas/conflictos',['conflicts' => $conflicts]);
+    }
+
+    public function conflict($uuid){
+        dd($uuid);
     }
 
     /**
