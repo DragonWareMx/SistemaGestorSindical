@@ -51,6 +51,9 @@ Route::get('/honor-y-justicia/{id}', [App\Http\Controllers\issueController::clas
 //Conflictos
 Route::get('/conflictos', [App\Http\Controllers\conflictController::class, 'index'])->name('conflicts');
 Route::get('/conflictos/{id}', [App\Http\Controllers\conflictController::class, 'conflict'])->name('conflicts.conflict');
+//Secretaria del Interior
+Route::get('/secretaria-del-interior', [App\Http\Controllers\conflictController::class, 'secretariaInterior'])->name('secretariaInterior');
+Route::get('/secretaria-del-interior/{id}', [App\Http\Controllers\conflictController::class, 'secretariaInteriorConflict'])->name('secretariaInterior.conflict');
 
 Auth::routes(['register' => false]);
 
