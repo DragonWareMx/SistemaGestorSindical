@@ -54,7 +54,19 @@ const useStyles = makeStyles(
         marginRight: theme.spacing(0.5),
         },
         '& .MuiInput-underline:before': {
-        borderBottom: `1px solid ${theme.palette.divider}`,
+        borderBottom: `none`,
+        },
+        '& .MuiInput-underline:after': {
+            borderBottom: "none",
+        },
+        '& .MuiInput-underline:focus': {
+            borderBottom: "none",
+        },
+        '& .MuiInputBase-root-MuiInput-root:hover:not(.Mui-disabled):before' : {
+            borderBottom: "0px solid white",
+        },
+        '& .css-1480iag-MuiInputBase-root-MuiInput-root:hover:not(.Mui-disabled):before' : {
+            borderBottom: "0px solid white",
         },
     },
     }),
@@ -118,7 +130,7 @@ return (
         variant="standard"
         value={props.value}
         onChange={props.onChange}
-        placeholder="Search…"
+        placeholder="Buscar…"
         className={classes.textField}
         InputProps={{
         startAdornment: <SearchIcon fontSize="small" />,
