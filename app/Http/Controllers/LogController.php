@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Conflict;
+use App\Models\Log;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
-use Auth;
-use Illuminate\Support\Facades\DB;
 
-class ConflictController extends Controller
+class LogController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,16 +14,7 @@ class ConflictController extends Controller
      */
     public function index()
     {
-        $conflicts = Conflict::
-            leftJoin('conflict_employee','conflicts.id','conflict_employee.conflict_id')
-            ->leftJoin('employees','conflict_employee.employee_id','employees.id')
-            ->select('num_oficio','employees.nombre','inicio_sancion','termino_sancion','matricula','apellido_p','conflict_employee.id as id','conflicts.uuid as uuid')
-            ->get();
-        return Inertia::render('Oficinas/conflictos',['conflicts' => $conflicts]);
-    }
-
-    public function conflict($uuid){
-        dd($uuid);
+        //
     }
 
     /**
@@ -53,10 +41,10 @@ class ConflictController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Conflict  $conflict
+     * @param  \App\Models\Log  $log
      * @return \Illuminate\Http\Response
      */
-    public function show(Conflict $conflict)
+    public function show(Log $log)
     {
         //
     }
@@ -64,10 +52,10 @@ class ConflictController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Conflict  $conflict
+     * @param  \App\Models\Log  $log
      * @return \Illuminate\Http\Response
      */
-    public function edit(Conflict $conflict)
+    public function edit(Log $log)
     {
         //
     }
@@ -76,10 +64,10 @@ class ConflictController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Conflict  $conflict
+     * @param  \App\Models\Log  $log
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Conflict $conflict)
+    public function update(Request $request, Log $log)
     {
         //
     }
@@ -87,10 +75,10 @@ class ConflictController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Conflict  $conflict
+     * @param  \App\Models\Log  $log
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Conflict $conflict)
+    public function destroy(Log $log)
     {
         //
     }

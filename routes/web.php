@@ -47,6 +47,10 @@ Route::name('employees.')->middleware('auth')->group(function () {
 
 // RUTAS OFICINAS
 Route::get('/honor-y-justicia', [App\Http\Controllers\issueController::class, 'index'])->name('honor');
+Route::get('/honor-y-justicia/{id}', [App\Http\Controllers\issueController::class, 'issue'])->name('honor.issue');
+//Conflictos
+Route::get('/conflictos', [App\Http\Controllers\conflictController::class, 'index'])->name('conflicts');
+Route::get('/conflictos/{id}', [App\Http\Controllers\conflictController::class, 'conflict'])->name('conflicts.conflict');
 
 Auth::routes(['register' => false]);
 

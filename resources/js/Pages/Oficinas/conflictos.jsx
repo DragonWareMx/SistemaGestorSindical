@@ -107,7 +107,7 @@ QuickSearchToolbar.propTypes = {
     value: PropTypes.string.isRequired,
   };
 
-const honorJusticia = ({issues}) => {
+const conflictos = ({conflicts}) => {
 
     const columns = [
         {
@@ -159,7 +159,7 @@ const honorJusticia = ({issues}) => {
         headerName: "VER",
         flex: 0.2,
         renderCell: (params) => (
-          <InertiaLink href={route('honor.issue', params.row.uuid)} style={{textDecoration: 'none', color: 'gray'}}><VisibilityIcon/></InertiaLink>
+          <InertiaLink href={route('conflicts.conflict', params.row.uuid)} style={{textDecoration: 'none', color: 'gray'}}><VisibilityIcon/></InertiaLink>
         ),
         sortable: false,
         editable: false,
@@ -167,12 +167,12 @@ const honorJusticia = ({issues}) => {
     ]
     
       const [searchText, setSearchText] = React.useState('');
-      const [rows, setRows] = React.useState(issues);
+      const [rows, setRows] = React.useState(conflicts);
     
       const requestSearch = (searchValue) => {
         setSearchText(searchValue);
         const searchRegex = new RegExp(escapeRegExp(searchValue), 'i');
-        const filteredRows = issues.filter((row) => {
+        const filteredRows = conflicts.filter((row) => {
           return Object.keys(row).some((field) => {
             return searchRegex.test(row[field] ? row[field].toString() : "");
           });
@@ -181,15 +181,15 @@ const honorJusticia = ({issues}) => {
       };
     
       React.useEffect(() => {
-        setRows(issues);
-      }, [issues]);
+        setRows(conflicts);
+      }, [conflicts]);
     return (
         <> 
             <div className="row contenedor">
                 <div className="col contenedor s12">
                     <div className="card darken-1 cardUsers">
                         <div className="card-content">
-                            <span className="card-title">Honor y Justicia</span>
+                            <span className="card-title">Conflictos</span>
                             <div style={{ height: 400, width: '100%' }}>
                                     <DataGrid
                                     components={{ Toolbar: QuickSearchToolbar }}
@@ -214,6 +214,6 @@ const honorJusticia = ({issues}) => {
 
 
 
-honorJusticia.layout = page => <Layout children={page} title="Honor y Justicia" pageTitle="Honor y Justicia"/>
+conflictos.layout = page => <Layout children={page} title="Conflictos" pageTitle="Conflictos"/>
 
-export default honorJusticia
+export default conflictos

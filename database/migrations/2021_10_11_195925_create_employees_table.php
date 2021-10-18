@@ -15,6 +15,7 @@ class CreateEmployeesTable extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique();
 
             $table->string('matricula',10)->unique();
 
@@ -35,7 +36,7 @@ class CreateEmployeesTable extends Migration
             $table->string('ciudad', 60);
             $table->string('estado', 50);
             $table->string('cp', 9);
-            $table->string('tel', 20)->nullable();
+            $table->string('tel', 25)->nullable();
 
 
             //laves foraneas

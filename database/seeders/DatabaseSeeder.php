@@ -20,6 +20,9 @@ class DatabaseSeeder extends Seeder
             UnitSeeder::class,
             UserSeeder::class,
             PermissionSeeder::class,
+            EmployeeSeeder::class,
+            IssueSeeder::class,
+            ConflictSeeder::class,
         ]);
     }
 }

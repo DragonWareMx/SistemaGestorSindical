@@ -250,7 +250,7 @@ const Create = ({ categories, regimes, units, roles }) => {
                                     </div>
 
                                     <div className="input-field col s12 input-50-re">
-                                        <input id="antiguedad" type="text" className={errors.antiguedad ? "validate datepicker2 invalid" : "validate datepicker2"} name="antiguedad" required autoComplete="antiguedad" value={values.antiguedad} readOnly />
+                                        <input id="antiguedad" type="text" className={errors.antiguedad ? "validate datepicker2 invalid" : "validate datepicker2"} name="antiguedad" autoComplete="antiguedad" value={values.antiguedad} readOnly />
                                         <label htmlFor="antiguedad">Antigüedad</label>
                                         {
                                             errors.antiguedad &&
@@ -324,7 +324,7 @@ const Create = ({ categories, regimes, units, roles }) => {
                                     </div>
 
                                     <div className="input-field col s12 input-50-re">
-                                        <input  maxLength="20" id="telefono" type="text" className={errors.telefono ? "validate form-control invalid" : "validate"} name="telefono" value={values.telefono} autoComplete="telefono" onChange={handleChange} />
+                                        <input  maxLength="25" id="telefono" type="text" className={errors.telefono ? "validate form-control invalid" : "validate"} name="telefono" value={values.telefono} autoComplete="telefono" onChange={handleChange} />
                                         <label htmlFor="telefono">Teléfono (opcional)</label>
                                         {
                                             errors.telefono &&
@@ -484,6 +484,6 @@ const Create = ({ categories, regimes, units, roles }) => {
     )
 }
 
-Create.layout = page => <Layout children={page} title="Escuela Sindical - Usuarios" pageTitle="USUARIOS" />
+Create.layout = page => <Layout children={page} title="Escuela Sindical - Empleado" pageTitle="EMPLEADO" />
 
 export default Create

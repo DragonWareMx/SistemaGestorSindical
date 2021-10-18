@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Auth;
-use App\Models\User;
+use App\Models\Issue;
 use Illuminate\Support\Facades\DB;
 
 class IssueController extends Controller
@@ -18,9 +18,16 @@ class IssueController extends Controller
     public function index()
     {
         
-        $usuarios = User::get();
-        
-        return Inertia::render('Oficinas/honorJusticia',['usuarios' => $usuarios]);
+        $issues = Issue::
+            leftJoin('employee_issue','issues.id','employee_issue.issue_id')
+            ->leftJoin('employees','employee_issue.employee_id','employees.id')
+            ->select('num_oficio','employees.nombre','inicio_sancion','termino_sancion','matricula','apellido_p','employee_issue.id as id','issues.uuid as uuid')
+            ->get();
+        return Inertia::render('Oficinas/honorJusticia',['issues' => $issues]);
+    }
+
+    public function issue($uuid){
+        dd($uuid);
     }
 
     /**
