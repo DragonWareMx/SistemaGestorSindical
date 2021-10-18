@@ -438,10 +438,11 @@ const Edit = ({ employee, categories, regimes, units }) => {
                                             <Grid container>
                                                 <InertiaLink href={route('users.edit', employee.user.uuid)} style={{width: "100%", textDecoration: "none", color: "rgba(0,0,0,0.87)"}}>
                                                 <div className="col s12" style={{ "display": "flex", "justifyContent": "center", "flexDirection": "column", "marginTop": "5px", "marginBottom": "5px" }}>
-                                                    <img id="profileImage" src={employee.user.foto ? "/img/storage/fotos_perfil/" + employee.user.foto : "/img/avatar1.png"}></img>
+                                                    <img id="profileImage" src={employee.user.foto ? "/storage/fotos_perfil/" + employee.user.foto : "/img/avatar1.png"}></img>
                                                 </div>
                                                 <div className="col s12" style={{ "display": "flex", "justifyContent": "center", "flexDirection": "column", "marginTop": "5px", "marginBottom": "5px", textAlign: "center" }}>
                                                     {employee.user.email}
+                                                    <p><b>Ver usuario</b></p>
                                                 </div>
                                                 </InertiaLink>
                                             </Grid>

@@ -197,103 +197,103 @@ const columns = [
         headerName: "",
         width:50,
         renderCell: (params) => (
-          <InertiaLink href={route('employees.edit', params.row.uuid)} style={{textDecoration: 'none', color: 'gray'}}><EditIcon/></InertiaLink>
+          <InertiaLink href={route('users.edit', params.row.uuid)} style={{textDecoration: 'none', color: 'gray'}}><EditIcon/></InertiaLink>
         ),
         sortable: false,
         editable: false,
     },
     { field: 'id', headerName: 'ID', width: 100 },
-    { field: 'matricula', headerName: 'MATRICULA', width: 120 },
-    {
-        field: 'nombre',
-        headerName: 'NOMBRE',
-        editable: false,
-        disableColumnSelector:false,
-        width: 200,
-        valueGetter: getFullName,
-        sortComparator: (v1, v2, cellParams1, cellParams2) =>
-          getFullName(cellParams1).localeCompare(getFullName(cellParams2)),
-    },
-    {
-        field: 'edad',
-        headerName: 'EDAD',
-        editable: false,
-        valueGetter: (params) => {
-            return getAge(params.getValue(params.id, "fecha_nac"))},
-        width: 100,
-    },
-    {
-        field: 'fecha_nac',
-        headerName: 'FECHA NACIMIENTO',
-        editable: false,
-        width: 170,
-        valueFormatter: (params) => {
-          return `${params.value}`;
-        },
-    },
-    {
-      field: 'sexo',
-      headerName: 'SEXO',
-      editable: false,
-      width: 100,
-      valueGetter: (params) => {
-          if(params.value == 'h') return "hombre"
-          else if (params.value == 'm') return "mujer"
-          else return "otro"
-      },
-    },
-    {
-        field: 'antiguedad',
-        headerName: 'ANTIGÜEDAD',
-        width: 120,
-    },
-    {
-        field: 'category',
-        headerName: 'CATEGORÍA',
-        width: 120,
-        valueGetter: getCategory,
-        sortComparator: (v1, v2, cellParams1, cellParams2) =>
-            getAddress(cellParams1).localeCompare(getAddress(cellParams2)),
-    },
-    {
-        field: 'unit',
-        headerName: 'UNIDAD',
-        width: 250,
-        valueGetter: getUnit,
-        sortComparator: (v1, v2, cellParams1, cellParams2) =>
-            getAddress(cellParams1).localeCompare(getAddress(cellParams2)),
-    },
-    {
-        field: 'regime',
-        headerName: 'RÉGIMEN',
-        width: 120,
-        valueGetter: getRegime,
-        sortComparator: (v1, v2, cellParams1, cellParams2) =>
-            getAddress(cellParams1).localeCompare(getAddress(cellParams2)),
-    },
-    {
-        field: 'tel',
-        headerName: 'TELÉFONO',
-        width: 120,
-    },
-    {
-        field: 'direccion',
-        headerName: 'DIRECCIÓN',
-        width: 700,
-        valueGetter: getAddress,
-        sortComparator: (v1, v2, cellParams1, cellParams2) =>
-            getAddress(cellParams1).localeCompare(getAddress(cellParams2)),
-    },
+    // { field: 'matricula', headerName: 'MATRICULA', width: 120 },
+    // {
+    //     field: 'nombre',
+    //     headerName: 'NOMBRE',
+    //     editable: false,
+    //     disableColumnSelector:false,
+    //     width: 200,
+    //     valueGetter: getFullName,
+    //     sortComparator: (v1, v2, cellParams1, cellParams2) =>
+    //       getFullName(cellParams1).localeCompare(getFullName(cellParams2)),
+    // },
+    // {
+    //     field: 'edad',
+    //     headerName: 'EDAD',
+    //     editable: false,
+    //     valueGetter: (params) => {
+    //         return getAge(params.getValue(params.id, "fecha_nac"))},
+    //     width: 100,
+    // },
+    // {
+    //     field: 'fecha_nac',
+    //     headerName: 'FECHA NACIMIENTO',
+    //     editable: false,
+    //     width: 170,
+    //     valueFormatter: (params) => {
+    //       return `${params.value}`;
+    //     },
+    // },
+    // {
+    //   field: 'sexo',
+    //   headerName: 'SEXO',
+    //   editable: false,
+    //   width: 100,
+    //   valueGetter: (params) => {
+    //       if(params.value == 'h') return "hombre"
+    //       else if (params.value == 'm') return "mujer"
+    //       else return "otro"
+    //   },
+    // },
+    // {
+    //     field: 'antiguedad',
+    //     headerName: 'ANTIGÜEDAD',
+    //     width: 120,
+    // },
+    // {
+    //     field: 'category',
+    //     headerName: 'CATEGORÍA',
+    //     width: 120,
+    //     valueGetter: getCategory,
+    //     sortComparator: (v1, v2, cellParams1, cellParams2) =>
+    //         getAddress(cellParams1).localeCompare(getAddress(cellParams2)),
+    // },
+    // {
+    //     field: 'unit',
+    //     headerName: 'UNIDAD',
+    //     width: 250,
+    //     valueGetter: getUnit,
+    //     sortComparator: (v1, v2, cellParams1, cellParams2) =>
+    //         getAddress(cellParams1).localeCompare(getAddress(cellParams2)),
+    // },
+    // {
+    //     field: 'regime',
+    //     headerName: 'RÉGIMEN',
+    //     width: 120,
+    //     valueGetter: getRegime,
+    //     sortComparator: (v1, v2, cellParams1, cellParams2) =>
+    //         getAddress(cellParams1).localeCompare(getAddress(cellParams2)),
+    // },
+    // {
+    //     field: 'tel',
+    //     headerName: 'TELÉFONO',
+    //     width: 120,
+    // },
+    // {
+    //     field: 'direccion',
+    //     headerName: 'DIRECCIÓN',
+    //     width: 700,
+    //     valueGetter: getAddress,
+    //     sortComparator: (v1, v2, cellParams1, cellParams2) =>
+    //         getAddress(cellParams1).localeCompare(getAddress(cellParams2)),
+    // },
 ];
 
-const Index = ({ employees }) => {
+const Index = ({ users }) => {
     const [searchText, setSearchText] = React.useState('');
-    const [rows, setRows] = React.useState(employees);
+    const [rows, setRows] = React.useState(users);
 
     const requestSearch = (searchValue) => {
         setSearchText(searchValue);
         const searchRegex = new RegExp(escapeRegExp(searchValue), 'i');
-        const filteredRows = employees.filter((row) => {
+        const filteredRows = users.filter((row) => {
             return Object.keys(row).some((field) => {
             return searchRegex.test(row[field] ? row[field].toString() : "");
             });
@@ -302,8 +302,8 @@ const Index = ({ employees }) => {
     };
     
     React.useEffect(() => {
-        setRows(employees);
-    }, [employees]);
+        setRows(users);
+    }, [users]);
 
     return (
         <>
@@ -311,7 +311,7 @@ const Index = ({ employees }) => {
                 <Container>
                     <div className="col contenedor s12">
                         <div className="card darken-1 cardUsers">
-                            <InertiaLink className="btn-floating btn-large waves-effect waves-light green-sind button-addUser" href={route('employees.create')}><i className="material-icons">add</i></InertiaLink>
+                            <InertiaLink className="btn-floating btn-large waves-effect waves-light green-sind button-addUser" href={route('users.create')}><i className="material-icons">add</i></InertiaLink>
                             <div className="card-content">
                                 <span className="card-title">Empleados</span>
                                 <Alertas/>
