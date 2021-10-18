@@ -174,7 +174,7 @@ const honorJusticia = ({issues}) => {
         const searchRegex = new RegExp(escapeRegExp(searchValue), 'i');
         const filteredRows = issues.filter((row) => {
           return Object.keys(row).some((field) => {
-            return searchRegex.test(row[field].toString());
+            return searchRegex.test(row[field] ? row[field].toString() : "");
           });
         });
         setRows(filteredRows);
