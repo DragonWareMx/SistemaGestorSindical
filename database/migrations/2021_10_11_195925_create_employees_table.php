@@ -17,17 +17,17 @@ class CreateEmployeesTable extends Migration
             $table->id();
             $table->uuid('uuid')->unique();
 
-            $table->string('matricula',10)->unique();
+            $table->string('matricula', 10)->unique();
 
             //datos personales
             $table->string('nombre');
             $table->string('apellido_p');
             $table->string('apellido_m')->nullable();
-            
+
             $table->date('fecha_nac');
-            $table->enum('sexo',['h','m','o']);
+            $table->enum('sexo', ['h', 'm', 'o']);
             $table->date('antiguedad');
-            
+
             //direccion
             $table->string('calle', 100)->nullable();
             $table->string('num_ext', 10)->nullable();
@@ -39,7 +39,7 @@ class CreateEmployeesTable extends Migration
             $table->string('tel', 25)->nullable();
 
 
-            //laves foraneas
+            //llaves foraneas
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
 
