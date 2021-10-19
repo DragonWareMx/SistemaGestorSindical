@@ -14,6 +14,8 @@ use App\Models\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
+use Image;
+use Illuminate\Support\Facades\Storage;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
