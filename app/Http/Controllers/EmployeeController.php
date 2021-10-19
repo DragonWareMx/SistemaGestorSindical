@@ -29,14 +29,14 @@ class EmployeeController extends Controller
      */
     public function index(Request $request)
     {
-        $employees = Employee::with('category:nombre,id', 'unit:nombre,id,regime_id', 'unit.regime:nombre,id')
+        $employees = Employee::with('category:nombre,id', 'unit:nombre,id,regime_id', 'unit.regime:nombre,id', 'user:id')
         ->when($request->deleted == "true", function ($query, $deleted) {
             return $query->onlyTrashed();
         })
         ->when($request->user == "true", function ($query, $user) {
             return $query->whereHas('user');
         })
-        ->get(['id', 'uuid', 'nombre', 'apellido_p', 'apellido_m', 'fecha_nac', 'sexo', 'antiguedad', 'estado', 'ciudad', 'colonia', 'calle', 'cp', 'num_ext', 'num_int', 'tel', 'matricula', 'category_id', 'unit_id']);
+        ->get(['id', 'uuid', 'nombre', 'apellido_p', 'apellido_m', 'fecha_nac', 'sexo', 'antiguedad', 'estado', 'ciudad', 'colonia', 'calle', 'cp', 'num_ext', 'num_int', 'tel', 'matricula', 'category_id', 'unit_id', 'user_id']);
 
         return Inertia::render('Empleados/Index', [
             'employees' => $employees
@@ -93,17 +93,22 @@ class EmployeeController extends Controller
             'regimen' => 'required|exists:regimes,nombre',
             'unidad' => 'required|exists:units,nombre',
             'categoria' => 'required|exists:categories,nombre',
-            
-            //direccion
-            'estado' => ['required','max:50','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
-            'ciudad' => ['required','max:60','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
-            'colonia' => ['required','max:100','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
-            'calle' => ['required','max:100','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
-            'numero_exterior' => ['required','max:10','regex:/^(((#|[nN][oO]|[a-zA-Z1-9À-ÖØ-öø-ÿ]*\.?) ?)?\d{1,4}(( ?[a-zA-Z0-9\-]+)+)?)$/i'],
-            'numero_interior' => ['nullable','max:10','regex:/^(((#|[nN][oO]|[a-zA-Z1-9À-ÖØ-öø-ÿ]*\.?) ?)?\d{1,4}(( ?[a-zA-Z0-9\-]+)+)?)$/i'],
-            'codigo_postal' => ['required','max:9','regex:/^\d{5}$/i'],
-            'telefono' => ['nullable','max:25','regex:/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.0-9]*$/i'],
         ]);
+        
+        //si se introdujo algun dato para la direccion se validan los campos
+        if($request->estado || $request->ciudad || $request->colonia || $request->calle || $request->numero_exterior || $request->numero_interior || $request->codigo_postal || $request->telefono){
+            $validated = $request->validate([ 
+                //direccion
+                'estado' => ['required','max:50','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
+                'ciudad' => ['required','max:60','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
+                'colonia' => ['required','max:100','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
+                'calle' => ['required','max:100','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
+                'numero_exterior' => ['required','max:10','regex:/^(((#|[nN][oO]|[a-zA-Z1-9À-ÖØ-öø-ÿ]*\.?) ?)?\d{1,4}(( ?[a-zA-Z0-9\-]+)+)?)$/i'],
+                'numero_interior' => ['nullable','max:10','regex:/^(((#|[nN][oO]|[a-zA-Z1-9À-ÖØ-öø-ÿ]*\.?) ?)?\d{1,4}(( ?[a-zA-Z0-9\-]+)+)?)$/i'],
+                'codigo_postal' => ['required','max:9','regex:/^\d{5}$/i'],
+                'telefono' => ['nullable','max:25','regex:/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.0-9]*$/i'],
+            ]);
+        }
         // El nuevo empleado es valido...
 
         //nos sirve para saber si se esta creando un nuevo usuario
@@ -329,17 +334,6 @@ class EmployeeController extends Controller
 
             return \Redirect::back()->with('error','Ha ocurrido un error al intentar registrar el empleado, inténtelo más tarde.');
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Employee  $employee
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Employee $employee)
-    {
-        //
     }
 
     /**
@@ -384,7 +378,7 @@ class EmployeeController extends Controller
      * @param  \App\Models\Employee  $employee
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Employee $employee)
+    public function update(Request $request, $id)
     {
         //valida el rol del usuario
         // \Gate::authorize('haveaccess', 'admin.perm');
@@ -399,45 +393,27 @@ class EmployeeController extends Controller
             'antiguedad' => 'nullable|date|before:tomorrow',
             
             //---informacion institucional---            
-            'matricula' => 'required|digits_between:7,10|numeric|unique:employees,matricula',
+            'matricula' => 'required|digits_between:7,10|numeric|unique:employees,matricula,'.$id,
             'regimen' => 'required|exists:regimes,nombre',
             'unidad' => 'required|exists:units,nombre',
             'categoria' => 'required|exists:categories,nombre',
-            
-            //direccion
-            'estado' => ['required','max:50','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
-            'ciudad' => ['required','max:60','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
-            'colonia' => ['required','max:100','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
-            'calle' => ['required','max:100','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
-            'numero_exterior' => ['required','max:10','regex:/^(((#|[nN][oO]|[a-zA-Z1-9À-ÖØ-öø-ÿ]*\.?) ?)?\d{1,4}(( ?[a-zA-Z0-9\-]+)+)?)$/i'],
-            'numero_interior' => ['nullable','max:10','regex:/^(((#|[nN][oO]|[a-zA-Z1-9À-ÖØ-öø-ÿ]*\.?) ?)?\d{1,4}(( ?[a-zA-Z0-9\-]+)+)?)$/i'],
-            'codigo_postal' => ['required','max:9','regex:/^\d{5}$/i'],
-            'telefono' => ['nullable','max:25','regex:/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.0-9]*$/i'],
+            'desvincular' => 'required|boolean',
         ]);
-        // El nuevo empleado es valido...
-
-        //nos sirve para saber si se esta creando un nuevo usuario
-        $user = false;
-        $newUser = null;
-        //valida los datos del usuario
-        if($request->email || $request->contrasena || $request->confirmar_contrasena || $request->rol){
-            $user = true;
-            $validated = $request->validate([
-                //---cuenta---
-                'email' => 'required|email:rfc|max:255|unique:users',
-                'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:51200',
-                'contrasena' => [
-                    'required',
-                    Password::min(8)
-                        ->mixedCase()
-                        ->letters()
-                        ->numbers()
-                        ->uncompromised(),
-                ],
-                'confirmar_contrasena' => 'required|same:contrasena',
-                'rol' => 'required|exists:roles,name'
+        //si se introdujo algun dato para la direccion se validan los campos
+        if($request->estado || $request->ciudad || $request->colonia || $request->calle || $request->numero_exterior || $request->numero_interior || $request->codigo_postal || $request->telefono){
+            $validated = $request->validate([ 
+                //direccion
+                'estado' => ['required','max:50','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
+                'ciudad' => ['required','max:60','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
+                'colonia' => ['required','max:100','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
+                'calle' => ['required','max:100','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
+                'numero_exterior' => ['required','max:10','regex:/^(((#|[nN][oO]|[a-zA-Z1-9À-ÖØ-öø-ÿ]*\.?) ?)?\d{1,4}(( ?[a-zA-Z0-9\-]+)+)?)$/i'],
+                'numero_interior' => ['nullable','max:10','regex:/^(((#|[nN][oO]|[a-zA-Z1-9À-ÖØ-öø-ÿ]*\.?) ?)?\d{1,4}(( ?[a-zA-Z0-9\-]+)+)?)$/i'],
+                'codigo_postal' => ['required','max:9','regex:/^\d{5}$/i'],
+                'telefono' => ['nullable','max:25','regex:/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.0-9]*$/i'],
             ]);
         }
+        // El nuevo empleado es valido...
 
         //variables para comprobar la subida de archivos
         $foto = null;
@@ -477,105 +453,48 @@ class EmployeeController extends Controller
                 return \Redirect::back()->with('error','Ha ocurrido un error al intentar registrar el empleado, inténtelo más tarde.');
             }
 
-            //si hay usuario se registra
-            if($user){
-                 $rol = Role::where("name", $request->rol)->get();
-
-                if($rol->isEmpty())
-                {
-                    DB::rollBack();
-                    return \Redirect::back()->with('error','Ha ocurrido un error al intentar registrar el empleado, inténtelo más tarde.');
-                }
-
-                $newUser = new User;
-
-                // ---se crea el usuario---
-                if($request->foto)
-                {
-                    //guarda la foto
-                    $foto = $request->file('foto')->store('public/fotos_perfil');
-                    $fileName = $request->file('foto')->hashName();
-                    $newUser->foto = $fileName;
-    
-                    $image = Image::make(Storage::get($foto));
-    
-                    $image->resize(1280, null, function ($constraint) {
-                        $constraint->aspectRatio();
-                        $constraint->upsize();
-                    });
-    
-                    Storage::put($foto, (string) $image->encode('jpg', 30));
-                }
-
-                $newUser->email = $request->email;
-                $newUser->password = \Hash::make($request->contrasena);
-                $newUser->uuid = Str::uuid();
-                $newUser->save();
-
-                // se asigna el rol
-                $newUser->roles()->saveMany($rol);
-            }
-
             //SE CREA EL NUEVO EMPLEADO
-            $newEmployee = new Employee;
-
-            $newEmployee->uuid = Str::uuid();
+            $employee = Employee::findOrFail($id);
             
             //---informacion personal---
-            $newEmployee->nombre = $request->nombre;
-            $newEmployee->apellido_p = $request->apellido_paterno;
-            $newEmployee->apellido_m = $request->apellido_materno;
-            $newEmployee->fecha_nac = $request->fecha_de_nacimiento;
-            $newEmployee->sexo = $request->sexo;
-            $newEmployee->antiguedad = $request->antiguedad;
+            $employee->nombre = $request->nombre;
+            $employee->apellido_p = $request->apellido_paterno;
+            $employee->apellido_m = $request->apellido_materno;
+            $employee->fecha_nac = $request->fecha_de_nacimiento;
+            $employee->sexo = $request->sexo;
+            $employee->antiguedad = $request->antiguedad;
             
             //---informacion institucional---
-            $newEmployee->matricula = $request->matricula;
-            $newEmployee->unit_id = $unidad[0]->id;
-            $newEmployee->category_id = $categoria[0]->id;
+            $employee->matricula = $request->matricula;
+            $employee->unit_id = $unidad[0]->id;
+            $employee->category_id = $categoria[0]->id;
             
             //---direccion---
-            $newEmployee->estado = $request->estado;
-            $newEmployee->ciudad = $request->ciudad;
-            $newEmployee->colonia = $request->colonia;
-            $newEmployee->calle = $request->calle;
-            $newEmployee->num_ext = $request->numero_exterior;
-            $newEmployee->num_int = $request->numero_interior;
-            $newEmployee->cp = $request->codigo_postal;
-            $newEmployee->tel = $request->telefono;
+            $employee->estado = $request->estado;
+            $employee->ciudad = $request->ciudad;
+            $employee->colonia = $request->colonia;
+            $employee->calle = $request->calle;
+            $employee->num_ext = $request->numero_exterior;
+            $employee->num_int = $request->numero_interior;
+            $employee->cp = $request->codigo_postal;
+            $employee->tel = $request->telefono;
+
+            if($request->desvincular)
+                $employee->user_id = null;
             
             //SE GUARDA EL NUEVO USUARIO
-            $newEmployee->save();
-
-            //si hay usuario se asigna el empleado
-            if($user)
-            {
-                if(!$newUser)
-                {
-                    DB::rollBack();
-                    //si hay foto se elimina del servidor
-                    if($foto)
-                    {
-                        \Storage::delete($foto);
-                    }
-
-                    return \Redirect::back()->with('error','Ha ocurrido un error al intentar registrar el empleado, inténtelo más tarde.');
-                }
-
-                //se asigna el empleado al usuario
-                $newUser->employee()->save($newEmployee);
-            }
+            $employee->save();
 
             //SE CREA EL LOG
             $newLog = new Log;
             
             $newLog->uuid = Str::uuid();
 
-            $newLog->categoria = 'create';
+            $newLog->categoria = 'update';
             $newLog->user_id = Auth::id();
             $newLog->accion =
             '{
-                users: {
+                employees: {
                     nombre: ' . $request->nombre . ',\n
                     apellido_p: ' . $request->apellido_paterno . ',\n
                     apellido_m: ' . $request->apellido_materno . ',\n
@@ -595,12 +514,12 @@ class EmployeeController extends Controller
                 '}
             }';
 
-            $newLog->descripcion = 'El usuario '.Auth::user()->email.' ha registrado un nuevo empleado con la matricula: '. $newEmployee->matricula;
+            $newLog->descripcion = 'El usuario '.Auth::user()->email.' ha editado al empleado con la matricula: '. $employee->matricula;
                 
             //SE GUARDA EL LOG
             $newLog->save();
             
-            if(!$newEmployee)
+            if(!$employee)
             {
                 DB::rollBack();
                 //si hay foto se elimina del servidor
@@ -609,7 +528,7 @@ class EmployeeController extends Controller
                     \Storage::delete($foto);
                 }
 
-                return \Redirect::back()->with('error','Ha ocurrido un error al intentar registrar el empleado, inténtelo más tarde.');
+                return \Redirect::back()->with('error','Ha ocurrido un error al intentar editar el empleado, inténtelo más tarde.');
             }
 
             if(!$newLog)
@@ -620,14 +539,14 @@ class EmployeeController extends Controller
                 {
                     \Storage::delete($foto);
                 }
-                return \Redirect::back()->with('error','Ha ocurrido un error al intentar registrar el empleado, inténtelo más tarde.');
+                return \Redirect::back()->with('error','Ha ocurrido un error al intentar editar el empleado, inténtelo más tarde.');
             }
 
             //SE HACE COMMIT
             DB::commit();
             
-            //REDIRECCIONA A LA VISTA DE USUARIOS
-            return \Redirect::route('employees.index')->with('success','El empleado ha sido registrado con éxito!');
+            //REDIRECCIONA A LA VISTA DEL EMPLEADO
+            return \Redirect::back()->with('success','El empleado ha sido editado con éxito!');
         } catch (\Exception $e) {
             DB::rollBack();
             
@@ -637,7 +556,7 @@ class EmployeeController extends Controller
                 \Storage::delete($foto);
             }
 
-            return \Redirect::back()->with('error','Ha ocurrido un error al intentar registrar el empleado, inténtelo más tarde.');
+            return \Redirect::back()->with('error','Ha ocurrido un error al intentar editar el empleado, inténtelo más tarde.');
         }
     }
 
@@ -654,7 +573,7 @@ class EmployeeController extends Controller
 
         DB::beginTransaction();
         try{
-            $employee = Employee::find($id);
+            $employee = Employee::findOrFail($id);
 
             if(!$employee){
                 DB::rollBack();
@@ -666,6 +585,8 @@ class EmployeeController extends Controller
                 DB::rollBack();
                 return \Redirect::back()->with('message','¡No puedes eliminar tu propio empleado!');
             }
+            $employee->user_id = null;
+            $employee->save();
 
             $employee->delete();
 
@@ -687,7 +608,7 @@ class EmployeeController extends Controller
             $newLog->save();
 
             DB::commit();
-            return \Redirect::route('employees.index')->with('success','¡Empleado eliminado con éxito!');
+            return \Redirect::back()->with('success','¡Empleado eliminado con éxito!');
         } catch (\Exception $e) {
             DB::rollBack();
 

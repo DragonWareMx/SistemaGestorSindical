@@ -177,6 +177,8 @@ function getRegime(params) {
 }
 
 function getAddress(params) {
+    if(!params.getValue(params.id, "calle"))
+        return null
     return `${params.getValue(params.id, "calle") || ""} ${params.getValue(params.id, "num_ext") || ""} ${params.getValue(params.id, "num_int") || ""}, colonia ${params.getValue(params.id, "colonia") || ""}, código postal ${params.getValue(params.id, "cp") || ""}, ${params.getValue(params.id, "ciudad") || ""}, ${params.getValue(params.id, "estado") || ""}`
 }
 
@@ -286,6 +288,25 @@ const columns = [
         valueGetter: getAddress,
         sortComparator: (v1, v2, cellParams1, cellParams2) =>
             getAddress(cellParams1).localeCompare(getAddress(cellParams2)),
+        valueFormatter: (params) => {
+            return params.value ?? 'Sin dirección registrada'
+        }
+    },
+    {
+        field: 'usuario',
+        headerName: 'USUARIO',
+        width: 120,
+        valueGetter: (params) => {
+            if(params.row.user)
+                return "Si"
+            else
+                return "No"
+        },
+        sortComparator: (v1, v2, cellParams1, cellParams2) =>
+            getAddress(cellParams1).localeCompare(getAddress(cellParams2)),
+        valueFormatter: (params) => {
+            return params.value
+        }
     },
 ];
 
@@ -319,7 +340,7 @@ const Index = ({ employees }) => {
                                 <span className="card-title">Empleados</span>
                                 <Alertas/>
 
-                                <div style={{ height: 400, width: '100%' }}>
+                                <div style={{ height: 1000, width: '100%' }}>
                                     <DataGrid
                                         components={{ Toolbar: QuickSearchToolbar }}
                                         rows={rows}

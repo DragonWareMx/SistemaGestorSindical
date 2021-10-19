@@ -165,8 +165,24 @@ const columns = [
         editable: false,
     },
     { field: 'id', headerName: 'ID', width: 100 },
+    {
+        field: 'foto',
+        headerName: 'FOTO',
+        sortable: false,
+        filterable: false,
+        width: 70,
+        renderCell: (params) => {
+            return(
+            <div>
+                <img src={params.value ? "/storage/fotos_perfil/" + params.value : "/img/avatar1.png"} style={{width: 40, height: 40, borderRadius: "50%", objectFit: "cover", margin: 'auto'}} />
+            </div>
+        )},
+    },
     { field: 'email', headerName: 'CORREO', width: 400 },
     { field: 'matricula', headerName: 'MATRICULA', width: 120,
+    valueGetter: (params) => {
+        return params.row.deleted_at != null ? null : params.value
+    },
     valueFormatter: (params) => {
         return params.value != null ? params.value : 'Usuario sin empleado'
     }
@@ -177,8 +193,11 @@ const columns = [
         editable: false,
         disableColumnSelector:false,
         width: 400,
+        valueGetter: (params) => {
+            return params.row.deleted_at != null ? null : params.value
+        },
         valueFormatter: (params) => {
-            return params.value != "" ? params.value : 'Usuario sin empleado'
+            return params.value ? params.value : 'Usuario sin empleado'
         }
     },
     {
@@ -191,76 +210,6 @@ const columns = [
             return dateFormat(params.value)
         }
     },
-    // {
-    //     field: 'edad',
-    //     headerName: 'EDAD',
-    //     editable: false,
-    //     valueGetter: (params) => {
-    //         return getAge(params.getValue(params.id, "fecha_nac"))},
-    //     width: 100,
-    // },
-    // {
-    //     field: 'fecha_nac',
-    //     headerName: 'FECHA NACIMIENTO',
-    //     editable: false,
-    //     width: 170,
-    //     valueFormatter: (params) => {
-    //       return `${params.value}`;
-    //     },
-    // },
-    // {
-    //   field: 'sexo',
-    //   headerName: 'SEXO',
-    //   editable: false,
-    //   width: 100,
-    //   valueGetter: (params) => {
-    //       if(params.value == 'h') return "hombre"
-    //       else if (params.value == 'm') return "mujer"
-    //       else return "otro"
-    //   },
-    // },
-    // {
-    //     field: 'antiguedad',
-    //     headerName: 'ANTIGÜEDAD',
-    //     width: 120,
-    // },
-    // {
-    //     field: 'category',
-    //     headerName: 'CATEGORÍA',
-    //     width: 120,
-    //     valueGetter: getCategory,
-    //     sortComparator: (v1, v2, cellParams1, cellParams2) =>
-    //         getAddress(cellParams1).localeCompare(getAddress(cellParams2)),
-    // },
-    // {
-    //     field: 'unit',
-    //     headerName: 'UNIDAD',
-    //     width: 250,
-    //     valueGetter: getUnit,
-    //     sortComparator: (v1, v2, cellParams1, cellParams2) =>
-    //         getAddress(cellParams1).localeCompare(getAddress(cellParams2)),
-    // },
-    // {
-    //     field: 'regime',
-    //     headerName: 'RÉGIMEN',
-    //     width: 120,
-    //     valueGetter: getRegime,
-    //     sortComparator: (v1, v2, cellParams1, cellParams2) =>
-    //         getAddress(cellParams1).localeCompare(getAddress(cellParams2)),
-    // },
-    // {
-    //     field: 'tel',
-    //     headerName: 'TELÉFONO',
-    //     width: 120,
-    // },
-    // {
-    //     field: 'direccion',
-    //     headerName: 'DIRECCIÓN',
-    //     width: 700,
-    //     valueGetter: getAddress,
-    //     sortComparator: (v1, v2, cellParams1, cellParams2) =>
-    //         getAddress(cellParams1).localeCompare(getAddress(cellParams2)),
-    // },
 ];
 
 const Index = ({ users }) => {
@@ -293,7 +242,7 @@ const Index = ({ users }) => {
                                 <span className="card-title">Usuarios</span>
                                 <Alertas/>
 
-                                <div style={{ height: 400, width: '100%' }}>
+                                <div style={{ height: 1000, width: '100%' }}>
                                     <DataGrid
                                         components={{ Toolbar: QuickSearchToolbar }}
                                         rows={rows}

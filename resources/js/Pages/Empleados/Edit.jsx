@@ -49,6 +49,8 @@ const Edit = ({ employee, categories, regimes, units }) => {
 
         created_at: parseFecha(employee.created_at),
         deleted_at: employee.deleted_at,
+
+        desvincular: false,
     })
 
     //actualiza los hooks cada vez que se modifica un input
@@ -178,6 +180,13 @@ const Edit = ({ employee, categories, regimes, units }) => {
             Inertia.reload({ only: ['units'], data: { regime: values.regimen } })
     }, [])
 
+    function desvincular(){
+        setValues(values => ({
+            ...values,
+            desvincular: !values.desvincular,
+        }))
+    }
+
     return (
         <>
             <div className="row">
@@ -275,10 +284,10 @@ const Edit = ({ employee, categories, regimes, units }) => {
                                             }
                                         </div>
 
-                                        <p className="titles-sub" style={{ "margin": "1em 0px 1em 3%", "marginBottom":"20px"}}>DIRECCIÓN</p>
+                                        <p className="titles-sub" style={{ "margin": "1em 0px 1em 3%", "marginBottom":"20px"}}>DIRECCIÓN (OPCIONAL)</p>
 
                                         <div className="input-field col s12 ">
-                                            <input  maxLength="50" id="estado" type="text" className={errors.estado ? "validate form-control invalid" : "validate"} name="estado" value={values.estado} required autoComplete="estado" onChange={handleChange} />
+                                            <input  maxLength="50" id="estado" type="text" className={errors.estado ? "validate form-control invalid" : "validate"} name="estado" value={values.estado} autoComplete="estado" onChange={handleChange} />
                                             <label htmlFor="estado">Estado</label>
                                             {
                                                 errors.estado &&
@@ -287,7 +296,7 @@ const Edit = ({ employee, categories, regimes, units }) => {
                                         </div>
 
                                         <div className="input-field col s6 input-50-re">
-                                            <input  maxLength="60" id="ciudad" type="text" className={errors.ciudad ? "validate form-control invalid" : "validate"} name="ciudad" value={values.ciudad} required autoComplete="ciudad" onChange={handleChange} />
+                                            <input  maxLength="60" id="ciudad" type="text" className={errors.ciudad ? "validate form-control invalid" : "validate"} name="ciudad" value={values.ciudad} autoComplete="ciudad" onChange={handleChange} />
                                             <label htmlFor="ciudad">Ciudad</label>
                                             {
                                                 errors.ciudad &&
@@ -296,7 +305,7 @@ const Edit = ({ employee, categories, regimes, units }) => {
                                         </div>
 
                                         <div className="input-field col s6 input-50-re">
-                                            <input  maxLength="100" id="colonia" type="text" className={errors.colonia ? "validate form-control invalid" : "validate"} name="colonia" value={values.colonia} required autoComplete="colonia" onChange={handleChange} />
+                                            <input  maxLength="100" id="colonia" type="text" className={errors.colonia ? "validate form-control invalid" : "validate"} name="colonia" value={values.colonia} autoComplete="colonia" onChange={handleChange} />
                                             <label htmlFor="colonia">Colonia</label>
                                             {
                                                 errors.colonia &&
@@ -305,7 +314,7 @@ const Edit = ({ employee, categories, regimes, units }) => {
                                         </div>
 
                                         <div className="input-field col s6 input-50-re">
-                                            <input  maxLength="100" id="calle" type="text" className={errors.calle ? "validate form-control invalid" : "validate"} name="calle" value={values.calle} required autoComplete="calle" onChange={handleChange} />
+                                            <input  maxLength="100" id="calle" type="text" className={errors.calle ? "validate form-control invalid" : "validate"} name="calle" value={values.calle} autoComplete="calle" onChange={handleChange} />
                                             <label htmlFor="calle">Calle</label>
                                             {
                                                 errors.calle &&
@@ -314,7 +323,7 @@ const Edit = ({ employee, categories, regimes, units }) => {
                                         </div>
 
                                         <div className="input-field col s6 input-50-re">
-                                            <input  maxLength="9" id="codigo_postal" type="text" className={errors.codigo_postal ? "validate form-control invalid" : "validate"} name="codigo_postal" value={values.codigo_postal} required autoComplete="codigo_postal" onChange={handleChange} />
+                                            <input  maxLength="9" id="codigo_postal" type="text" className={errors.codigo_postal ? "validate form-control invalid" : "validate"} name="codigo_postal" value={values.codigo_postal} autoComplete="codigo_postal" onChange={handleChange} />
                                             <label htmlFor="codigo_postal">Código Postal</label>
                                             {
                                                 errors.codigo_postal &&
@@ -323,7 +332,7 @@ const Edit = ({ employee, categories, regimes, units }) => {
                                         </div>
 
                                         <div className="input-field col s6 input-50-re">
-                                            <input  maxLength="10" id="numero_exterior" type="text" className={errors.numero_exterior ? "validate form-control invalid" : "validate"} name="numero_exterior" value={values.numero_exterior} required autoComplete="numero_exterior" onChange={handleChange} />
+                                            <input  maxLength="10" id="numero_exterior" type="text" className={errors.numero_exterior ? "validate form-control invalid" : "validate"} name="numero_exterior" value={values.numero_exterior} autoComplete="numero_exterior" onChange={handleChange} />
                                             <label htmlFor="numero_exterior">No. Exterior</label>
                                             {
                                                 errors.numero_exterior &&
@@ -435,6 +444,7 @@ const Edit = ({ employee, categories, regimes, units }) => {
                                         <p className="titles-sub" style={{ "margin": "1em 0px 1em 3%", "marginBottom":"20px" }}>USUARIO</p>
 
                                         {employee.user ?
+                                        <>
                                             <Grid container>
                                                 <InertiaLink href={route('users.edit', employee.user.uuid)} style={{width: "100%", textDecoration: "none", color: "rgba(0,0,0,0.87)"}}>
                                                 <div className="col s12" style={{ "display": "flex", "justifyContent": "center", "flexDirection": "column", "marginTop": "5px", "marginBottom": "5px" }}>
@@ -446,6 +456,19 @@ const Edit = ({ employee, categories, regimes, units }) => {
                                                 </div>
                                                 </InertiaLink>
                                             </Grid>
+
+                                            <p style={{"marginTop":"0px","fontFamily":"Montserrat","fontSize":"13px",color:"rgb(159, 157, 157)", cursor:"pointer"}}>¿Desvincular cuenta?</p>
+                                                                                        
+                                            <div className="switch"  style={{"marginBottom":"15px"}}>
+                                                <label>
+                                                No
+                                                <input id="cambiar_empleado" type="checkbox"  checked={values.desvincular_cuenta} onChange={desvincular} />
+                                                <span className="lever"></span>
+                                                Sí
+                                                </label>
+                                            </div>
+                                        </>
+
                                         :
                                             <Grid container style={{padding: "0 .75rem"}}>
                                                 Este empleado no tiene usuario

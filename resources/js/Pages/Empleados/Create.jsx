@@ -258,10 +258,10 @@ const Create = ({ categories, regimes, units, roles }) => {
                                         }
                                     </div>
 
-                                    <p className="titles-sub" style={{ "margin": "1em 0px 1em 3%" }}>DIRECCIÓN</p>
+                                    <p className="titles-sub" style={{ "margin": "1em 0px 1em 3%" }}>DIRECCIÓN (OPCIONAL)</p>
 
                                     <div className="input-field col s12 ">
-                                        <input  maxLength="50" id="estado" type="text" className={errors.estado ? "validate form-control invalid" : "validate"} name="estado" value={values.estado} required autoComplete="estado" onChange={handleChange} />
+                                        <input  maxLength="50" id="estado" type="text" className={errors.estado ? "validate form-control invalid" : "validate"} name="estado" value={values.estado} autoComplete="estado" onChange={handleChange} />
                                         <label htmlFor="estado">Estado</label>
                                         {
                                             errors.estado &&
@@ -270,7 +270,7 @@ const Create = ({ categories, regimes, units, roles }) => {
                                     </div>
 
                                     <div className="input-field col s6 input-50-re">
-                                        <input  maxLength="60" id="ciudad" type="text" className={errors.ciudad ? "validate form-control invalid" : "validate"} name="ciudad" value={values.ciudad} required autoComplete="ciudad" onChange={handleChange} />
+                                        <input  maxLength="60" id="ciudad" type="text" className={errors.ciudad ? "validate form-control invalid" : "validate"} name="ciudad" value={values.ciudad} autoComplete="ciudad" onChange={handleChange} />
                                         <label htmlFor="ciudad">Ciudad</label>
                                         {
                                             errors.ciudad &&
@@ -279,7 +279,7 @@ const Create = ({ categories, regimes, units, roles }) => {
                                     </div>
 
                                     <div className="input-field col s6 input-50-re">
-                                        <input  maxLength="100" id="colonia" type="text" className={errors.colonia ? "validate form-control invalid" : "validate"} name="colonia" value={values.colonia} required autoComplete="colonia" onChange={handleChange} />
+                                        <input  maxLength="100" id="colonia" type="text" className={errors.colonia ? "validate form-control invalid" : "validate"} name="colonia" value={values.colonia} autoComplete="colonia" onChange={handleChange} />
                                         <label htmlFor="colonia">Colonia</label>
                                         {
                                             errors.colonia &&
@@ -288,7 +288,7 @@ const Create = ({ categories, regimes, units, roles }) => {
                                     </div>
 
                                     <div className="input-field col s6 input-50-re">
-                                        <input  maxLength="100" id="calle" type="text" className={errors.calle ? "validate form-control invalid" : "validate"} name="calle" value={values.calle} required autoComplete="calle" onChange={handleChange} />
+                                        <input  maxLength="100" id="calle" type="text" className={errors.calle ? "validate form-control invalid" : "validate"} name="calle" value={values.calle} autoComplete="calle" onChange={handleChange} />
                                         <label htmlFor="calle">Calle</label>
                                         {
                                             errors.calle &&
@@ -297,7 +297,7 @@ const Create = ({ categories, regimes, units, roles }) => {
                                     </div>
 
                                     <div className="input-field col s6 input-50-re">
-                                        <input  maxLength="9" id="codigo_postal" type="text" className={errors.codigo_postal ? "validate form-control invalid" : "validate"} name="codigo_postal" value={values.codigo_postal} required autoComplete="codigo_postal" onChange={handleChange} />
+                                        <input  maxLength="9" id="codigo_postal" type="text" className={errors.codigo_postal ? "validate form-control invalid" : "validate"} name="codigo_postal" value={values.codigo_postal} autoComplete="codigo_postal" onChange={handleChange} />
                                         <label htmlFor="codigo_postal">Código Postal</label>
                                         {
                                             errors.codigo_postal &&
@@ -306,7 +306,7 @@ const Create = ({ categories, regimes, units, roles }) => {
                                     </div>
 
                                     <div className="input-field col s6 input-50-re">
-                                        <input  maxLength="10" id="numero_exterior" type="text" className={errors.numero_exterior ? "validate form-control invalid" : "validate"} name="numero_exterior" value={values.numero_exterior} required autoComplete="numero_exterior" onChange={handleChange} />
+                                        <input  maxLength="10" id="numero_exterior" type="text" className={errors.numero_exterior ? "validate form-control invalid" : "validate"} name="numero_exterior" value={values.numero_exterior} autoComplete="numero_exterior" onChange={handleChange} />
                                         <label htmlFor="numero_exterior">No. Exterior</label>
                                         {
                                             errors.numero_exterior &&

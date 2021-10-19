@@ -31,7 +31,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $users = User::leftJoin('employees', 'users.id', '=', 'employees.user_id')
-                    ->select('users.id', 'users.uuid','email', 'matricula', 'users.created_at')
+                    ->select('users.id', 'users.uuid','email', 'matricula', 'users.created_at', 'employees.deleted_at', 'foto')
                     ->selectRaw("CONCAT_WS(' ', nombre , apellido_p , apellido_m) AS nombre")
                     ->when($request->deleted == "true", function ($query, $deleted) {
                         return $query->onlyTrashed();
@@ -223,7 +223,7 @@ class UserController extends Controller
                     'employee.unit.regime:id,nombre'
                 ])
                 ->where('uuid', $uuid)
-                ->select('id', 'uuid', 'email', 'foto', 'created_at')
+                ->select('id', 'uuid', 'email', 'foto', 'created_at', 'deleted_at')
                 ->firstOrFail(),
             'roles'=> fn () => Role::select('name')->get(),
             'employees' => fn () => Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')
@@ -295,11 +295,17 @@ class UserController extends Controller
             if($rol->isEmpty())
             {
                 DB::rollBack();
-                return \Redirect::back()->with('error','Ha ocurrido un error al intentar registrar el usuario, inténtelo más tarde.');
+                return \Redirect::back()->with('error','Ha ocurrido un error al intentar editar el usuario, inténtelo más tarde.');
             }
 
             //SE CREA EL NUEVO USUARIO
-            $user = User::find($id);
+            $user = User::findOrFail($id);
+
+            //guarda el empleado
+            if(!is_null($request->empleado)){
+                $employee = Employee::findOrFail($request->empleado);
+                $user->employee()->save($employee);
+            }
 
             //guarda la foto
             if(!is_null($request->file('foto'))){
@@ -309,36 +315,6 @@ class UserController extends Controller
                 $foto = $request->file('foto')->store('public/fotos_perfil');
                 $user->foto = $request->file('foto')->hashName();
             }
-            
-            //---informacion personal---
-            $user->nombre = $request->nombre;
-            $user->apellido_p = $request->apellido_paterno;
-            $user->apellido_m = $request->apellido_materno;
-            $user->fecha_nac = $request->fecha_de_nacimiento;
-            $user->sexo = $request->sexo;
-            
-            //---informacion institucional---
-            $user->matricula = $request->matricula;
-            $user->unit_id = $unidad[0]->id;
-            $user->category_id = $categoria[0]->id;
-
-            //guarda el tarjeton de pago
-            if(!is_null($request->file('tarjeton_de_pago'))){
-                if($user->tarjeton_pago){
-                    \Storage::delete('public/tarjetones_pago/'.$user->tarjeton_pago);
-                }
-                $tarjeton_pago = $request->file('tarjeton_de_pago')->store('public/tarjetones_pago');
-                $user->tarjeton_pago = $request->file('tarjeton_de_pago')->hashName();
-            }
-            
-            //---direccion---
-            $user->estado = $request->estado;
-            $user->ciudad = $request->ciudad;
-            $user->colonia = $request->colonia;
-            $user->calle = $request->calle;
-            $user->num_ext = $request->numero_exterior;
-            $user->num_int = $request->numero_interior;
-            $user->cp = $request->codigo_postal;
             
             //---cuenta---
             $user->email = $request->email;
@@ -355,28 +331,15 @@ class UserController extends Controller
 
             //SE CREA EL LOG
             $newLog = new Log;
-            
+            $newLog->uuid = Str::uuid();
             $newLog->categoria = 'update';
             $newLog->user_id = Auth::id();
             $newLog->accion =
             '{
                 users: {
-                    nombre: ' . $request->nombre . ',\n
-                    apellido_p: ' . $request->apellido_paterno . ',\n
-                    apellido_m: ' . $request->apellido_materno . ',\n
-                    fecha_nac: ' . $request->fecha_de_nacimiento . ',\n
-                    sexo: '. $request->sexo. ',\n
-                    matricula: ' . $request->matricula . ',\n
-                    unit_id: '.$unidad[0]->id. ',\n
-                    category_id: ' . $categoria[0]->id . ',\n
-                    estado: ' . $request->estado . ',\n
-                    ciudad: ' . $request->ciudad . ',\n
-                    colonia: ' . $request->colonia . ',\n
-                    calle: ' . $request->calle . ',\n
-                    num_ext: ' . $request->numero_exterior . ',\n
-                    num_int: ' . $request->numero_interior . ',\n
-                    cp: ' . $request->codigo_postal . ',\n
-                    email: ' . $request->email .
+                    email: ' . $request->email .',\n
+                    rol: ' . $request->rol . ',\n
+                    empleado: ' . $request->empleado .
                 '}
             }';
 
@@ -394,12 +357,7 @@ class UserController extends Controller
                 {
                     \Storage::delete($foto);
                 }
-                //si hay tarjeton se elimina del servidor
-                if($tarjeton_pago)
-                {
-                    \Storage::delete($tarjeton_pago);
-                }
-                return \Redirect::back()->with('error','Ha ocurrido un error al intentar registrar el usuario, inténtelo más tarde.');
+                return \Redirect::back()->with('error','Ha ocurrido un error al intentar editar el usuario, inténtelo más tarde.');
             }
             if(!$newLog)
             {
@@ -409,12 +367,7 @@ class UserController extends Controller
                 {
                     \Storage::delete($foto);
                 }
-                //si hay tarjeton se elimina del servidor
-                if($tarjeton_pago)
-                {
-                    \Storage::delete($tarjeton_pago);
-                }
-                return \Redirect::back()->with('error','Ha ocurrido un error al intentar registrar el usuario, inténtelo más tarde.');
+                return \Redirect::back()->with('error','Ha ocurrido un error al intentar editar el usuario, inténtelo más tarde.');
             }
 
             //SE HACE COMMIT
@@ -436,7 +389,7 @@ class UserController extends Controller
                 \Storage::delete($tarjeton_pago);
             }
 
-            return \Redirect::back()->with('error','Ha ocurrido un error al intentar registrar el usuario, inténtelo más tarde.');
+            return \Redirect::back()->with('error','Ha ocurrido un error al intentar editar el usuario, inténtelo más tarde.');
         }
     }
 
@@ -453,7 +406,7 @@ class UserController extends Controller
 
         DB::beginTransaction();
         try{
-            $user = User::find($id);
+            $user = User::findOrFail($id);
 
             if(!$user){
                 DB::rollBack();
@@ -469,7 +422,7 @@ class UserController extends Controller
 
             //SE CREA EL LOG
             $newLog = new Log;
-
+            $newLog->uuid = Str::uuid();
             $newLog->categoria = 'delete';
             $newLog->user_id = Auth::id();
             $newLog->accion =
@@ -484,7 +437,7 @@ class UserController extends Controller
             $newLog->save();
 
             DB::commit();
-            return \Redirect::route('usuarios')->with('success','¡Usuario eliminado con éxito!');
+            return \Redirect::back()->with('success','¡Usuario eliminado con éxito!');
             
         } catch (\Exception $e) {
             DB::rollBack();
@@ -521,7 +474,7 @@ class UserController extends Controller
 
             //SE CREA EL LOG
             $newLog = new Log;
-
+            $newLog->uuid = Str::uuid();
             $newLog->categoria = 'restore';
             $newLog->user_id = Auth::id();
             $newLog->accion =
@@ -540,7 +493,6 @@ class UserController extends Controller
             
         } catch (\Exception $e) {
             DB::rollBack();
-            // dd($e);
             return \Redirect::back()->with('error','Ha ocurrido un error al intentar restaurar el usuario, inténtelo más tarde.');
         }
     }
