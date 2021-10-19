@@ -18,7 +18,8 @@ class ConflictController extends Controller
     public function index()
     {
         $conflicts = Conflict::
-            leftJoin('conflict_employee','conflicts.id','conflict_employee.conflict_id')
+            where('tipo','conflictos')
+            ->leftJoin('conflict_employee','conflicts.id','conflict_employee.conflict_id')
             ->leftJoin('employees','conflict_employee.employee_id','employees.id')
             ->select('num_oficio','employees.nombre','inicio_sancion','termino_sancion','matricula','apellido_p','conflict_employee.id as id','conflicts.uuid as uuid')
             ->get();
@@ -26,6 +27,21 @@ class ConflictController extends Controller
     }
 
     public function conflict($uuid){
+        dd($uuid);
+    }
+
+    public function secretariaInterior()
+    {
+        $conflicts = Conflict::
+            where('tipo','secretaria')
+            ->leftJoin('conflict_employee','conflicts.id','conflict_employee.conflict_id')
+            ->leftJoin('employees','conflict_employee.employee_id','employees.id')
+            ->select('num_oficio','employees.nombre','inicio_sancion','termino_sancion','matricula','apellido_p','conflict_employee.id as id','conflicts.uuid as uuid')
+            ->get();
+        return Inertia::render('Oficinas/secretariaInterior',['conflicts' => $conflicts]);
+    }
+
+    public function secretariaInteriorConflict($uuid){
         dd($uuid);
     }
 

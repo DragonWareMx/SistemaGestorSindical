@@ -51,7 +51,16 @@ Route::get('/honor-y-justicia/{id}', [App\Http\Controllers\issueController::clas
 //Conflictos
 Route::get('/conflictos', [App\Http\Controllers\conflictController::class, 'index'])->name('conflicts');
 Route::get('/conflictos/{id}', [App\Http\Controllers\conflictController::class, 'conflict'])->name('conflicts.conflict');
+//Secretaria del Interior
+Route::get('/secretaria-del-interior', [App\Http\Controllers\conflictController::class, 'secretariaInterior'])->name('secretariaInterior');
+Route::get('/secretaria-del-interior/{id}', [App\Http\Controllers\conflictController::class, 'secretariaInteriorConflict'])->name('secretariaInterior.conflict');
 
 Auth::routes(['register' => false]);
 
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+//--------PERFIL--------
+Route::get('/perfil', [App\Http\Controllers\PerfilController::class, 'index'])->name('perfil');
+Route::get('/perfil/publico/{id}', [App\Http\Controllers\PerfilController::class, 'verPerfil'])->name('perfil.public');
+Route::get('/perfil/configuracion', [App\Http\Controllers\PerfilController::class, 'edit'])->name('perfil.edit');
+Route::patch('/perfil/configuracion', [App\Http\Controllers\PerfilController::class, 'update'])->name('perfil.update');
