@@ -77,18 +77,11 @@ function QuickSearchToolbar(props) {
 const classes = useStyles();
 
 const [checked, setChecked] = React.useState(false);
-const [checkedU, setCheckedU] = React.useState(false);
   
 const handleChange = (event) => {
     setChecked(event.target.checked);
 
     Inertia.reload({data: {deleted: event.target.checked}})
-};
-
-const handleChangeU = (event) => {
-    setCheckedU(event.target.checked);
-
-    Inertia.reload({data: {user: event.target.checked}})
 };
 
 return (
@@ -109,19 +102,6 @@ return (
                     />
                 }
                 label="Ver eliminados"
-                />
-            </Grid>
-            <Grid item>
-                <FormControlLabel
-                control={
-                    <Checkbox
-                    checked={checkedU}
-                    onChange={handleChangeU}
-                    name="checkedB"
-                    color="primary"
-                    />
-                }
-                label="Ver empleados con usuario"
                 />
             </Grid>
         </Grid>
@@ -157,38 +137,20 @@ QuickSearchToolbar.propTypes = {
     value: PropTypes.string.isRequired,
 };
 
-function getFullName(params) {
-    return `${params.value || ""} ${
-        params.getValue(params.id, "apellido_p") || ""
-    } ${params.getValue(params.id, "apellido_m") || ""}`
-}
-
-
-function getCategory(params) {
-    return `${params.row.category ? params.row.category.nombre || "Sin categoría" : "Sin categoría"}`
-}
-
-function getUnit(params) {
-    return `${params.row.unit ? params.row.unit.nombre || "Sin unidad" : "Sin unidad"}`
-}
-
-function getRegime(params) {
-    return `${params.row.unit ? params.row.unit.regime ? params.row.unit.regime.nombre || "Sin régimen" : "Sin régimen" : "Sin régimen"}`
-}
-
-function getAddress(params) {
-    return `${params.getValue(params.id, "calle") || ""} ${params.getValue(params.id, "num_ext") || ""} ${params.getValue(params.id, "num_int") || ""}, colonia ${params.getValue(params.id, "colonia") || ""}, código postal ${params.getValue(params.id, "cp") || ""}, ${params.getValue(params.id, "ciudad") || ""}, ${params.getValue(params.id, "estado") || ""}`
-}
-
-function getAge(dateString) {
-    var today = new Date();
-    var birthDate = new Date(dateString);
-    var age = today.getFullYear() - birthDate.getFullYear();
-    var m = today.getMonth() - birthDate.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-        age--;
-    }
-    return age;
+function dateFormat(date) {
+    if(!date)
+        return 'Sin fecha'
+    var date = new Date(date)
+    var month = date.getMonth()
+    if(month < 10) month = '0'+month
+    var day = date.getDate()
+    if(day < 10) day= '0'+day
+    var year = date.getFullYear()
+    var hours = date.getHours();
+    if(hours < 10) hours= '0'+hours
+    var minutes = date.getMinutes();
+    if(minutes < 10) minutes= '0'+minutes
+    return day + "/" + month + "/" + year + " " + hours + ":" + minutes 
 }
 
 const columns = [
@@ -203,17 +165,32 @@ const columns = [
         editable: false,
     },
     { field: 'id', headerName: 'ID', width: 100 },
-    // { field: 'matricula', headerName: 'MATRICULA', width: 120 },
-    // {
-    //     field: 'nombre',
-    //     headerName: 'NOMBRE',
-    //     editable: false,
-    //     disableColumnSelector:false,
-    //     width: 200,
-    //     valueGetter: getFullName,
-    //     sortComparator: (v1, v2, cellParams1, cellParams2) =>
-    //       getFullName(cellParams1).localeCompare(getFullName(cellParams2)),
-    // },
+    { field: 'email', headerName: 'CORREO', width: 400 },
+    { field: 'matricula', headerName: 'MATRICULA', width: 120,
+    valueFormatter: (params) => {
+        return params.value != null ? params.value : 'Usuario sin empleado'
+    }
+    },
+    {
+        field: 'nombre',
+        headerName: 'NOMBRE',
+        editable: false,
+        disableColumnSelector:false,
+        width: 400,
+        valueFormatter: (params) => {
+            return params.value != "" ? params.value : 'Usuario sin empleado'
+        }
+    },
+    {
+        field: 'created_at',
+        headerName: 'FECHA REGISTRO',
+        editable: false,
+        disableColumnSelector:false,
+        width: 400,
+        valueFormatter: (params) => {
+            return dateFormat(params.value)
+        }
+    },
     // {
     //     field: 'edad',
     //     headerName: 'EDAD',
@@ -313,7 +290,7 @@ const Index = ({ users }) => {
                         <div className="card darken-1 cardUsers">
                             <InertiaLink className="btn-floating btn-large waves-effect waves-light green-sind button-addUser" href={route('users.create')}><i className="material-icons">add</i></InertiaLink>
                             <div className="card-content">
-                                <span className="card-title">Empleados</span>
+                                <span className="card-title">Usuarios</span>
                                 <Alertas/>
 
                                 <div style={{ height: 400, width: '100%' }}>
@@ -339,6 +316,6 @@ const Index = ({ users }) => {
     )
 }
 
-Index.layout = page => <Layout children={page} title="Escuela Sindical - Empleados" pageTitle="EMPLEADOS" />
+Index.layout = page => <Layout children={page} title="Escuela Sindical - Usuarios" pageTitle="USUARIOS" />
 
 export default Index

@@ -13,14 +13,63 @@ import { Inertia } from '@inertiajs/inertia';
 import { Container } from '@mui/material';
 import Grid from '@mui/material/Grid';
 
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
+import { createStyles, makeStyles } from '@mui/styles';
+import { createTheme } from '@mui/material/styles';
+
 //COMPONENTES
 import Alertas from '../../components/common/Alertas';
 import ModalEliminar from '../../components/common/ModalEliminar';
 import ModalRestaurar from '../../components/common/ModalRestaurar';
 
-const Edit = ({ user, roles }) => {
+const defaultTheme = createTheme();
+const useStyles = makeStyles(
+(theme) =>
+    createStyles({
+    root: {
+        padding: theme.spacing(0.5, 0.5, 0),
+        justifyContent: 'space-between',
+        display: 'flex',
+        alignItems: 'flex-start',
+        flexWrap: 'wrap',
+    },
+    textField: {
+        [theme.breakpoints.down('xs')]: {
+        width: '100%',
+        },
+        margin: theme.spacing(1, 0.5, 1.5),
+        '& .MuiSvgIcon-root': {
+        marginRight: theme.spacing(0.5),
+        },
+        '& .MuiInput-underline:before': {
+        borderBottom: `none`,
+        },
+        '& .MuiInput-underline:after': {
+            borderBottom: "none",
+        },
+        '& .MuiInput-underline:focus': {
+            borderBottom: "none",
+        },
+        '& .MuiInput-underline:hover': {
+            borderBottom: "none",
+        },
+        '& .MuiInputBase-root-MuiInput-root:hover:not(.Mui-disabled):before' : {
+            borderBottom: "none",
+        },
+        '& .css-ghsjzk-MuiInputBase-root-MuiInput-root:hover:not(.Mui-disabled):before' : {
+            borderBottom: "none",
+        },
+    },
+    }),
+{ defaultTheme },
+);
+
+const Edit = ({ user, roles, employees }) => {
     //errores de la validacion de laravel
     const { errors } = usePage().props
+
+    const classes = useStyles();
 
     //valores para formulario
     const [values, setValues] = useState({
@@ -34,6 +83,9 @@ const Edit = ({ user, roles }) => {
 
         created_at: parseFecha(user.created_at),
         deleted_at: user.deleted_at,
+
+        cambiar_empleado: false,
+        cambiar_contrasena: false
     })
 
     //actualiza los hooks cada vez que se modifica un input
@@ -172,6 +224,21 @@ const Edit = ({ user, roles }) => {
         }
     }
 
+    function cambiarEmpleado(){
+        setValues(values => ({
+            ...values,
+            cambiar_empleado: !values.cambiar_empleado,
+        }))
+
+        if(!values.cambiar_empleado == false)
+        {
+            setValues(values => ({
+                ...values,
+                empleado: null,
+            }))
+        }
+    }
+
     //para mostrar la fecha de registro
     function parseFecha(date) {
         var d = new Date(date),
@@ -193,6 +260,19 @@ const Edit = ({ user, roles }) => {
         if (values.regimen)
             Inertia.reload({ only: ['units'], data: { regime: values.regimen } })
     }, [])
+
+    const defaultProps = {
+        options: employees,
+        getOptionLabel: (option) => option.matricula + " " + option.nombre + " " + option.apellido_p + " " + (option.apellido_m ? option.apellido_m : ""),
+        onChange: (event, newValue) => {
+            setValues({
+                ...values,
+                empleado: newValue
+                    ? newValue.id
+                    : null,
+            });
+        }
+    };
 
     return (
         <>
@@ -345,6 +425,32 @@ const Edit = ({ user, roles }) => {
                                                 <Grid container style={{padding: "0 .75rem"}}>
                                                     Este usuario no tiene ningún empleado asociado.
                                                 </Grid>
+                                            }
+
+                                            <p style={{"marginTop":"0px","fontFamily":"Montserrat","fontSize":"13px",color:"rgb(159, 157, 157)", cursor:"pointer"}}>¿Cambiar empleado?</p>
+                                            
+                                            <div className="switch"  style={{"marginBottom":"15px"}}>
+                                                <label>
+                                                No
+                                                <input id="cambiar_empleado" type="checkbox"  checked={values.cambiar_empleado} onChange={cambiarEmpleado} />
+                                                <span className="lever"></span>
+                                                Sí
+                                                </label>
+                                            </div>
+
+                                            {values.cambiar_empleado &&
+                                            <>
+                                                <Autocomplete
+                                                    {...defaultProps}
+                                                    renderInput={(params) => (
+                                                    <TextField {...params} id="empleado" className={classes.textField} label="Empleado" variant="standard" />
+                                                    )}
+                                                />
+                                                {
+                                                    errors.contrasena &&
+                                                    <div className="helper-text" data-error={errors.contrasena} style={{ "marginBottom": "10px" }}>{errors.contrasena}</div>
+                                                }
+                                            </>
                                             }
                                     </div>
                                 </div>

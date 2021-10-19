@@ -275,6 +275,9 @@ const columns = [
         field: 'tel',
         headerName: 'TELÉFONO',
         width: 120,
+        valueFormatter: (params) => {
+            return params.value ?? 'Sin teléfono'
+        }
     },
     {
         field: 'direccion',
