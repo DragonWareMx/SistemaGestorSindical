@@ -96,13 +96,13 @@ export default function MenuLateral() {
           </li>
           {/* {auth && auth.roles && auth.roles.length > 0 && auth.roles[0].name != "Administrador" && */}
           <li>
-            <InertiaLink href="" className="icono-menu" className={isUrl("usuarios") ? "icono-menu current-menu-text" : "icono-menu"}>
+            <InertiaLink href={route('users.index')} className="icono-menu" className={isUrl("usuarios") ? "icono-menu current-menu-text" : "icono-menu"}>
               <i className={isUrl("usuarios") ? "material-icons icono-menu current-menu" : "material-icons icono-menu"}>people</i>
               Usuarios
             </InertiaLink>
           </li>
           <li>
-            <InertiaLink href="" className="icono-menu" className={isUrl("empleados") ? "icono-menu current-menu-text" : "icono-menu"}>
+            <InertiaLink href={route('employees.index')} className="icono-menu" className={isUrl("empleados") ? "icono-menu current-menu-text" : "icono-menu"}>
               <i className={isUrl("empleados") ? "material-icons icono-menu current-menu" : "material-icons icono-menu"}>badge</i>
               Empleados
             </InertiaLink>
@@ -114,7 +114,7 @@ export default function MenuLateral() {
           {/* HONOR Y JUSTICIA */}
           {/* {auth && auth.roles && auth.roles.length > 0 && auth.roles[0].name == "Administrador" && */}
           <li>
-            <InertiaLink href="" className={isUrl("reportes") ? "icono-menu current-menu-text" : "icono-menu"}>
+            <InertiaLink href={route('honor')} className={isUrl("reportes") ? "icono-menu current-menu-text" : "icono-menu"}>
               <i className={isUrl("reportes") ? "material-icons icono-menu current-menu" : "material-icons icono-menu"}>maps_home_work</i>Honor y Justicia
             </InertiaLink>
           </li>
@@ -236,7 +236,7 @@ export default function MenuLateral() {
         {/* OFICINAS */}
         {/* HONOR Y JUSTICIA */}
         <div className="col s12">
-          <InertiaLink href="" className="icono-menu">
+          <InertiaLink href={route('honor')} className="icono-menu">
             <i className={isUrl("cursos") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Honor y Justicia">maps_home_work</i>
           </InertiaLink>
         </div>
