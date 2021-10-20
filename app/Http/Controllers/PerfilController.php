@@ -19,7 +19,7 @@ class PerfilController extends Controller
 
     public function index()
     {
-        $usuario = User::with('category:nombre,id','roles:name','unit:id,nombre,regime_id','unit.regime:nombre,id')
+        $usuario = User::with('roles:name')
                     ->where('users.id',Auth::id())
                     ->first();
 
@@ -29,19 +29,11 @@ class PerfilController extends Controller
     //vista donde se puede ver el perfil público de otros estudiantes y profesores
     public function verPerfil($id)
     {
-        $usuario = User::with('roles:name','teacherCourses')
+        $usuario = User::with('roles:name')
                     ->select('nombre','apellido_p','apellido_m','created_at','email','foto','id')
                     ->findOrFail($id);
-                
-        $cursos = $usuario->teacherCourses->count();
 
-        $participantes = 0;
-
-        foreach ($usuario->teacherCourses as $curso) {
-            $participantes += $curso->users()->get()->count();
-        }
-
-        return Inertia::render('Perfil/PerfilPublico',['user'=>$usuario, 'cursos' => $cursos, 'participantes' => $participantes]);
+        return Inertia::render('Perfil/PerfilPublico',['user'=>$usuario]);
     }
 
     public function edit()
