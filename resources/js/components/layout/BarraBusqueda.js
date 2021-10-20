@@ -135,12 +135,12 @@ export default function BarraBusqueda() {
 
                     <div className="main-bar-right-rightSide">
                         <div className="truncate">
-                            <InertiaLink href={'#'}>
+                            <InertiaLink href={route('perfil')}>
                                 <span className="main-username">Pepito Pérez</span>
                             </InertiaLink>
                         </div>
                         <div>
-                            <InertiaLink href={'#'}>
+                            <InertiaLink href={route('perfil')}>
                                 <img className="main-userimage" src={"/img/avatar1.png"} alt="" />
                             </InertiaLink>
                         </div>

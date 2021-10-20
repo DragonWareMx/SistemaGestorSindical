@@ -53,7 +53,7 @@ const Perfil = ({ user }) => {
                                                 {user.roles ? user.roles.length > 0 ? user.roles[0].name : "Sin rol" : "Sin rol"}
                                             </div>
                                             <div className="profile-txt-name">
-                                                {user.nombre} {user.apellido_p} {user.apellido_m}
+                                                {user.employee.nombre} {user.employee.apellido_p} {user.employee.apellido_m}
                                             </div>
                                             <div className="profile-txt-active-since">
                                                 Activo desde {user.created_at ? transformaFecha(user.created_at) : "el inicio de los tiempos"}
@@ -87,10 +87,10 @@ const Perfil = ({ user }) => {
                                                 INFORMACIÓN PERSONAL
                                             </div>
                                             <div className="info-txt-format">
-                                                <b>Fecha de Nacimiento:</b> {transformaFecha(user.fecha_nac)}
+                                                <b>Fecha de Nacimiento:</b> {transformaFecha(user.employee.fecha_nac)}
                                             </div>
                                             <div className="info-txt-format">
-                                                <b>Sexo:</b> {user.sexo == 'h' && "Hombre"}{user.sexo == 'm' && "Mujer"}{user.sexo == 'o' && "Otro"}
+                                                <b>Sexo:</b> {user.employee.sexo == 'h' && "Hombre"}{user.employee.sexo == 'm' && "Mujer"}{user.employee.sexo == 'o' && "Otro"}
                                             </div>
                                         </div>
                                         <div className="col s12 m6" style={{ "marginTop": "15px" }}>
@@ -98,16 +98,16 @@ const Perfil = ({ user }) => {
                                                 INFORMACIÓN INSTITUCIONAL
                                             </div>
                                             <div className="info-txt-format">
-                                                <b>Matrícula:</b> {user.matricula}
+                                                <b>Matrícula:</b> {user.employee.matricula}
                                             </div>
                                             <div className="info-txt-format">
-                                                <b>Régimen:</b> {user.unit ? user.unit.regime ? user.unit.regime.nombre ?? "Sin régimen" : "Sin régimen" : "Sin régimen"}
+                                                <b>Régimen:</b> {user.employee.unit ? user.employee.unit.regime ? user.employee.unit.regime.nombre ?? "Sin régimen" : "Sin régimen" : "Sin régimen"}
                                             </div>
                                             <div className="info-txt-format">
-                                                <b>Unidad:</b> {user.unit ? user.unit.nombre ?? "Sin unidad" : "Sin unidad"}
+                                                <b>Unidad:</b> {user.employee.unit ? user.employee.unit.nombre ?? "Sin unidad" : "Sin unidad"}
                                             </div>
                                             <div className="info-txt-format">
-                                                <b>Categoría:</b> {user.category ? user.category.nombre : "Sin categoría"}
+                                                <b>Categoría:</b> {user.employee.category ? user.employee.category.nombre : "Sin categoría"}
                                             </div>
                                         </div>
                                         <div className="col s12 m6" style={{ "marginTop": "15px" }}>
@@ -115,27 +115,27 @@ const Perfil = ({ user }) => {
                                                 DIRECCIÓN
                                             </div>
                                             <div className="info-txt-format">
-                                                <b>Estado:</b> {user.estado}
+                                                <b>Estado:</b> {user.employee.estado}
                                             </div>
                                             <div className="info-txt-format">
-                                                <b>Ciudad:</b> {user.ciudad}
+                                                <b>Ciudad:</b> {user.employee.ciudad}
                                             </div>
                                             <div className="info-txt-format">
-                                                <b>Colonia:</b> {user.colonia}
+                                                <b>Colonia:</b> {user.employee.colonia}
                                             </div>
                                             <div className="info-txt-format">
-                                                <b>Calle:</b> {user.calle}
+                                                <b>Calle:</b> {user.employee.calle}
                                             </div>
                                             <div className="info-txt-format">
-                                                <b>No. Exterior:</b> {user.num_ext}
+                                                <b>No. Exterior:</b> {user.employee.num_ext}
                                             </div>
                                             {user.num_int &&
                                             <div className="info-txt-format">
-                                                <b>No. Exterior:</b> {user.num_int}
+                                                <b>No. Exterior:</b> {user.employee.num_int}
                                             </div>
                                             }
                                             <div className="info-txt-format">
-                                                <b>Código Postal:</b> {user.cp}
+                                                <b>Código Postal:</b> {user.employee.cp}
                                             </div>
                                         </div>
                                         {/* Boton de editar */}

@@ -72,7 +72,7 @@ export default function MenuLateral() {
               <div className="center-align" style={{ zIndex: 100, height: '150px' }}>
                 <img src="img/imagenes/Classroom-cuate.svg" style={{ position: 'relative', height: '150px' }} />
               </div>
-              <InertiaLink href={'#'} className="icono-menu">
+              <InertiaLink href={route('perfil')} className="icono-menu">
                 <div className="menu-profile-info">
                   <img style={{ marginLeft: '10px' }} src={"/img/avatar1.png"} className="main-userimage" />
                   <div className="profile-info-name truncate">Pepito Pérez</div>
@@ -180,8 +180,8 @@ export default function MenuLateral() {
 
           {/* CONFIGURACION */}
           <li>
-            <InertiaLink href={'#'} className="icono-menu" className={isUrl("perfil") ? "icono-menu current-menu-text" : "icono-menu"}>
-              <i className={isUrl("perfil") ? "material-icons icono-menu current-menu" : "material-icons icono-menu"}>settings</i>Configuración
+            <InertiaLink href={route('perfil.edit')} className="icono-menu" className={isUrl("perfil") ? "icono-menu current-menu-text" : "icono-menu"}>
+              <i className={isUrl("configuracion") ? "material-icons icono-menu current-menu" : "material-icons icono-menu"}>settings</i>Configuración
             </InertiaLink>
           </li>
 
@@ -291,8 +291,8 @@ export default function MenuLateral() {
 
         {/* CONFIGURACION */}
         <div className="col s12">
-          <InertiaLink href={'#'} className="icono-menu">
-            <i className={isUrl("perfil") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Configuración">settings</i>
+          <InertiaLink href={route('perfil.edit')} className="icono-menu">
+            <i className={isUrl("configuracion") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Configuración">settings</i>
           </InertiaLink>
         </div>
 
