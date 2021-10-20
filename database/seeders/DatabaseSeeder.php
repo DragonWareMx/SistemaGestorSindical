@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             EmployeeSeeder::class,
             IssueSeeder::class,
             ConflictSeeder::class,
+            TrophySeeder::class,
         ]);
     }
 }

@@ -55,6 +55,10 @@ Route::get('/conflictos/{id}', [App\Http\Controllers\conflictController::class, 
 Route::get('/secretaria-del-interior', [App\Http\Controllers\conflictController::class, 'secretariaInterior'])->name('secretariaInterior');
 Route::get('/secretaria-del-interior/{id}', [App\Http\Controllers\conflictController::class, 'secretariaInteriorConflict'])->name('secretariaInterior.conflict');
 
+//Acción Femenil
+Route::get('/accion-femenil', [App\Http\Controllers\trophyController::class, 'index'])->name('accionFemenil');
+Route::get('/accion-femenil/{id}', [App\Http\Controllers\trophyController::class, 'trophy'])->name('accionFemenil.trophy');
+
 Auth::routes(['register' => false]);
 
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
