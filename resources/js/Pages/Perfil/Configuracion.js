@@ -38,6 +38,7 @@ const Configuracion = ({ user }) => {
         telefono: user.employee.tel || "",
         
         email: user.email || "",
+        cambiar_contrasena: false,
         contrasena: "",
         confirmar_contrasena: "",
         
@@ -45,8 +46,6 @@ const Configuracion = ({ user }) => {
         tarjeton_de_pago: "",
         deleted_at: user.employee.deleted_at,
 
-        cambiar_tarjeton: false,
-        cambiar_contrasena: false
     })
 
     //actualiza los hooks cada vez que se modifica un input

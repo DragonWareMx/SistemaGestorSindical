@@ -6,6 +6,8 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Auth;
 use App\Models\User;
+use App\Models\Employee;
+use Illuminate\Support\Str;
 use App\Models\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rules\Password;
@@ -229,18 +231,32 @@ class PerfilController extends Controller
     // }
 
     //  funcion para actualizar los datos del perfil
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         //valida el rol del usuario
         // \Gate::authorize('haveaccess', 'admin.perm');
 
         $validated = $request->validate([ 
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:51200',
+
             //---informacion personal---
             'nombre' => ['required','max:255','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
             'apellido_paterno' => ['required','max:255','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
             'apellido_materno' => ['nullable','max:255','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
             'fecha_de_nacimiento' => 'required|date|before:17 years ago',
             'sexo' => 'required|in:h,m,o',
+
+            //---cambio de contrasena---
+            'cambiar_contrasena' => 'required|boolean',
+            'contrasena' => [
+                'nullable',
+                Password::min(8)
+                    ->mixedCase()
+                    ->letters()
+                    ->numbers()
+                    ->uncompromised(),
+            ],
+            'confirmar_contrasena' => 'required_with:contrasena|same:contrasena',
         ]);
         //si se introdujo algun dato para la direccion se validan los campos
         if($request->estado || $request->ciudad || $request->colonia || $request->calle || $request->numero_exterior || $request->numero_interior || $request->codigo_postal || $request->telefono){
@@ -258,6 +274,14 @@ class PerfilController extends Controller
         }
         // El nuevo empleado es valido...
 
+        //si hay cambio de contraseña valida que no sea nula
+        if($request->cambiar_contrasena){
+            if(is_null($request->contrasena)){
+                DB::rollBack();
+                return \Redirect::back()->with('error','La nueva contraseña no ha sido introducida.');
+            }
+        }
+
         //variables para comprobar la subida de archivos
         $foto = null;
 
@@ -266,7 +290,11 @@ class PerfilController extends Controller
 
         try {
             //SE CREA EL NUEVO EMPLEADO
-            $employee = Employee::findOrFail($id);
+            $employee = Employee::where('user_id',Auth::id())->first();
+            
+            //SE CREA EL NUEVO USUARIO
+            $user = User::find(Auth::User()->id);
+            // $user = User::findOrFail($id);
             
             //---informacion personal---
             $employee->nombre = $request->nombre;
@@ -285,8 +313,36 @@ class PerfilController extends Controller
             $employee->cp = $request->codigo_postal;
             $employee->tel = $request->telefono;
             
+            //guarda la foto
+            if(!is_null($request->file('foto'))){
+                if($user->foto){
+                    \Storage::delete('public/fotos_perfil/'.$user->foto);
+                }
+                $foto = $request->file('foto')->store('public/fotos_perfil');
+                $user->foto = $request->file('foto')->hashName();
+            }
+
+            //---cuenta---
+            $user->email = $request->email;
+
+            if($request->cambiar_contrasena){
+                $user->password = \Hash::make($request->contrasena);
+            }
+
             //SE GUARDA EL NUEVO USUARIO
+            $user->save();
+            
+            //SE GUARDA EL NUEVO EMPLEADO
             $employee->save();
+
+            //guarda la foto
+            if(!is_null($request->file('foto'))){
+                if($user->foto){
+                    \Storage::delete('public/fotos_perfil/'.$user->foto);
+                }
+                $foto = $request->file('foto')->store('public/fotos_perfil');
+                $user->foto = $request->file('foto')->hashName();
+            }
 
             //SE CREA EL LOG
             $newLog = new Log;
@@ -304,9 +360,6 @@ class PerfilController extends Controller
                     fecha_nac: ' . $request->fecha_de_nacimiento . ',\n
                     sexo: '. $request->sexo. ',\n
                     antiguedad: ' . $request->antiguedad . ',\n
-                    matricula: ' . $request->matricula . ',\n
-                    unit_id: '.$unidad[0]->id. ',\n
-                    category_id: ' . $categoria[0]->id . ',\n
                     estado: ' . $request->estado . ',\n
                     ciudad: ' . $request->ciudad . ',\n
                     colonia: ' . $request->colonia . ',\n
@@ -349,7 +402,7 @@ class PerfilController extends Controller
             DB::commit();
             
             //REDIRECCIONA A LA VISTA DEL EMPLEADO
-            return \Redirect::back()->with('success','Tu perfil ha sido editado con éxito!');
+            return \Redirect::back()->with('success','El perfil ha sido editado con éxito!');
         } catch (\Exception $e) {
             DB::rollBack();
             
@@ -359,7 +412,8 @@ class PerfilController extends Controller
                 \Storage::delete($foto);
             }
 
-            return \Redirect::back()->with('error','Ha ocurrido un error al intentar editar el empleado, inténtelo más tarde.');
+            dd($e);
+            return \Redirect::back()->with('error','Ha ocurrido un error al intentar editar el perfil, inténtelo más tarde.');
         }
     }
 
