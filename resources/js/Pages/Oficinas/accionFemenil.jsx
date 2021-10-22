@@ -107,7 +107,7 @@ QuickSearchToolbar.propTypes = {
     value: PropTypes.string.isRequired,
   };
 
-const secretariaInterior = ({elections}) => {
+const accionFemenil = ({trophies}) => {
 
     const columns = [
         {
@@ -117,13 +117,6 @@ const secretariaInterior = ({elections}) => {
           disableColumnSelector:false,
           flex: 0.1,
         },
-        {
-          field: 'num_oficio',
-          headerName: 'OFICIO',
-          editable: false,
-          disableColumnSelector:false,
-          flex: 0.3,
-      },
       {
           field: 'matricula',
           headerName: 'MATRICULA',
@@ -143,23 +136,23 @@ const secretariaInterior = ({elections}) => {
         flex: 0.4,
       },
       {
-        field: 'fecha',
-        headerName: 'FECHA DE ELECCIÓN',
+        field: 'premio',
+        headerName: 'PREMIO',
         editable: false,
         flex: 0.4,
       },
       {
-        field: 'fecha_voto',
-        headerName: 'FECHA DE VOTACIÓN',
+        field: 'observaciones',
+        headerName: 'OBSERVACIONES',
         editable: false,
-        flex: 0.4,
+        flex: 0.5,
       },
       {
         field: "",
         headerName: "VER",
         flex: 0.2,
         renderCell: (params) => (
-          <InertiaLink href={route('secretariaInterior.election', params.row.id)} style={{textDecoration: 'none', color: 'gray'}}><VisibilityIcon/></InertiaLink>
+          <InertiaLink href={route('accionFemenil.trophy', params.row.id)} style={{textDecoration: 'none', color: 'gray'}}><VisibilityIcon/></InertiaLink>
         ),
         sortable: false,
         editable: false,
@@ -167,12 +160,12 @@ const secretariaInterior = ({elections}) => {
     ]
     
       const [searchText, setSearchText] = React.useState('');
-      const [rows, setRows] = React.useState(elections);
+      const [rows, setRows] = React.useState(trophies);
     
       const requestSearch = (searchValue) => {
         setSearchText(searchValue);
         const searchRegex = new RegExp(escapeRegExp(searchValue), 'i');
-        const filteredRows = elections.filter((row) => {
+        const filteredRows = trophies.filter((row) => {
           return Object.keys(row).some((field) => {
             return searchRegex.test(row[field] ? row[field].toString() : "");
           });
@@ -181,15 +174,15 @@ const secretariaInterior = ({elections}) => {
       };
     
       React.useEffect(() => {
-        setRows(elections);
-      }, [elections]);
+        setRows(trophies);
+      }, [trophies]);
     return (
         <> 
             <div className="row contenedor">
                 <div className="col contenedor s12">
                     <div className="card darken-1 cardUsers">
                         <div className="card-content">
-                            <span className="card-title">Secretaria del Interior</span>
+                            <span className="card-title">Acción Femenil</span>
                             <div style={{ height: 400, width: '100%' }}>
                                     <DataGrid
                                     components={{ Toolbar: QuickSearchToolbar }}
@@ -211,6 +204,6 @@ const secretariaInterior = ({elections}) => {
         </>)
 }
 
-secretariaInterior.layout = page => <Layout children={page} title="Secretaria del Interior" pageTitle="Secretaria del Interior"/>
+accionFemenil.layout = page => <Layout children={page} title="Acción Femenil" pageTitle="Acción Femenil"/>
 
-export default secretariaInterior
+export default accionFemenil

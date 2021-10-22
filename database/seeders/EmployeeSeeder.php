@@ -56,5 +56,34 @@ class EmployeeSeeder extends Seeder
             'category_id'=>'2',
             'unit_id'=>'2',
         ]);
+
+        DB::table('employees')->insert([
+            'uuid'=>'6666666',
+            'matricula' => '17121030',
+            'nombre'=>'Beatriz',
+            'apellido_p'=>'Dama',
+            'apellido_m'=>'Piña',
+            'fecha_nac'=>'1999-03-02',
+            'sexo'=>'m',
+            'antiguedad'=>'2017-01-01',
+            'estado'=>'Michoacán',
+            'ciudad'=>'Morelia',
+            'colonia'=>'Centro',
+            'calle'=>'Lucha del porvenir',
+            'num_int'=>'13',
+            'num_ext'=>'13',
+            'cp'=>'58960',
+            'tel'=>'4444444444',
+            'category_id'=>'1',
+            'unit_id'=>'2',
+            'estatus'=>'Aceptado',
+        ]);
+
+        DB::table('employee_relative')->insert([
+            'parentesco'=>'hijo',
+            'ingreso_bolsa'=>'2020-01-01',
+            'employee_id'=>'1',
+            'relative_id'=>'3',
+        ]);
     }
 }
