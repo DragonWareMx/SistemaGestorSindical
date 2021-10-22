@@ -107,7 +107,7 @@ QuickSearchToolbar.propTypes = {
     value: PropTypes.string.isRequired,
   };
 
-const secretariaInterior = ({elections}) => {
+const admisionCambios = ({employees}) => {
 
     const columns = [
         {
@@ -118,48 +118,48 @@ const secretariaInterior = ({elections}) => {
           flex: 0.1,
         },
         {
-          field: 'num_oficio',
-          headerName: 'OFICIO',
+          field: 'nombreRelative',
+          headerName: 'Nombre',
           editable: false,
           disableColumnSelector:false,
           flex: 0.3,
       },
       {
-          field: 'matricula',
-          headerName: 'MATRICULA',
+          field: 'tel',
+          headerName: 'TELÉFONO',
           editable: false,
-          flex: 0.4,
+          flex: 0.3,
       },
       {
-        field: 'nombre',
-        headerName: 'NOMBRE',
+        field: 'estatus',
+        headerName: 'ESTATUS',
+        editable: false,
+        flex: 0.3,
+      },
+      {
+        field: 'categoria',
+        headerName: 'CATEGORIA',
         editable: false,
         flex: 0.4,
       },
       {
-        field: 'apellido_p',
-        headerName: 'APELLIDO',
+        field: 'nombreEmployee',
+        headerName: 'NOMBRE DEL FAMILIAR',
         editable: false,
         flex: 0.4,
       },
       {
-        field: 'fecha',
-        headerName: 'FECHA DE ELECCIÓN',
+        field: 'parentesco',
+        headerName: 'PARENTESCO',
         editable: false,
-        flex: 0.4,
-      },
-      {
-        field: 'fecha_voto',
-        headerName: 'FECHA DE VOTACIÓN',
-        editable: false,
-        flex: 0.4,
+        flex: 0.3,
       },
       {
         field: "",
         headerName: "VER",
         flex: 0.2,
         renderCell: (params) => (
-          <InertiaLink href={route('secretariaInterior.election', params.row.id)} style={{textDecoration: 'none', color: 'gray'}}><VisibilityIcon/></InertiaLink>
+          <InertiaLink href={route('admisionCambiosRelative', params.row.uuid)} style={{textDecoration: 'none', color: 'gray'}}><VisibilityIcon/></InertiaLink>
         ),
         sortable: false,
         editable: false,
@@ -167,12 +167,12 @@ const secretariaInterior = ({elections}) => {
     ]
     
       const [searchText, setSearchText] = React.useState('');
-      const [rows, setRows] = React.useState(elections);
+      const [rows, setRows] = React.useState(employees);
     
       const requestSearch = (searchValue) => {
         setSearchText(searchValue);
         const searchRegex = new RegExp(escapeRegExp(searchValue), 'i');
-        const filteredRows = elections.filter((row) => {
+        const filteredRows = employees.filter((row) => {
           return Object.keys(row).some((field) => {
             return searchRegex.test(row[field] ? row[field].toString() : "");
           });
@@ -181,15 +181,15 @@ const secretariaInterior = ({elections}) => {
       };
     
       React.useEffect(() => {
-        setRows(elections);
-      }, [elections]);
+        setRows(employees);
+      }, [employees]);
     return (
         <> 
             <div className="row contenedor">
                 <div className="col contenedor s12">
                     <div className="card darken-1 cardUsers">
                         <div className="card-content">
-                            <span className="card-title">Secretaria del Interior</span>
+                            <span className="card-title">Admisión y Cambios</span>
                             <div style={{ height: 400, width: '100%' }}>
                                     <DataGrid
                                     components={{ Toolbar: QuickSearchToolbar }}
@@ -211,6 +211,6 @@ const secretariaInterior = ({elections}) => {
         </>)
 }
 
-secretariaInterior.layout = page => <Layout children={page} title="Secretaria del Interior" pageTitle="Secretaria del Interior"/>
+admisionCambios.layout = page => <Layout children={page} title="Admisión y Cambios" pageTitle="Admisión y Cambios"/>
 
-export default secretariaInterior
+export default admisionCambios

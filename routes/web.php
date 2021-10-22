@@ -57,6 +57,9 @@ Route::get('/secretaria-del-trabajo/{id}', [App\Http\Controllers\ConflictControl
 // Secreteria del trabajo
 Route::get('/secretaria-del-interior', [App\Http\Controllers\ElectionController::class, 'index'])->name('secretariaInterior');
 Route::get('/secretaria-del-interior/{id}', [App\Http\Controllers\ElectionController::class, 'secretariaInteriorElection'])->name('secretariaInterior.election');
+//Admisión y cambios
+Route::get('/admision-y-cambios', [App\Http\Controllers\EmployeeController::class, 'admisionCambios'])->name('admisionCambios');
+Route::get('/admision-y-cambios/{id}', [App\Http\Controllers\EmployeeController::class, 'admisionCambiosRelative'])->name('admisionCambiosRelative');
 
 
 //Acción Femenil

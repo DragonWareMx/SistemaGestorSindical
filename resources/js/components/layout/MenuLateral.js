@@ -152,7 +152,7 @@ export default function MenuLateral() {
 
           {/* ADMISIÓN Y CAMBIOS */}
           <li>
-            <InertiaLink href={'#'} className={isUrl("solicitudes") ? "icono-menu current-menu-text" : "icono-menu"}>
+            <InertiaLink href={route('admisionCambios')} className={isUrl("solicitudes") ? "icono-menu current-menu-text" : "icono-menu"}>
               <i className={isUrl("solicitudes") ? "material-icons icono-menu current-menu" : "material-icons icono-menu"}>maps_home_work</i>Admisión y Cambios
             </InertiaLink>
           </li>
@@ -266,7 +266,7 @@ export default function MenuLateral() {
         </div>
         {/* ADMISION Y CAMBIOS */}
         <div className="col s12">
-          <InertiaLink href={'#'} className="icono-menu">
+          <InertiaLink href={route('admisionCambios')} className="icono-menu">
             <i className={isUrl("cursos") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Admisión y Cambios">maps_home_work</i>
           </InertiaLink>
         </div>
