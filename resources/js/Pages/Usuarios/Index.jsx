@@ -19,6 +19,7 @@ import TextField from '@mui/material/TextField';
 import {
   DataGrid,
   GridToolbarDensitySelector,
+  GridToolbarExport,
   GridToolbarFilterButton,
 } from '@mui/x-data-grid';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -89,6 +90,7 @@ return (
     <div>
         <GridToolbarFilterButton />
         <GridToolbarDensitySelector />
+        <GridToolbarExport />
 
         <Grid style={{margin: 4}} container>
             <Grid item>
@@ -163,6 +165,7 @@ const columns = [
         ),
         sortable: false,
         editable: false,
+        disableExport: true
     },
     { field: 'id', headerName: 'ID', width: 100 },
     {
@@ -177,6 +180,7 @@ const columns = [
                 <img src={params.value ? "/storage/fotos_perfil/" + params.value : "/img/avatar1.png"} style={{width: 40, height: 40, borderRadius: "50%", objectFit: "cover", margin: 'auto'}} />
             </div>
         )},
+        disableExport: true
     },
     { field: 'email', headerName: 'CORREO', width: 400 },
     { field: 'matricula', headerName: 'MATRICULA', width: 120,
@@ -239,7 +243,7 @@ const Index = ({ users }) => {
                         <div className="card darken-1 cardUsers">
                             <InertiaLink className="btn-floating btn-large waves-effect waves-light green-sind button-addUser" href={route('users.create')}><i className="material-icons">add</i></InertiaLink>
                             <div className="card-content">
-                                <span className="card-title">Usuarios</span>
+                                <span className="card-title">Comité</span>
                                 <Alertas/>
 
                                 <div style={{ height: 1000, width: '100%' }}>
@@ -265,6 +269,6 @@ const Index = ({ users }) => {
     )
 }
 
-Index.layout = page => <Layout children={page} title="Escuela Sindical - Usuarios" pageTitle="USUARIOS" />
+Index.layout = page => <Layout children={page} title="Escuela Sindical - Comité" pageTitle="COMITÉ" />
 
 export default Index

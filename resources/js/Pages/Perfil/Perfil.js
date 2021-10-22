@@ -47,6 +47,7 @@ const Perfil = ({ user }) => {
                                                 <img src={user.foto ? "/storage/fotos_perfil/"+user.foto : "/storage/fotos_perfil/avatar1.jpg"} alt="foto de perfil" className="img-profile" />
                                             </div>
                                         </div>
+                                        {console.log(user)}
                                         <div className="col s12 center-align">
                                             <div className="profile-txt-category">
                                                 {user.roles ? user.roles.length > 0 ? user.roles[0].name : "Sin rol" : "Sin rol"}
@@ -139,7 +140,7 @@ const Perfil = ({ user }) => {
                                         </div>
                                         {/* Boton de editar */}
                                         <div className="col s12 m12 right-align" style={{ "marginTop": "25px" }}>
-                                            <InertiaLink href={route('perfil.edit')} className="waves-effect waves-light btn boton-verde"><i className="material-icons right" style={{ "fontSize": "18px" }}>settings</i>Configuración</InertiaLink>
+                                            {/* <InertiaLink href={route('perfil.edit')} className="waves-effect waves-light btn boton-verde"><i className="material-icons right" style={{ "fontSize": "18px" }}>settings</i>Configuración</InertiaLink> */}
                                             
                                         </div>
                                     </div>

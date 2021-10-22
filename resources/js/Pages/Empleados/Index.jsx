@@ -20,6 +20,7 @@ import {
   DataGrid,
   GridToolbarDensitySelector,
   GridToolbarFilterButton,
+  GridToolbarExport,
 } from '@mui/x-data-grid';
 import ClearIcon from '@mui/icons-material/Clear';
 import SearchIcon from '@mui/icons-material/Search';
@@ -96,6 +97,7 @@ return (
     <div>
         <GridToolbarFilterButton />
         <GridToolbarDensitySelector />
+        <GridToolbarExport />
 
         <Grid style={{margin: 4}} container>
             <Grid item>

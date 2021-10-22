@@ -23,17 +23,17 @@ class PerfilController extends Controller
     public function index()
     {
         $usuario = User::with(
-                            'employee:user_id,nombre,apellido_p,apellido_m,fecha_nac,sexo,matricula,antiguedad,calle,num_ext,num_int,colonia,ciudad,estado,cp,tel,created_at,unit_id,category_id',
-                            'employee.unit:id,nombre,regime_id',
-                            'employee.unit.regime:nombre,id',
-                            'employee.category:nombre,id',
-                            'roles:name',
-                        )
-                        ->where('users.id',Auth::id())
-                        ->first();
+            'employee:user_id,nombre,apellido_p,apellido_m,fecha_nac,sexo,matricula,antiguedad,calle,num_ext,num_int,colonia,ciudad,estado,cp,tel,created_at,unit_id,category_id',
+            'employee.unit:id,nombre,regime_id',
+            'employee.unit.regime:nombre,id',
+            'employee.category:nombre,id',
+            'roles:name',
+        )
+            ->where('users.id', Auth::id())
+            ->first();
 
         // dd($usuario);
-        return Inertia::render('Perfil/Perfil',['user'=>$usuario]);
+        return Inertia::render('Perfil/Perfil', ['user' => $usuario]);
     }
 
     //vista donde se puede ver el perfil público de otros estudiantes y profesores
@@ -42,7 +42,7 @@ class PerfilController extends Controller
     //     $usuario = User::with('roles:name','teacherCourses')
     //                 ->select('nombre','apellido_p','apellido_m','created_at','email','foto','id')
     //                 ->findOrFail($id);
-                
+
     //     $cursos = $usuario->teacherCourses->count();
 
     //     $participantes = 0;
@@ -64,8 +64,8 @@ class PerfilController extends Controller
             'employee.category:nombre,id',
             'roles:name',
         )
-        ->where('users.id',Auth::id())
-        ->first();
+            ->where('users.id', Auth::id())
+            ->first();
 
         return Inertia::render('Perfil/Configuracion',['user'=>$usuario]);
     }
@@ -132,14 +132,14 @@ class PerfilController extends Controller
     //             $foto = $request->file('foto')->store('public/fotos_perfil');
     //             $user->foto = $request->file('foto')->hashName();
     //         }
-            
+
     //         //---informacion personal---
     //         $user->nombre = $request->nombre;
     //         $user->apellido_p = $request->apellido_paterno;
     //         $user->apellido_m = $request->apellido_materno;
     //         $user->fecha_nac = $request->fecha_de_nacimiento;
     //         $user->sexo = $request->sexo;
-            
+
     //         //---direccion---
     //         $user->estado = $request->estado;
     //         $user->ciudad = $request->ciudad;
@@ -148,7 +148,7 @@ class PerfilController extends Controller
     //         $user->num_ext = $request->numero_exterior;
     //         $user->num_int = $request->numero_interior;
     //         $user->cp = $request->codigo_postal;
-            
+
     //         //---cuenta---
     //         if($request->cambiar_contrasena){
     //             $user->password = \Hash::make($request->contrasena);
@@ -159,7 +159,7 @@ class PerfilController extends Controller
 
     //         //SE CREA EL LOG
     //         $newLog = new Log;
-            
+
     //         $newLog->categoria = 'update';
     //         $newLog->user_id = Auth::id();
     //         $newLog->accion =
@@ -179,16 +179,16 @@ class PerfilController extends Controller
     //                 num_int: ' . $request->numero_interior . ',\n
     //                 cp: ' . $request->codigo_postal . ',\n
 
-                    
+
     //             }
     //         }';
 
     //         $newLog->descripcion = 'El usuario '.Auth::user()->email.' ha actualizado sus datos';
-                
+
     //         //SE GUARDA EL LOG
     //         $newLog->save();
-            
-            
+
+
     //         if(!$user)
     //         {
     //             DB::rollBack();
@@ -208,13 +208,13 @@ class PerfilController extends Controller
     //             {
     //                 \Storage::delete($foto);
     //             }
-                
+
     //             return \Redirect::back()->with('error','Ha ocurrido un error al intentar registrar el usuario, inténtelo más tarde.');
     //         }
 
     //         //SE HACE COMMIT
     //         DB::commit();
-            
+
     //         //REDIRECCIONA A LA VISTA DE USUARIOS
     //         return \Redirect::back()->with('success','El usuario ha sido editado con éxito!');
     //     } catch (\Exception $e) {
@@ -225,7 +225,7 @@ class PerfilController extends Controller
     //         {
     //             \Storage::delete($foto);
     //         }
-            
+
     //         return \Redirect::back()->with('error','Ha ocurrido un error al intentar registrar el usuario, inténtelo más tarde.');
     //     }
     // }
