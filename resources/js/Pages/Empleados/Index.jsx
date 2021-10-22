@@ -17,10 +17,11 @@ import PropTypes from 'prop-types';
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
 import {
-  DataGrid,
-  GridToolbarDensitySelector,
-  GridToolbarFilterButton,
-  GridToolbarExport,
+    DataGrid,
+    GridToolbarDensitySelector,
+    GridToolbarFilterButton,
+    GridToolbarExport,
+    esES
 } from '@mui/x-data-grid';
 import ClearIcon from '@mui/icons-material/Clear';
 import SearchIcon from '@mui/icons-material/Search';
@@ -31,126 +32,137 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
 
+import { ThemeProvider } from '@mui/material/styles';
+
+const themeEs = createTheme(
+    {
+        palette: {
+            primary: { main: '#134E39' },
+        },
+    },
+    esES,
+);
+
 function escapeRegExp(value) {
     return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
-  }
-  
+}
+
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
-(theme) =>
-    createStyles({
-    root: {
-        padding: theme.spacing(0.5, 0.5, 0),
-        justifyContent: 'space-between',
-        display: 'flex',
-        alignItems: 'flex-start',
-        flexWrap: 'wrap',
-    },
-    textField: {
-        [theme.breakpoints.down('xs')]: {
-        width: '100%',
-        },
-        margin: theme.spacing(1, 0.5, 1.5),
-        '& .MuiSvgIcon-root': {
-        marginRight: theme.spacing(0.5),
-        },
-        '& .MuiInput-underline:before': {
-        borderBottom: `none`,
-        },
-        '& .MuiInput-underline:after': {
-            borderBottom: "none",
-        },
-        '& .MuiInput-underline:focus': {
-            borderBottom: "none",
-        },
-        '& .MuiInputBase-root-MuiInput-root:hover:not(.Mui-disabled):before' : {
-            borderBottom: "0px solid white",
-        },
-        '& .css-1480iag-MuiInputBase-root-MuiInput-root:hover:not(.Mui-disabled):before' : {
-            borderBottom: "0px solid white",
-        },
-    },
-    }),
-{ defaultTheme },
+    (theme) =>
+        createStyles({
+            root: {
+                padding: theme.spacing(0.5, 0.5, 0),
+                justifyContent: 'space-between',
+                display: 'flex',
+                alignItems: 'flex-start',
+                flexWrap: 'wrap',
+            },
+            textField: {
+                [theme.breakpoints.down('xs')]: {
+                    width: '100%',
+                },
+                margin: theme.spacing(1, 0.5, 1.5),
+                '& .MuiSvgIcon-root': {
+                    marginRight: theme.spacing(0.5),
+                },
+                '& .MuiInput-underline:before': {
+                    borderBottom: `none`,
+                },
+                '& .MuiInput-underline:after': {
+                    borderBottom: "none",
+                },
+                '& .MuiInput-underline:focus': {
+                    borderBottom: "none",
+                },
+                '& .MuiInputBase-root-MuiInput-root:hover:not(.Mui-disabled):before': {
+                    borderBottom: "0px solid white",
+                },
+                '& .css-1480iag-MuiInputBase-root-MuiInput-root:hover:not(.Mui-disabled):before': {
+                    borderBottom: "0px solid white",
+                },
+            },
+        }),
+    { defaultTheme },
 );
-  
+
 function QuickSearchToolbar(props) {
-const classes = useStyles();
+    const classes = useStyles();
 
-const [checked, setChecked] = React.useState(false);
-const [checkedU, setCheckedU] = React.useState(false);
-  
-const handleChange = (event) => {
-    setChecked(event.target.checked);
+    const [checked, setChecked] = React.useState(false);
+    const [checkedU, setCheckedU] = React.useState(false);
 
-    Inertia.reload({data: {deleted: event.target.checked}})
-};
+    const handleChange = (event) => {
+        setChecked(event.target.checked);
 
-const handleChangeU = (event) => {
-    setCheckedU(event.target.checked);
+        Inertia.reload({ data: { deleted: event.target.checked } })
+    };
 
-    Inertia.reload({data: {user: event.target.checked}})
-};
+    const handleChangeU = (event) => {
+        setCheckedU(event.target.checked);
 
-return (
-    <div className={classes.root}>
-    <div>
-        <GridToolbarFilterButton />
-        <GridToolbarDensitySelector />
-        <GridToolbarExport />
+        Inertia.reload({ data: { user: event.target.checked } })
+    };
 
-        <Grid style={{margin: 4}} container>
-            <Grid item>
-                <FormControlLabel
-                control={
-                    <Checkbox
-                    checked={checked}
-                    onChange={handleChange}
-                    name="checkedB"
-                    color="primary"
-                    />
-                }
-                label="Ver eliminados"
-                />
-            </Grid>
-            <Grid item>
-                <FormControlLabel
-                control={
-                    <Checkbox
-                    checked={checkedU}
-                    onChange={handleChangeU}
-                    name="checkedB"
-                    color="primary"
-                    />
-                }
-                label="Ver empleados con usuario"
-                />
-            </Grid>
-        </Grid>
-    </div>
-    <TextField
-        variant="standard"
-        value={props.value}
-        onChange={props.onChange}
-        placeholder="Buscar…"
-        className={classes.textField}
-        InputProps={{
-        startAdornment: <SearchIcon fontSize="small" />,
-        endAdornment: (
-            <IconButton
-            title="Clear"
-            aria-label="Clear"
-            size="small"
-            style={{ visibility: props.value ? 'visible' : 'hidden' }}
-            onClick={props.clearSearch}
-            >
-            <ClearIcon fontSize="small" />
-            </IconButton>
-        ),
-        }}
-    />
-    </div>
-);
+    return (
+        <div className={classes.root}>
+            <div>
+                <GridToolbarFilterButton />
+                <GridToolbarDensitySelector />
+                <GridToolbarExport />
+
+                <Grid style={{ margin: 4 }} container>
+                    <Grid item>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={checked}
+                                    onChange={handleChange}
+                                    name="checkedB"
+                                    color="primary"
+                                />
+                            }
+                            label="Ver eliminados"
+                        />
+                    </Grid>
+                    <Grid item>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={checkedU}
+                                    onChange={handleChangeU}
+                                    name="checkedB"
+                                    color="primary"
+                                />
+                            }
+                            label="Ver empleados con usuario"
+                        />
+                    </Grid>
+                </Grid>
+            </div>
+            <TextField
+                variant="standard"
+                value={props.value}
+                onChange={props.onChange}
+                placeholder="Buscar…"
+                className={classes.textField}
+                InputProps={{
+                    startAdornment: <SearchIcon fontSize="small" />,
+                    endAdornment: (
+                        <IconButton
+                            title="Clear"
+                            aria-label="Clear"
+                            size="small"
+                            style={{ visibility: props.value ? 'visible' : 'hidden' }}
+                            onClick={props.clearSearch}
+                        >
+                            <ClearIcon fontSize="small" />
+                        </IconButton>
+                    ),
+                }}
+            />
+        </div>
+    );
 }
 
 QuickSearchToolbar.propTypes = {
@@ -160,9 +172,8 @@ QuickSearchToolbar.propTypes = {
 };
 
 function getFullName(params) {
-    return `${params.value || ""} ${
-        params.getValue(params.id, "apellido_p") || ""
-    } ${params.getValue(params.id, "apellido_m") || ""}`
+    return `${params.value || ""} ${params.getValue(params.id, "apellido_p") || ""
+        } ${params.getValue(params.id, "apellido_m") || ""}`
 }
 
 
@@ -179,7 +190,7 @@ function getRegime(params) {
 }
 
 function getAddress(params) {
-    if(!params.getValue(params.id, "calle"))
+    if (!params.getValue(params.id, "calle"))
         return null
     return `${params.getValue(params.id, "calle") || ""} ${params.getValue(params.id, "num_ext") || ""} ${params.getValue(params.id, "num_int") || ""}, colonia ${params.getValue(params.id, "colonia") || ""}, código postal ${params.getValue(params.id, "cp") || ""}, ${params.getValue(params.id, "ciudad") || ""}, ${params.getValue(params.id, "estado") || ""}`
 }
@@ -199,9 +210,9 @@ const columns = [
     {
         field: "",
         headerName: "",
-        width:50,
+        width: 50,
         renderCell: (params) => (
-          <InertiaLink href={route('employees.edit', params.row.uuid)} style={{textDecoration: 'none', color: 'gray'}}><EditIcon/></InertiaLink>
+            <InertiaLink href={route('employees.edit', params.row.uuid)} style={{ textDecoration: 'none', color: 'gray' }}><EditIcon /></InertiaLink>
         ),
         sortable: false,
         editable: false,
@@ -212,18 +223,19 @@ const columns = [
         field: 'nombre',
         headerName: 'NOMBRE',
         editable: false,
-        disableColumnSelector:false,
+        disableColumnSelector: false,
         width: 200,
         valueGetter: getFullName,
         sortComparator: (v1, v2, cellParams1, cellParams2) =>
-          getFullName(cellParams1).localeCompare(getFullName(cellParams2)),
+            getFullName(cellParams1).localeCompare(getFullName(cellParams2)),
     },
     {
         field: 'edad',
         headerName: 'EDAD',
         editable: false,
         valueGetter: (params) => {
-            return getAge(params.getValue(params.id, "fecha_nac"))},
+            return getAge(params.getValue(params.id, "fecha_nac"))
+        },
         width: 100,
     },
     {
@@ -232,19 +244,19 @@ const columns = [
         editable: false,
         width: 170,
         valueFormatter: (params) => {
-          return `${params.value}`;
+            return `${params.value}`;
         },
     },
     {
-      field: 'sexo',
-      headerName: 'SEXO',
-      editable: false,
-      width: 100,
-      valueGetter: (params) => {
-          if(params.value == 'h') return "hombre"
-          else if (params.value == 'm') return "mujer"
-          else return "otro"
-      },
+        field: 'sexo',
+        headerName: 'SEXO',
+        editable: false,
+        width: 100,
+        valueGetter: (params) => {
+            if (params.value == 'h') return "hombre"
+            else if (params.value == 'm') return "mujer"
+            else return "otro"
+        },
     },
     {
         field: 'antiguedad',
@@ -299,7 +311,7 @@ const columns = [
         headerName: 'USUARIO',
         width: 120,
         valueGetter: (params) => {
-            if(params.row.user)
+            if (params.row.user)
                 return "Si"
             else
                 return "No"
@@ -321,12 +333,12 @@ const Index = ({ employees }) => {
         const searchRegex = new RegExp(escapeRegExp(searchValue), 'i');
         const filteredRows = employees.filter((row) => {
             return Object.keys(row).some((field) => {
-            return searchRegex.test(row[field] ? row[field].toString() : "");
+                return searchRegex.test(row[field] ? row[field].toString() : "");
             });
         });
         setRows(filteredRows);
     };
-    
+
     React.useEffect(() => {
         setRows(employees);
     }, [employees]);
@@ -340,21 +352,24 @@ const Index = ({ employees }) => {
                             <InertiaLink className="btn-floating btn-large waves-effect waves-light green-sind button-addUser" href={route('employees.create')}><i className="material-icons">add</i></InertiaLink>
                             <div className="card-content">
                                 <span className="card-title">Empleados</span>
-                                <Alertas/>
+                                <Alertas />
 
                                 <div style={{ height: 1000, width: '100%' }}>
-                                    <DataGrid
-                                        components={{ Toolbar: QuickSearchToolbar }}
-                                        rows={rows}
-                                        columns={columns}
-                                        componentsProps={{
-                                        toolbar: {
-                                            value: searchText,
-                                            onChange: (event) => requestSearch(event.target.value),
-                                            clearSearch: () => requestSearch(''),
-                                        },
-                                        }}
-                                    />
+                                    <ThemeProvider theme={themeEs}>
+                                        <DataGrid
+                                            components={{ Toolbar: QuickSearchToolbar }}
+                                            rows={rows}
+                                            columns={columns}
+                                            componentsProps={{
+                                                toolbar: {
+                                                    value: searchText,
+                                                    onChange: (event) => requestSearch(event.target.value),
+                                                    clearSearch: () => requestSearch(''),
+                                                },
+                                            }}
+                                        />
+                                    </ThemeProvider>
+
                                 </div>
                             </div>
                         </div>
