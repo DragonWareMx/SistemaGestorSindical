@@ -430,6 +430,13 @@ class UserController extends Controller
                 return \Redirect::back()->with('message','¡No puedes eliminar tu propio usuario!');
             }
 
+            if(!$user->employee()->get()->isEmpty())
+            {
+                $employee = $user->employee()->firstOrFail();
+                $employee->user()->dissociate();
+                $employee->save();
+            }
+
             $user->delete();
 
             //SE CREA EL LOG
