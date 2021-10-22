@@ -16,6 +16,7 @@ class CreateElectionsTable extends Migration
         Schema::create('elections', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->date('fecha');
         });
     }
 

@@ -46,18 +46,26 @@ Route::name('employees.')->middleware('auth')->group(function () {
 });
 
 // RUTAS OFICINAS
-Route::get('/honor-y-justicia', [App\Http\Controllers\issueController::class, 'index'])->name('honor');
-Route::get('/honor-y-justicia/{id}', [App\Http\Controllers\issueController::class, 'issue'])->name('honor.issue');
+Route::get('/honor-y-justicia', [App\Http\Controllers\IssueController::class, 'index'])->name('honor');
+Route::get('/honor-y-justicia/{id}', [App\Http\Controllers\IssueController::class, 'issue'])->name('honor.issue');
 //Conflictos
-Route::get('/conflictos', [App\Http\Controllers\conflictController::class, 'index'])->name('conflicts');
-Route::get('/conflictos/{id}', [App\Http\Controllers\conflictController::class, 'conflict'])->name('conflicts.conflict');
+Route::get('/conflictos', [App\Http\Controllers\ConflictController::class, 'index'])->name('conflicts');
+Route::get('/conflictos/{id}', [App\Http\Controllers\ConflictController::class, 'conflict'])->name('conflicts.conflict');
 //Secretaria del Interior
-Route::get('/secretaria-del-interior', [App\Http\Controllers\conflictController::class, 'secretariaInterior'])->name('secretariaInterior');
-Route::get('/secretaria-del-interior/{id}', [App\Http\Controllers\conflictController::class, 'secretariaInteriorConflict'])->name('secretariaInterior.conflict');
+Route::get('/secretaria-del-trabajo', [App\Http\Controllers\ConflictController::class, 'secretariaTrabajo'])->name('secretariaTrabajo');
+Route::get('/secretaria-del-trabajo/{id}', [App\Http\Controllers\ConflictController::class, 'secretariaTrabajoConflict'])->name('secretariaTrabajo.conflict');
+// Secreteria del trabajo
+Route::get('/secretaria-del-interior', [App\Http\Controllers\ElectionController::class, 'index'])->name('secretariaInterior');
+Route::get('/secretaria-del-interior/{id}', [App\Http\Controllers\ElectionController::class, 'secretariaInteriorElection'])->name('secretariaInterior.election');
+
 
 //Acción Femenil
-Route::get('/accion-femenil', [App\Http\Controllers\trophyController::class, 'index'])->name('accionFemenil');
-Route::get('/accion-femenil/{id}', [App\Http\Controllers\trophyController::class, 'trophy'])->name('accionFemenil.trophy');
+Route::get('/accion-femenil', [App\Http\Controllers\TrophyController::class, 'index'])->name('accionFemenil');
+Route::get('/accion-femenil/{id}', [App\Http\Controllers\TrophyController::class, 'trophy'])->name('accionFemenil.trophy');
+
+
+
+
 
 Auth::routes(['register' => false]);
 

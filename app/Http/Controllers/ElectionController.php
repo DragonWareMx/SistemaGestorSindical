@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Election;
+use App\Models\Employee;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Auth;
+use Illuminate\Support\Facades\DB;
 
 class ElectionController extends Controller
 {
@@ -12,9 +16,17 @@ class ElectionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        //
+    public function index(){
+        $elections = Election::leftJoin('election_employee','elections.id','election_employee.election_id')
+        ->leftJoin('employees','election_employee.employee_id','employees.id')
+        ->select('election_employee.id','employees.nombre','matricula','apellido_p','election_employee.num_oficio','elections.fecha','fecha_voto')
+        ->get();
+
+        return Inertia::render('Oficinas/secretariaInterior',['elections' => $elections]);
+    }
+
+    public function secretariaInteriorElection($id){
+        dd("Welcome to the employee-election row",$id);
     }
 
     /**

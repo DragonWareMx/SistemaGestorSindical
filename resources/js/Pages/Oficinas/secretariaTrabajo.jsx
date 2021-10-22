@@ -107,7 +107,7 @@ QuickSearchToolbar.propTypes = {
     value: PropTypes.string.isRequired,
   };
 
-const secretariaInterior = ({elections}) => {
+const secretariaTrabajo = ({conflicts}) => {
 
     const columns = [
         {
@@ -143,14 +143,14 @@ const secretariaInterior = ({elections}) => {
         flex: 0.4,
       },
       {
-        field: 'fecha',
-        headerName: 'FECHA DE ELECCIÓN',
+        field: 'inicio_sancion',
+        headerName: 'INICIO DE SANCION',
         editable: false,
         flex: 0.4,
       },
       {
-        field: 'fecha_voto',
-        headerName: 'FECHA DE VOTACIÓN',
+        field: 'termino_sancion',
+        headerName: 'TÉRMINO DE SANCION',
         editable: false,
         flex: 0.4,
       },
@@ -159,7 +159,7 @@ const secretariaInterior = ({elections}) => {
         headerName: "VER",
         flex: 0.2,
         renderCell: (params) => (
-          <InertiaLink href={route('secretariaInterior.election', params.row.id)} style={{textDecoration: 'none', color: 'gray'}}><VisibilityIcon/></InertiaLink>
+          <InertiaLink href={route('secretariaTrabajo.conflict', params.row.uuid)} style={{textDecoration: 'none', color: 'gray'}}><VisibilityIcon/></InertiaLink>
         ),
         sortable: false,
         editable: false,
@@ -167,12 +167,12 @@ const secretariaInterior = ({elections}) => {
     ]
     
       const [searchText, setSearchText] = React.useState('');
-      const [rows, setRows] = React.useState(elections);
+      const [rows, setRows] = React.useState(conflicts);
     
       const requestSearch = (searchValue) => {
         setSearchText(searchValue);
         const searchRegex = new RegExp(escapeRegExp(searchValue), 'i');
-        const filteredRows = elections.filter((row) => {
+        const filteredRows = conflicts.filter((row) => {
           return Object.keys(row).some((field) => {
             return searchRegex.test(row[field] ? row[field].toString() : "");
           });
@@ -181,8 +181,8 @@ const secretariaInterior = ({elections}) => {
       };
     
       React.useEffect(() => {
-        setRows(elections);
-      }, [elections]);
+        setRows(conflicts);
+      }, [conflicts]);
     return (
         <> 
             <div className="row contenedor">
@@ -211,6 +211,6 @@ const secretariaInterior = ({elections}) => {
         </>)
 }
 
-secretariaInterior.layout = page => <Layout children={page} title="Secretaria del Interior" pageTitle="Secretaria del Interior"/>
+secretariaTrabajo.layout = page => <Layout children={page} title="Secretaria del Trabajo" pageTitle="Secretaria del Trabajo"/>
 
-export default secretariaInterior
+export default secretariaTrabajo

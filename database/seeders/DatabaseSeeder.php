@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             IssueSeeder::class,
             ConflictSeeder::class,
             TrophySeeder::class,
+            ElectionSeeder::class,
         ]);
     }
 }
