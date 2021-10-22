@@ -243,7 +243,7 @@ const Index = ({ users }) => {
                         <div className="card darken-1 cardUsers">
                             <InertiaLink className="btn-floating btn-large waves-effect waves-light green-sind button-addUser" href={route('users.create')}><i className="material-icons">add</i></InertiaLink>
                             <div className="card-content">
-                                <span className="card-title">Usuarios</span>
+                                <span className="card-title">Comité</span>
                                 <Alertas/>
 
                                 <div style={{ height: 1000, width: '100%' }}>
@@ -269,6 +269,6 @@ const Index = ({ users }) => {
     )
 }
 
-Index.layout = page => <Layout children={page} title="Escuela Sindical - Usuarios" pageTitle="USUARIOS" />
+Index.layout = page => <Layout children={page} title="Escuela Sindical - Comité" pageTitle="COMITÉ" />
 
 export default Index

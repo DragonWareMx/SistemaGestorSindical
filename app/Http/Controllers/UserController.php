@@ -312,8 +312,20 @@ class UserController extends Controller
                 if($user->foto){
                     \Storage::delete('public/fotos_perfil/'.$user->foto);
                 }
+
+                //guarda la foto
                 $foto = $request->file('foto')->store('public/fotos_perfil');
-                $user->foto = $request->file('foto')->hashName();
+                $fileName = $request->file('foto')->hashName();
+                $user->foto = $fileName;
+
+                $image = Image::make(Storage::get($foto));
+
+                $image->resize(1280, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                });
+
+                Storage::put($foto, (string) $image->encode('jpg', 30));
             }
             
             //---cuenta---

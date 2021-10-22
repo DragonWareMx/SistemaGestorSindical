@@ -479,6 +479,6 @@ const Edit = ({ user, roles, employees }) => {
     )
 }
 
-Edit.layout = page => <Layout children={page} title="Escuela Sindical - Usuarios" pageTitle="USUARIOS" />
+Edit.layout = page => <Layout children={page} title="Escuela Sindical - Comité" pageTitle="COMITÉ" />
 
 export default Edit
