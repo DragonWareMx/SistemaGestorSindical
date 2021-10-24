@@ -21,14 +21,13 @@ const Configuracion = ({ user }) => {
     //valores para formulario
     const [values, setValues] = useState({
         _method: 'patch',
+
         nombre: user.employee.nombre || "",
         apellido_paterno: user.employee.apellido_p || "",
         apellido_materno: user.employee.apellido_m || "",
-        email: user.email || "",
-        contrasena: "",
-        confirmar_contrasena: "",
         fecha_de_nacimiento: user.employee.fecha_nac || "",
         sexo: user.employee.sexo || "",
+        
         estado: user.employee.estado || "",
         ciudad: user.employee.ciudad || "",
         colonia: user.employee.colonia || "",
@@ -36,11 +35,17 @@ const Configuracion = ({ user }) => {
         codigo_postal: user.employee.cp || "",
         numero_exterior: user.employee.num_ext || "",
         numero_interior: user.employee.num_int || "",
-        tarjeton_de_pago: "",
+        telefono: user.employee.tel || "",
+        
+        email: user.email || "",
+        cambiar_contrasena: false,
+        contrasena: "",
+        confirmar_contrasena: "",
+        
         foto: null,
+        tarjeton_de_pago: "",
         deleted_at: user.employee.deleted_at,
-        cambiar_tarjeton: false,
-        cambiar_contrasena: false
+
     })
 
     //actualiza los hooks cada vez que se modifica un input
@@ -248,6 +253,15 @@ const Configuracion = ({ user }) => {
                                             {
                                                 errors.sexo &&
                                                 <span className="helper-text" data-error={errors.sexo} style={{ "marginBottom": "10px", color: "#F44336" }}>{errors.sexo}</span>
+                                            }
+                                        </div>
+
+                                        <div className="input-field col s12 input-50-re">
+                                            <input  maxLength="25" id="telefono" type="text" className={errors.telefono ? "validate form-control invalid" : "validate"} name="telefono" value={values.telefono} autoComplete="telefono" onChange={handleChange} />
+                                            <label htmlFor="telefono">Teléfono (opcional)</label>
+                                            {
+                                                errors.telefono &&
+                                                <span className="helper-text" data-error={errors.telefono} style={{ "marginBottom": "10px" }}>{errors.telefono}</span>
                                             }
                                         </div>
                                         
