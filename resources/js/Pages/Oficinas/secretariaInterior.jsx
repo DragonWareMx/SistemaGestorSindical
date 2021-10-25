@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Layout from '../../layouts/Layout';
 import { Inertia } from '@inertiajs/inertia'
 import route from 'ziggy-js';
-import { InertiaLink } from '@inertiajs/inertia-react'; 
+import { InertiaLink } from '@inertiajs/inertia-react';
 
 // componentes
 import PropTypes from 'prop-types';
@@ -12,6 +12,7 @@ import {
   DataGrid,
   GridToolbarDensitySelector,
   GridToolbarFilterButton,
+  esES
 } from '@mui/x-data-grid';
 import ClearIcon from '@mui/icons-material/Clear';
 import SearchIcon from '@mui/icons-material/Search';
@@ -22,8 +23,19 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 // Hojas de estilos
 import '/css/usersStyle.css'
 
+import { ThemeProvider } from '@mui/material/styles';
+
+const themeEs = createTheme(
+  {
+    palette: {
+      primary: { main: '#134E39' },
+    },
+  },
+  esES,
+);
+
 function escapeRegExp(value) {
-    return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+  return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
 }
 
 const defaultTheme = createTheme();
@@ -49,168 +61,171 @@ const useStyles = makeStyles(
           borderBottom: `none`,
         },
         '& .MuiInput-underline:after': {
-            borderBottom: `none`,
+          borderBottom: `none`,
         },
-          '& .MuiInput-underline:focus': {
-            borderBottom: `none`,
+        '& .MuiInput-underline:focus': {
+          borderBottom: `none`,
         },
-        '& .MuiInputBase-root-MuiInput-root:hover:not(.Mui-disabled):before' : {
-            borderBottom: `0px solid white`,
+        '& .MuiInputBase-root-MuiInput-root:hover:not(.Mui-disabled):before': {
+          borderBottom: `0px solid white`,
         },
-        '& .css-1480iag-MuiInputBase-root-MuiInput-root:hover:not(.Mui-disabled):before' : {
-            borderBottom: `0px solid white`,
+        '& .css-1480iag-MuiInputBase-root-MuiInput-root:hover:not(.Mui-disabled):before': {
+          borderBottom: `0px solid white`,
         },
       },
-      
+
     }),
   { defaultTheme },
 );
 
 function QuickSearchToolbar(props) {
-    const classes = useStyles();
-  
-    return (
-      <div className={classes.root}>
-        <div>
-          <GridToolbarFilterButton />
-          <GridToolbarDensitySelector />
-        </div>
-        <TextField
-          variant="standard"
-          value={props.value}
-          onChange={props.onChange}
-          placeholder="Buscar…"
-          className={classes.textField}
-          InputProps={{
-            startAdornment: <SearchIcon fontSize="small" />,
-            endAdornment: (
-              <IconButton
-                title="Clear"
-                aria-label="Clear"
-                size="small"
-                style={{ visibility: props.value ? 'visible' : 'hidden' }}
-                onClick={props.clearSearch}
-              >
-                <ClearIcon fontSize="small" />
-              </IconButton>
-            ),
-          }}
-        />
+  const classes = useStyles();
+
+  return (
+    <div className={classes.root}>
+      <div>
+        <GridToolbarFilterButton />
+        <GridToolbarDensitySelector />
       </div>
-    );
-  }
+      <TextField
+        variant="standard"
+        value={props.value}
+        onChange={props.onChange}
+        placeholder="Buscar…"
+        className={classes.textField}
+        InputProps={{
+          startAdornment: <SearchIcon fontSize="small" />,
+          endAdornment: (
+            <IconButton
+              title="Clear"
+              aria-label="Clear"
+              size="small"
+              style={{ visibility: props.value ? 'visible' : 'hidden' }}
+              onClick={props.clearSearch}
+            >
+              <ClearIcon fontSize="small" />
+            </IconButton>
+          ),
+        }}
+      />
+    </div>
+  );
+}
 
 
 QuickSearchToolbar.propTypes = {
-    clearSearch: PropTypes.func.isRequired,
-    onChange: PropTypes.func.isRequired,
-    value: PropTypes.string.isRequired,
+  clearSearch: PropTypes.func.isRequired,
+  onChange: PropTypes.func.isRequired,
+  value: PropTypes.string.isRequired,
+};
+
+const secretariaInterior = ({ elections }) => {
+
+  const columns = [
+    {
+      field: 'id',
+      headerName: 'NO.',
+      editable: false,
+      disableColumnSelector: false,
+      flex: 0.1,
+    },
+    {
+      field: 'num_oficio',
+      headerName: 'OFICIO',
+      editable: false,
+      disableColumnSelector: false,
+      flex: 0.3,
+    },
+    {
+      field: 'matricula',
+      headerName: 'MATRICULA',
+      editable: false,
+      flex: 0.4,
+    },
+    {
+      field: 'nombre',
+      headerName: 'NOMBRE',
+      editable: false,
+      flex: 0.4,
+    },
+    {
+      field: 'apellido_p',
+      headerName: 'APELLIDO',
+      editable: false,
+      flex: 0.4,
+    },
+    {
+      field: 'fecha',
+      headerName: 'FECHA DE ELECCIÓN',
+      editable: false,
+      flex: 0.4,
+    },
+    {
+      field: 'fecha_voto',
+      headerName: 'FECHA DE VOTACIÓN',
+      editable: false,
+      flex: 0.4,
+    },
+    {
+      field: "",
+      headerName: "VER",
+      flex: 0.2,
+      renderCell: (params) => (
+        <InertiaLink href={route('secretariaInterior.election', params.row.id)} style={{ textDecoration: 'none', color: 'gray' }}><VisibilityIcon /></InertiaLink>
+      ),
+      sortable: false,
+      editable: false,
+    }
+  ]
+
+  const [searchText, setSearchText] = React.useState('');
+  const [rows, setRows] = React.useState(elections);
+
+  const requestSearch = (searchValue) => {
+    setSearchText(searchValue);
+    const searchRegex = new RegExp(escapeRegExp(searchValue), 'i');
+    const filteredRows = elections.filter((row) => {
+      return Object.keys(row).some((field) => {
+        return searchRegex.test(row[field] ? row[field].toString() : "");
+      });
+    });
+    setRows(filteredRows);
   };
 
-const secretariaInterior = ({elections}) => {
+  React.useEffect(() => {
+    setRows(elections);
+  }, [elections]);
+  return (
+    <>
+      <div className="row contenedor">
+        <div className="col contenedor s12">
+          <div className="card darken-1 cardUsers">
+            <div className="card-content">
+              <span className="card-title">Secretaria del Interior</span>
+              <div style={{ height: 400, width: '100%' }}>
+                <ThemeProvider theme={themeEs}>
+                  <DataGrid
+                    components={{ Toolbar: QuickSearchToolbar }}
+                    rows={rows}
+                    columns={columns}
+                    componentsProps={{
+                      toolbar: {
+                        value: searchText,
+                        onChange: (event) => requestSearch(event.target.value),
+                        clearSearch: () => requestSearch(''),
+                      },
+                    }}
+                  />
+                </ThemeProvider>
 
-    const columns = [
-        {
-          field: 'id',
-          headerName: 'NO.',
-          editable: false,
-          disableColumnSelector:false,
-          flex: 0.1,
-        },
-        {
-          field: 'num_oficio',
-          headerName: 'OFICIO',
-          editable: false,
-          disableColumnSelector:false,
-          flex: 0.3,
-      },
-      {
-          field: 'matricula',
-          headerName: 'MATRICULA',
-          editable: false,
-          flex: 0.4,
-      },
-      {
-        field: 'nombre',
-        headerName: 'NOMBRE',
-        editable: false,
-        flex: 0.4,
-      },
-      {
-        field: 'apellido_p',
-        headerName: 'APELLIDO',
-        editable: false,
-        flex: 0.4,
-      },
-      {
-        field: 'fecha',
-        headerName: 'FECHA DE ELECCIÓN',
-        editable: false,
-        flex: 0.4,
-      },
-      {
-        field: 'fecha_voto',
-        headerName: 'FECHA DE VOTACIÓN',
-        editable: false,
-        flex: 0.4,
-      },
-      {
-        field: "",
-        headerName: "VER",
-        flex: 0.2,
-        renderCell: (params) => (
-          <InertiaLink href={route('secretariaInterior.election', params.row.id)} style={{textDecoration: 'none', color: 'gray'}}><VisibilityIcon/></InertiaLink>
-        ),
-        sortable: false,
-        editable: false,
-      }
-    ]
-    
-      const [searchText, setSearchText] = React.useState('');
-      const [rows, setRows] = React.useState(elections);
-    
-      const requestSearch = (searchValue) => {
-        setSearchText(searchValue);
-        const searchRegex = new RegExp(escapeRegExp(searchValue), 'i');
-        const filteredRows = elections.filter((row) => {
-          return Object.keys(row).some((field) => {
-            return searchRegex.test(row[field] ? row[field].toString() : "");
-          });
-        });
-        setRows(filteredRows);
-      };
-    
-      React.useEffect(() => {
-        setRows(elections);
-      }, [elections]);
-    return (
-        <> 
-            <div className="row contenedor">
-                <div className="col contenedor s12">
-                    <div className="card darken-1 cardUsers">
-                        <div className="card-content">
-                            <span className="card-title">Secretaria del Interior</span>
-                            <div style={{ height: 400, width: '100%' }}>
-                                    <DataGrid
-                                    components={{ Toolbar: QuickSearchToolbar }}
-                                    rows={rows}
-                                    columns={columns}
-                                    componentsProps={{
-                                        toolbar: {
-                                        value: searchText,
-                                        onChange: (event) => requestSearch(event.target.value),
-                                        clearSearch: () => requestSearch(''),
-                                        },
-                                    }}
-                                    />
-                            </div>
-                        </div>
-                    </div>
-                </div>
+              </div>
             </div>
-        </>)
+          </div>
+        </div>
+      </div>
+    </>)
 }
 
-secretariaInterior.layout = page => <Layout children={page} title="Secretaria del Interior" pageTitle="Secretaria del Interior"/>
+secretariaInterior.layout = page => <Layout children={page} title="Secretaria del Interior" pageTitle="Secretaria del Interior" />
 
 export default secretariaInterior
