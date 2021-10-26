@@ -34,7 +34,7 @@ Route::name('users.')->middleware('auth')->group(function () {
     Route::put('usuarios/{id}/restore',  [App\Http\Controllers\UserController::class, 'restore'])->name('restore');
 });
 
-//Usuarios
+//Empleados
 Route::name('employees.')->middleware('auth')->group(function () {
     Route::get('/empleados', [App\Http\Controllers\EmployeeController::class, 'index'])->name('index');
     Route::get('/empleados/crear', [App\Http\Controllers\EmployeeController::class, 'create'])->name('create');

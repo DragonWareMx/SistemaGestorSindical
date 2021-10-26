@@ -22,7 +22,18 @@ class EmployeeFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'uuid' => $this->faker->unique()->uuid(),
+            'matricula' => $this->faker->unique()->randomNumber(5, true),
+            'nombre' => $this->faker->name(),
+            'apellido_p' => $this->faker->lastName(),
+            'apellido_m' => $this->faker->optional()->lastName(),
+
+            'fecha_nac' => $this->faker->date(),
+            'antiguedad' => $this->faker->date(),
+            'sexo' => $this->faker->randomElement(['h', 'm', 'o']),
+
+            'category_id' => $this->faker->randomElement([1, 2]),
+            'unit_id' => $this->faker->randomElement([1, 2, 3]),
         ];
     }
 }
