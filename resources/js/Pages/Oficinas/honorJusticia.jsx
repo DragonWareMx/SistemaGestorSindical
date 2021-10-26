@@ -20,8 +20,9 @@ import { createTheme } from '@mui/material/styles';
 import { createStyles, makeStyles } from '@mui/styles';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 
-// Hojas de estilos
+//estilos
 import '/css/usersStyle.css'
+import '/css/users.css'
 
 import { ThemeProvider } from '@mui/material/styles';
 
@@ -197,9 +198,10 @@ const honorJusticia = ({ issues }) => {
   }, [issues]);
   return (
     <>
-      <div className="row contenedor">
+      <div className="row">
         <div className="col contenedor s12">
           <div className="card darken-1 cardUsers">
+            <InertiaLink className="btn-floating btn-large waves-effect waves-light green-sind button-addUser" href={route('honor.create')}><i className="material-icons">add</i></InertiaLink>
             <div className="card-content">
               <span className="card-title">Honor y Justicia</span>
               <div style={{ height: 400, width: '100%' }}>

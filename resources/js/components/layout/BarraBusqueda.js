@@ -111,28 +111,9 @@ export default function BarraBusqueda() {
                 <a id="amburger" onClick={openNav} data-target="slide-out" className="menu-celular waves-effect waves-light sidenav-trigger"><i className="material-icons">menu</i></a>
 
                 {/* Parte izquierda de la barra superior */}
-                <nav className="main-bar-search" id="main-bar-search" onClick={growSearchBar}>
-                    <form onSubmit={handleSubmit}>
-                        <div className="nav-wrapper nav-flex row">
-                            <div className="input-field col s12" style={{ marginLeft: "0px", padding: "0px" }}>
-                                <input className="main-bar-search-2" id="busqueda" type="search" style={{ "borderRadius": "4px" }} onBlur={shrinkSearchBar} value={values.busqueda} onChange={handleChange} autoComplete="off" />
-                                <label className="label-icon margin-search-icons" htmlFor="search"><i className="material-icons">search</i></label>
-                            </div>
-                            <div className="col enter-div hide-on-small-only" id="enter-search">
-                                <button type="submit"><i className="material-icons">chevron_right</i></button>
-                            </div>
-                        </div>
-                    </form>
-                </nav>
-                {/* Parte derecha de la barra superior*/}
-                <div className="main-bar-right" id="main-bar-right">
-                    <div className="main-bar-right-leftSide" id="main-bar-backNoti">
-                        <a href="#">
-                            <i className="material-icons icono-notificaciones" style={{ marginTop: "5px" }}>backpack</i>
-                        </a>
-                        {/* < Notificaciones /> */}
-                    </div>
 
+                {/* Parte derecha de la barra superior*/}
+                <div className="main-bar-right" id="main-bar-right" style={{ marginRight: '0px' }}>
                     <div className="main-bar-right-rightSide">
                         <div className="truncate">
                             <InertiaLink href={route('perfil')}>
