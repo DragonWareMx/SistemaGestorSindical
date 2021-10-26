@@ -29,6 +29,13 @@ class EmployeeController extends Controller
      */
     public function index(Request $request)
     {
+        $usuarios = [];
+        $chunk = DB::table('employees')->orderBy('id')->chunk(100, function($employees) use($usuarios){
+            $usuarios = array_merge($usuarios, $employees->toArray());
+            // print_r($usuarios);
+        });
+
+        // print_r($usuarios);
         $employees = Employee::with('category:nombre,id', 'unit:nombre,id,regime_id', 'unit.regime:nombre,id', 'user:id')
         ->when($request->deleted == "true", function ($query, $deleted) {
             return $query->onlyTrashed();
