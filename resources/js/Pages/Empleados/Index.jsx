@@ -27,6 +27,7 @@ import {
   GridOverlay,
   esES
 } from '@mui/x-data-grid';
+import Stack from '@mui/material/Stack';
 import LinearProgress from '@mui/material/LinearProgress';
 import ClearIcon from '@mui/icons-material/Clear';
 import SearchIcon from '@mui/icons-material/Search';
@@ -253,15 +254,23 @@ function CustomPagination() {
     const [state] = useGridState(apiRef);
     const classes = useStyles();
   
+    console.log(state.rows.totalRowCount)
     return (
-      <Pagination
-        className={classes.root}
-        color="primary"
-        count={state.pagination.pageCount}
-        page={state.pagination.page + 1}
-        onChange={(event, value) => apiRef.current.setPage(value - 1)}
-        style={{backgroundColor: 'white'}}
-      />
+        <>
+            <div style={{marginRight: "auto", marginLeft: "12px"}}>
+                Total de registros: {state.rows.totalRowCount}
+            </div>
+            <div style={{ alignItems: "right"}}>
+
+            <Pagination
+                color="primary"
+                count={state.pagination.pageCount}
+                page={state.pagination.page + 1}
+                onChange={(event, value) => apiRef.current.setPage(value - 1)}
+                style={{backgroundColor: 'white', '-webkit-box-shadow': "none", "box-shadow": "none"}}
+            />
+            </div>
+        </>
     );
 }
 
