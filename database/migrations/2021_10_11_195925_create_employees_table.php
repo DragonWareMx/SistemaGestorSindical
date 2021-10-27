@@ -38,6 +38,8 @@ class CreateEmployeesTable extends Migration
             $table->string('cp', 9)->nullable();
             $table->string('tel', 25)->nullable();
 
+            // Empleado aceptado o no por la tabla admision y cambios
+            $table->enum('estatus', ['Aceptado', 'Rechazado', 'Pendiente'])->nullable();
 
             //llaves foraneas
             $table->unsignedBigInteger('user_id')->nullable();

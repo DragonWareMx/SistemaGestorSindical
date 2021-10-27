@@ -698,4 +698,19 @@ class EmployeeController extends Controller
             return \Redirect::back()->with('error','Ha ocurrido un error al intentar restaurar el empleado, inténtelo más tarde.');
         }
     }
+
+    public function admisionCambios(){
+
+        $employees = Employee::join('employee_relative','employees.id','employee_relative.employee_id')
+        ->join('employees as relatives','employee_relative.relative_id','relatives.id')
+        ->join('categories','relatives.category_id','categories.id')
+        ->select('relatives.id','relatives.uuid','relatives.nombre as nombreRelative','relatives.tel','employees.nombre as nombreEmployee','relatives.estatus','categories.nombre as categoria','employee_relative.parentesco')
+        ->get();
+
+        return Inertia::render('Oficinas/admisionCambios',['employees' => $employees]);
+    }
+
+    public function admisionCambiosRelative($uuid){
+        dd('Welcome to the relative and employee information view', $uuid);
+    }
 }

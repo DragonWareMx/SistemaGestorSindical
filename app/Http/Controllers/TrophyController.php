@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Trophy;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Auth;
+use Illuminate\Support\Facades\DB;
 
 class TrophyController extends Controller
 {
@@ -14,7 +17,16 @@ class TrophyController extends Controller
      */
     public function index()
     {
-        //
+        $trophies = Trophy::
+            leftJoin('employee_trophie','trophies.id','employee_trophie.trophie_id')
+            ->leftJoin('employees','employee_trophie.employee_id','employees.id')
+            ->select('employees.nombre','matricula','apellido_p','employee_trophie.id as id','trophies.nombre as premio','trophies.observaciones as observaciones')
+            ->get();
+        return Inertia::render('Oficinas/accionFemenil',['trophies' => $trophies]);
+    }
+
+    public function trophy($id){
+        dd($id);
     }
 
     /**

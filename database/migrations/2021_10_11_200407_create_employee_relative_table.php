@@ -23,7 +23,7 @@ class CreateEmployeeRelativeTable extends Migration
             $table->unsignedBigInteger('relative_id');
             $table->foreign('relative_id')->references('id')->on('employees')->onDelete('cascade');
 
-            $table->string('parentezco');
+            $table->string('parentesco');
             $table->date('ingreso_bolsa');
         });
     }

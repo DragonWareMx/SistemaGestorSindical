@@ -30,7 +30,7 @@ class ConflictController extends Controller
         dd($uuid);
     }
 
-    public function secretariaInterior()
+    public function secretariaTrabajo()
     {
         $conflicts = Conflict::
             where('tipo','secretaria')
@@ -38,10 +38,10 @@ class ConflictController extends Controller
             ->leftJoin('employees','conflict_employee.employee_id','employees.id')
             ->select('num_oficio','employees.nombre','inicio_sancion','termino_sancion','matricula','apellido_p','conflict_employee.id as id','conflicts.uuid as uuid')
             ->get();
-        return Inertia::render('Oficinas/secretariaInterior',['conflicts' => $conflicts]);
+        return Inertia::render('Oficinas/secretariaTrabajo',['conflicts' => $conflicts]);
     }
 
-    public function secretariaInteriorConflict($uuid){
+    public function secretariaTrabajoConflict($uuid){
         dd($uuid);
     }
 
