@@ -22,7 +22,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 
 // Hojas de estilos
 import '/css/usersStyle.css'
-
+import '/css/users.css'
 import { ThemeProvider } from '@mui/material/styles';
 
 const themeEs = createTheme(
@@ -193,6 +193,7 @@ const accionFemenil = ({ trophies }) => {
       <div className="row contenedor">
         <div className="col contenedor s12">
           <div className="card darken-1 cardUsers">
+          <InertiaLink className="btn-floating btn-large waves-effect waves-light green-sind button-addUser" href={route('accionFemenil.create')}><i className="material-icons">add</i></InertiaLink>
             <div className="card-content">
               <span className="card-title">Acción Femenil</span>
               <div style={{ height: 400, width: '100%' }}>
