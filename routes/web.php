@@ -59,7 +59,8 @@ Route::get('/secretaria-del-trabajo', [App\Http\Controllers\ConflictController::
 Route::get('/secretaria-del-trabajo/{id}', [App\Http\Controllers\ConflictController::class, 'secretariaTrabajoConflict'])->name('secretariaTrabajo.conflict');
 // Secreteria del trabajo
 Route::get('/secretaria-del-interior', [App\Http\Controllers\ElectionController::class, 'index'])->name('secretariaInterior');
-Route::get('/secretaria-del-interior/{id}', [App\Http\Controllers\ElectionController::class, 'secretariaInteriorElection'])->name('secretariaInterior.election');
+Route::get('/secretaria-del-interior/ver/{id}', [App\Http\Controllers\ElectionController::class, 'secretariaInteriorElection'])->name('secretariaInterior.election');
+Route::get('/secretaria-del-interior/crear', [App\Http\Controllers\ElectionController::class, 'create'])->name('secretariaInterior.create');
 //Admisión y cambios
 Route::get('/admision-y-cambios', [App\Http\Controllers\EmployeeController::class, 'admisionCambios'])->name('admisionCambios');
 Route::get('/admision-y-cambios/{id}', [App\Http\Controllers\EmployeeController::class, 'admisionCambiosRelative'])->name('admisionCambiosRelative');

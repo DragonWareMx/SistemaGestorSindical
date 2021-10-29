@@ -319,7 +319,7 @@ const Create = ({ employees }) => {
                                                             <TableCell>Empleado</TableCell>
                                                             <TableCell align="center">Sancionado</TableCell>
                                                             <TableCell align="center">Fecha Inicio</TableCell>
-                                                            <TableCell align="center">Fecha Termino</TableCell>
+                                                            <TableCell align="center">Fecha Término</TableCell>
                                                             <TableCell align="center">Sanción</TableCell>
                                                         </TableRow>
                                                     </TableHead>
@@ -362,7 +362,7 @@ const Create = ({ employees }) => {
                                                                 <TableCell align="center">
                                                                     <LocalizationProvider dateAdapter={DateAdapter} locale={es}>
                                                                         <MobileDatePicker
-                                                                            label="Fecha de termino"
+                                                                            label="Fecha de término"
                                                                             inputFormat="dd/MM/yyyy"
                                                                             clearable
                                                                             clearText="Limpiar"

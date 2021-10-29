@@ -44,7 +44,6 @@ class IssueController extends Controller
     {
         //
         return Inertia::render('Oficinas/hJCrear', [
-            'roles' => fn () => Role::select('name')->get(),
             'employees' => fn () => Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')
                 ->get()
         ]);

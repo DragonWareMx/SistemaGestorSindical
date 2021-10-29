@@ -16,17 +16,19 @@ class ElectionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(){
-        $elections = Election::leftJoin('election_employee','elections.id','election_employee.election_id')
-        ->leftJoin('employees','election_employee.employee_id','employees.id')
-        ->select('election_employee.id','employees.nombre','matricula','apellido_p','election_employee.num_oficio','elections.fecha','fecha_voto')
-        ->get();
+    public function index()
+    {
+        $elections = Election::leftJoin('election_employee', 'elections.id', 'election_employee.election_id')
+            ->leftJoin('employees', 'election_employee.employee_id', 'employees.id')
+            ->select('election_employee.id', 'employees.nombre', 'matricula', 'apellido_p', 'election_employee.num_oficio', 'elections.fecha', 'fecha_voto')
+            ->get();
 
-        return Inertia::render('Oficinas/secretariaInterior',['elections' => $elections]);
+        return Inertia::render('Oficinas/secretariaInterior', ['elections' => $elections]);
     }
 
-    public function secretariaInteriorElection($id){
-        dd("Welcome to the employee-election row",$id);
+    public function secretariaInteriorElection($id)
+    {
+        dd("Welcome to the employee-election row", $id);
     }
 
     /**
@@ -37,6 +39,10 @@ class ElectionController extends Controller
     public function create()
     {
         //
+        return Inertia::render('Oficinas/secretariaICrear', [
+            'employees' => fn () => Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')
+                ->get()
+        ]);
     }
 
     /**
