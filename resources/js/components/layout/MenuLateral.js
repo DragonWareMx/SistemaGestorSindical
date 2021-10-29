@@ -74,7 +74,7 @@ export default function MenuLateral() {
               </div>
               <InertiaLink href={route('perfil')} className="icono-menu">
                 <div className="menu-profile-info">
-                  <img style={{ marginLeft: '10px' }} src={auth.user.foto ? "/storage/fotos_perfil/" + auth.user.foto : "/img/avatar1.jpg"} className="main-userimage" />
+                  <img style={{ marginLeft: '10px' }} src={auth.user.foto ? "/storage/fotos_perfil/" + auth.user.foto : "/img/avatar1.png"} className="main-userimage" />
                   <div className="profile-info-name truncate">{auth.user.employee.nombre + ' ' + auth.user.employee.apellido_p + ' ' + auth.user.employee.apellido_m}</div>
                 </div>
               </InertiaLink>

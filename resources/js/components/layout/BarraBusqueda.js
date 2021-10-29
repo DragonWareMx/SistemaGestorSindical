@@ -122,7 +122,7 @@ export default function BarraBusqueda() {
                         </div>
                         <div>
                             <InertiaLink href={route('perfil')}>
-                                <img className="main-userimage" src={auth.user.foto ? "/storage/fotos_perfil/" + auth.user.foto : "/img/avatar1.jpg"} alt="" />
+                                <img className="main-userimage" src={auth.user.foto ? "/storage/fotos_perfil/" + auth.user.foto : "/img/avatar1.png"} alt="" />
                             </InertiaLink>
                         </div>
                     </div>

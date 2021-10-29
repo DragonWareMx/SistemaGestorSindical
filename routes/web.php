@@ -49,6 +49,7 @@ Route::name('employees.')->middleware('auth')->group(function () {
 Route::get('/honor-y-justicia', [App\Http\Controllers\IssueController::class, 'index'])->name('honor');
 Route::get('/honor-y-justicia/ver/{id}', [App\Http\Controllers\IssueController::class, 'issue'])->name('honor.issue');
 Route::get('/honor-y-justicia/crear', [App\Http\Controllers\IssueController::class, 'create'])->name('honor.create');
+Route::post('/honor-y-justicia/crear', [App\Http\Controllers\IssueController::class, 'store'])->name('honor.store');
 //Conflictos
 Route::get('/conflictos', [App\Http\Controllers\ConflictController::class, 'index'])->name('conflicts');
 Route::get('/conflictos/{id}', [App\Http\Controllers\ConflictController::class, 'conflict'])->name('conflicts.conflict');
