@@ -165,7 +165,7 @@ const Create = ({ roles, employees }) => {
                             <InertiaLink  href={route('users.index')}  className="icon-back-course tooltipped" data-position="left" data-tooltip="Regresar"><i className="material-icons">keyboard_backspace</i></InertiaLink>
                             AGREGAR USUARIO
                         </div>
-                        
+
                         <Alertas />
                         {/* ----Formulario---- */}
                         <form onSubmit={handleSubmit}>
