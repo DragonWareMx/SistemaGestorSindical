@@ -74,15 +74,15 @@ export default function MenuLateral() {
               </div>
               <InertiaLink href={route('perfil')} className="icono-menu">
                 <div className="menu-profile-info">
-                  <img style={{ marginLeft: '10px' }} src={"/img/avatar1.png"} className="main-userimage" />
-                  <div className="profile-info-name truncate">Pepito Pérez</div>
+                  <img style={{ marginLeft: '10px' }} src={auth.user.foto ? "/storage/fotos_perfil/" + auth.user.foto : "/img/avatar1.jpg"} className="main-userimage" />
+                  <div className="profile-info-name truncate">{auth.user.employee.nombre + ' ' + auth.user.employee.apellido_p + ' ' + auth.user.employee.apellido_m}</div>
                 </div>
               </InertiaLink>
             </div>
           </li>
           {/* INICIO */}
           <li>
-            <InertiaLink href={'#'} className={isUrl("inicio") ? "icono-menu current-menu-text" : "icono-menu"}>
+            <InertiaLink href={'/'} className={isUrl("inicio") ? "icono-menu current-menu-text" : "icono-menu"}>
               <i className={isUrl("inicio") ? "material-icons icono-menu current-menu" : "material-icons icono-menu"}>home</i>
               Inicio
             </InertiaLink>
@@ -115,7 +115,7 @@ export default function MenuLateral() {
           {/* {auth && auth.roles && auth.roles.length > 0 && auth.roles[0].name == "Administrador" && */}
           <li>
             <InertiaLink href={route('honor')} className={isUrl("reportes") ? "icono-menu current-menu-text" : "icono-menu"}>
-              <i className={isUrl("reportes") ? "material-icons icono-menu current-menu" : "material-icons icono-menu"}>maps_home_work</i>Honor y Justicia
+              <i className={isUrl("reportes") ? "material-icons icono-menu current-menu" : "material-icons icono-menu"}>military_tech</i>Honor y Justicia
             </InertiaLink>
           </li>
           {/* } */}
@@ -124,7 +124,7 @@ export default function MenuLateral() {
           {/* {auth && auth.roles && auth.roles.length > 0 && auth.roles[0].name == "Administrador" && */}
           <li>
             <InertiaLink href={route('conflicts')} className={isUrl("solicitudes") ? "icono-menu current-menu-text" : "icono-menu"}>
-              <i className={isUrl("solicitudes") ? "material-icons icono-menu current-menu" : "material-icons icono-menu"}>maps_home_work</i>Conflictos
+              <i className={isUrl("solicitudes") ? "material-icons icono-menu current-menu" : "material-icons icono-menu"}>sports_kabaddi</i>Conflictos
             </InertiaLink>
           </li>
           {/* } */}
@@ -132,28 +132,28 @@ export default function MenuLateral() {
           {/* SECRETARÍA DEL INTERIOR */}
           <li>
             <InertiaLink href={route('secretariaInterior')} className={isUrl("solicitudes") ? "icono-menu current-menu-text" : "icono-menu"}>
-              <i className={isUrl("solicitudes") ? "material-icons icono-menu current-menu" : "material-icons icono-menu"}>maps_home_work</i>Secretaría del Interior
+              <i className={isUrl("solicitudes") ? "material-icons icono-menu current-menu" : "material-icons icono-menu"}>light</i>Secretaría del Interior
             </InertiaLink>
           </li>
 
           {/* SECRETARIA DEL TRABAJO */}
           <li>
             <InertiaLink href={route('secretariaTrabajo')} className={isUrl("solicitudes") ? "icono-menu current-menu-text" : "icono-menu"}>
-              <i className={isUrl("solicitudes") ? "material-icons icono-menu current-menu" : "material-icons icono-menu"}>maps_home_work</i>Secretaría del Trabajo
+              <i className={isUrl("solicitudes") ? "material-icons icono-menu current-menu" : "material-icons icono-menu"}>work</i>Secretaría del Trabajo
             </InertiaLink>
           </li>
 
           {/* ACCION FEMENIL */}
           <li>
             <InertiaLink href={route('accionFemenil')} className={isUrl("solicitudes") ? "icono-menu current-menu-text" : "icono-menu"}>
-              <i className={isUrl("solicitudes") ? "material-icons icono-menu current-menu" : "material-icons icono-menu"}>maps_home_work</i>Acción femenil
+              <i className={isUrl("solicitudes") ? "material-icons icono-menu current-menu" : "material-icons icono-menu"}>woman</i>Acción femenil
             </InertiaLink>
           </li>
 
           {/* ADMISIÓN Y CAMBIOS */}
           <li>
             <InertiaLink href={route('admisionCambios')} className={isUrl("solicitudes") ? "icono-menu current-menu-text" : "icono-menu"}>
-              <i className={isUrl("solicitudes") ? "material-icons icono-menu current-menu" : "material-icons icono-menu"}>maps_home_work</i>Admisión y Cambios
+              <i className={isUrl("solicitudes") ? "material-icons icono-menu current-menu" : "material-icons icono-menu"}>family_restroom</i>Admisión y Cambios
             </InertiaLink>
           </li>
 
@@ -210,7 +210,7 @@ export default function MenuLateral() {
         </div>
         {/* INICIO */}
         <div className="col s12">
-          <InertiaLink href={'#'} className="icono-menu">
+          <InertiaLink href={'/'} className="icono-menu">
             <i className={isUrl("inicio") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Inicio">home</i>
           </InertiaLink>
         </div>
@@ -237,37 +237,37 @@ export default function MenuLateral() {
         {/* HONOR Y JUSTICIA */}
         <div className="col s12">
           <InertiaLink href={route('honor')} className="icono-menu">
-            <i className={isUrl("cursos") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Honor y Justicia">maps_home_work</i>
+            <i className={isUrl("cursos") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Honor y Justicia">military_tech</i>
           </InertiaLink>
         </div>
         {/* CONFLICTOS */}
         <div className="col s12">
           <InertiaLink href={route('honor')} className="icono-menu">
-            <i className={isUrl("cursos") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Conflictos">maps_home_work</i>
+            <i className={isUrl("cursos") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Conflictos">sports_kabaddi</i>
           </InertiaLink>
         </div>
         {/* SECRETARIA DEL INTERIOR */}
         <div className="col s12">
           <InertiaLink href={route('secretariaInterior')} className="icono-menu">
-            <i className={isUrl("cursos") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Secretaría del Interior">maps_home_work</i>
+            <i className={isUrl("cursos") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Secretaría del Interior">light</i>
           </InertiaLink>
         </div>
         {/* SECRETARIA DEL TRABAJO */}
         <div className="col s12">
           <InertiaLink href={route('secretariaTrabajo')} className="icono-menu">
-            <i className={isUrl("cursos") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Secretaría del Trabajo">maps_home_work</i>
+            <i className={isUrl("cursos") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Secretaría del Trabajo">work</i>
           </InertiaLink>
         </div>
         {/* ACCION FEMENIL */}
         <div className="col s12">
           <InertiaLink href={route('accionFemenil')} className="icono-menu">
-            <i className={isUrl("cursos") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Acción femenil">maps_home_work</i>
+            <i className={isUrl("cursos") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Acción femenil">woman</i>
           </InertiaLink>
         </div>
         {/* ADMISION Y CAMBIOS */}
         <div className="col s12">
           <InertiaLink href={route('admisionCambios')} className="icono-menu">
-            <i className={isUrl("cursos") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Admisión y Cambios">maps_home_work</i>
+            <i className={isUrl("cursos") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Admisión y Cambios">family_restroom</i>
           </InertiaLink>
         </div>
 

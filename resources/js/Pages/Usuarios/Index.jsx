@@ -260,7 +260,7 @@ const Index = ({ users }) => {
                                 <span className="card-title">Comité</span>
                                 <Alertas />
 
-                                <div style={{ height: 1000, width: '100%' }}>
+                                <div style={{ height: 500, width: '100%' }}>
                                     <ThemeProvider theme={themeEs}>
                                         <DataGrid
                                             components={{ Toolbar: QuickSearchToolbar }}

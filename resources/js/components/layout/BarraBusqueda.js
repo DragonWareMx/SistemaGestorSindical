@@ -113,16 +113,16 @@ export default function BarraBusqueda() {
                 {/* Parte izquierda de la barra superior */}
 
                 {/* Parte derecha de la barra superior*/}
-                <div className="main-bar-right" id="main-bar-right" style={{ marginRight: '0px' }}>
+                <div className="main-bar-right" id="main-bar-right" style={{ marginRight: '0px', marginLeft: 'auto', justifyContent: 'flex-end' }}>
                     <div className="main-bar-right-rightSide">
                         <div className="truncate">
                             <InertiaLink href={route('perfil')}>
-                                <span className="main-username">Pepito Pérez</span>
+                                <span className="main-username">{auth.user.employee.nombre + ' ' + auth.user.employee.apellido_p + ' ' + auth.user.employee.apellido_m}</span>
                             </InertiaLink>
                         </div>
                         <div>
                             <InertiaLink href={route('perfil')}>
-                                <img className="main-userimage" src={"/img/avatar1.png"} alt="" />
+                                <img className="main-userimage" src={auth.user.foto ? "/storage/fotos_perfil/" + auth.user.foto : "/img/avatar1.jpg"} alt="" />
                             </InertiaLink>
                         </div>
                     </div>

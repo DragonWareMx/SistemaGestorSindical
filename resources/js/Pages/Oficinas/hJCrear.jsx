@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, createRef } from 'react';
 import Layout from '../../layouts/Layout';
 import { InertiaLink, usePage } from '@inertiajs/inertia-react'
 
@@ -15,6 +15,36 @@ import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import { createStyles, makeStyles } from '@mui/styles';
 import { createTheme } from '@mui/material/styles';
+import Button from '@mui/material/Button';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import DeleteIcon from '@mui/icons-material/Delete';
+
+
+//tabla
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import Checkbox from '@mui/material/Checkbox';
+import MobileDatePicker from '@mui/lab/MobileDatePicker';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DateAdapter from '@mui/lab/AdapterDateFns';
+import IconButton from '@mui/material/IconButton';
+
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
+import { es } from "date-fns/locale";
+
+// import moment from "moment";
+// import "moment/locale/es-mx";
+
 
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
@@ -68,6 +98,7 @@ const Create = ({ roles, employees }) => {
     //valores para formulario
     const [values, setValues] = useState({
         num_oficio: '',
+        observaciones: '',
         empleado: null
     })
 
@@ -121,11 +152,106 @@ const Create = ({ roles, employees }) => {
             setValues({
                 ...values,
                 empleado: newValue
-                    ? newValue.id
+                    ? newValue
                     : null,
             });
         }
     };
+
+    //esto de aqui es provisional :v
+    const [emploInfo, setEmploInfo] = useState({
+        empleados: []
+    });
+
+    function agregarEmpleado() {
+        if (values.empleado) {
+            var arr = emploInfo.empleados.slice();
+            var bandera = true;
+            arr.map(emp => {
+                if (emp.id == values.empleado.id) {
+                    bandera = false;
+                }
+            });
+
+            if (bandera) {
+                arr.push({
+                    nombre: values.empleado.nombre + ' ' + values.empleado.apellido_p + ' ' + values.empleado.apellido_m,
+                    matricula: values.empleado.matricula,
+                    id: values.empleado.id,
+                    sancionado: false,
+                    fecha_inicio: '',
+                    fecha_termino: '',
+                    sancion: ''
+                });
+                setEmploInfo({ empleados: arr });
+                document.getElementsByClassName('MuiAutocomplete-clearIndicator')[0].click();
+            }
+            else {
+                handleClickOpenAlert();
+            }
+        }
+        else {
+            handleClickOpenAlert2();
+        }
+
+    }
+
+    function removeEmpleado(index) {
+        var arr = emploInfo.empleados.slice();
+        arr.splice(index, 1);
+        setEmploInfo({ empleados: arr });
+    }
+
+    const [openAlert, setOpenAlert] = React.useState(false);
+
+    const handleClickOpenAlert = () => {
+        setOpenAlert(true);
+    };
+
+    const handleCloseAlert = () => {
+        setOpenAlert(false);
+    };
+
+    const [openAlert2, setOpenAlert2] = React.useState(false);
+
+    const handleClickOpenAlert2 = () => {
+        setOpenAlert2(true);
+    };
+
+    const handleCloseAlert2 = () => {
+        setOpenAlert2(false);
+    };
+
+    function handleChangeSancionado(index) {
+        var arr = emploInfo.empleados.slice();
+        arr[index].sancionado = !arr[index].sancionado;
+        setEmploInfo({ empleados: arr });
+    }
+
+    function handleChangeDate(newValue, index) {
+        var arr = emploInfo.empleados.slice();
+        arr[index].fecha_inicio = newValue;
+        setEmploInfo({ empleados: arr });
+    };
+
+    function handleChangeDateTermino(newValue, index) {
+        var arr = emploInfo.empleados.slice();
+        arr[index].fecha_termino = newValue;
+        setEmploInfo({ empleados: arr });
+    };
+
+    function handleChangeText(event, index) {
+        var arr = emploInfo.empleados.slice();
+        arr[index].sancion = event.target.value;
+        setEmploInfo({ empleados: arr });
+    };
+
+    const handleChangeTextarea = (event) => {
+        setValues(values => ({
+            ...values,
+            observaciones: event.target.value,
+        }))
+    }
 
     return (
         <div className="row">
@@ -144,7 +270,20 @@ const Create = ({ roles, employees }) => {
                             <form onSubmit={handleSubmit}>
                                 <div className="row div-form-register" style={{ "padding": "3%" }}>
                                     <div className="col s12 m12 div-division">
-                                        <div className="col s12">
+
+                                        <div className="input-field col s12" style={{ marginTop: '15px' }}>
+                                            <input id="num_oficio" type="text" className={errors.num_oficio ? "validate form-control invalid" : "validate form-control"} name="num_oficio" value={values.num_oficio} required onChange={handleChange} readOnly onFocus={(e) => { e.target.removeAttribute("readonly") }} />
+                                            <label htmlFor="num_oficio">Numero de oficio</label>
+                                            {
+                                                errors.num_oficio &&
+                                                <span className="helper-text" data-error={errors.num_oficio} style={{ "marginBottom": "10px" }}>{errors.num_oficio}</span>
+                                            }
+                                        </div>
+                                        <div class="input-field col s12" style={{ marginTop: '15px' }}>
+                                            <textarea id="textarea1" class="materialize-textarea" onChange={handleChangeTextarea} values={values.observaciones}></textarea>
+                                            <label for="textarea1">Observaciones</label>
+                                        </div>
+                                        <div className="col s12" style={{ marginTop: '10px' }}>
                                             <Autocomplete
                                                 {...defaultProps}
                                                 renderInput={(params) => (
@@ -155,20 +294,87 @@ const Create = ({ roles, employees }) => {
                                                 errors.empleado &&
                                                 <div className="helper-text" data-error={errors.empleado} style={{ "marginBottom": "10px" }}>{errors.empleado}</div>
                                             }
-                                        </div>
-                                        <div className="input-field col s12" style={{ marginTop: '15px' }}>
-                                            <input id="num_oficio" type="text" className={errors.num_oficio ? "validate form-control invalid" : "validate form-control"} name="num_oficio" value={values.num_oficio} required onChange={handleChange} readOnly onFocus={(e) => { e.target.removeAttribute("readonly") }} />
-                                            <label htmlFor="num_oficio">Numero de oficio</label>
-                                            {
-                                                errors.num_oficio &&
-                                                <span className="helper-text" data-error={errors.num_oficio} style={{ "marginBottom": "10px" }}>{errors.num_oficio}</span>
-                                            }
-                                        </div>
-                                        <div class="input-field col s12" style={{ marginTop: '15px' }}>
-                                            <textarea id="textarea1" class="materialize-textarea"></textarea>
-                                            <label for="textarea1">Observaciones</label>
+                                            <Button variant="outlined" startIcon={<AddCircleOutlineIcon />} color="success" onClick={agregarEmpleado} style={{ float: "right", marginTop: '5px', marginBottom: '10px' }}>Agregar</Button>
+
+                                            <TableContainer component={Paper}>
+                                                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                                                    <TableHead>
+                                                        <TableRow>
+                                                            <TableCell></TableCell>
+                                                            <TableCell>Empleado</TableCell>
+                                                            <TableCell align="center">Sancionado</TableCell>
+                                                            <TableCell align="center">Fecha Inicio</TableCell>
+                                                            <TableCell align="center">Fecha Termino</TableCell>
+                                                            <TableCell align="center">Sanción</TableCell>
+                                                        </TableRow>
+                                                    </TableHead>
+                                                    <TableBody>
+                                                        {emploInfo.empleados.map((trabajador, index) => (
+                                                            <TableRow
+                                                                key={index}
+                                                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                            >
+                                                                <TableCell scope="row">
+                                                                    <IconButton aria-label="delete" color="error" onClick={() => (removeEmpleado(index))}>
+                                                                        <DeleteIcon />
+                                                                    </IconButton>
+                                                                </TableCell>
+                                                                <TableCell component="th" scope="row">
+                                                                    {trabajador.matricula + ' - ' + trabajador.nombre}
+                                                                </TableCell>
+                                                                <TableCell align="center">
+                                                                    <Checkbox
+                                                                        checked={emploInfo.empleados[index].sancionado}
+                                                                        onClick={() => (handleChangeSancionado(index))}
+                                                                        inputProps={{ 'aria-label': 'controlled' }}
+                                                                    />
+                                                                </TableCell>
+                                                                <TableCell align="center">
+                                                                    <LocalizationProvider dateAdapter={DateAdapter} locale={es}>
+                                                                        <MobileDatePicker
+                                                                            label="Fecha de inicio"
+                                                                            inputFormat="dd/MM/yyyy"
+                                                                            clearable
+                                                                            clearText="Limpiar"
+                                                                            cancelText="Cancelar"
+                                                                            value={emploInfo.empleados[index].fecha_inicio}
+                                                                            onChange={(date) => (handleChangeDate(date, index))}
+                                                                            renderInput={(params) => <TextField {...params} style={{}} />}
+                                                                        />
+                                                                    </LocalizationProvider>
+                                                                </TableCell>
+                                                                <TableCell align="center">
+                                                                    <LocalizationProvider dateAdapter={DateAdapter} locale={es}>
+                                                                        <MobileDatePicker
+                                                                            label="Fecha de termino"
+                                                                            inputFormat="dd/MM/yyyy"
+                                                                            clearable
+                                                                            clearText="Limpiar"
+                                                                            cancelText="Cancelar"
+                                                                            value={emploInfo.empleados[index].fecha_termino}
+                                                                            onChange={(date) => (handleChangeDateTermino(date, index))}
+                                                                            renderInput={(params) => <TextField {...params} />}
+                                                                        />
+                                                                    </LocalizationProvider>
+                                                                </TableCell>
+                                                                <TableCell align="center">
+                                                                    <TextField
+                                                                        id="outlined-multiline-flexible"
+                                                                        label="Sanción"
+                                                                        multiline
+                                                                        maxRows={6}
+                                                                        value={emploInfo.empleados[index].sancion}
+                                                                        onChange={(event) => (handleChangeText(event, index))}
+                                                                    />
+                                                                </TableCell>
+                                                            </TableRow>
+                                                        ))}
+                                                    </TableBody>
+                                                </Table>
+                                            </TableContainer>
                                         </div>
                                     </div>
+
                                 </div>
                                 <div className="row container-buttons">
                                     <button type="button" className=" center-align  btn waves-effect waves-light cancelar" style={{ marginRight: "15px" }} onClick={cancelEditUser}>Cancelar</button>
@@ -180,9 +386,50 @@ const Create = ({ roles, employees }) => {
                             </form>
                         </div>
                     </div>
-                </div>
-            </Container>
-        </div>
+                </div >
+            </Container >
+            <Dialog
+                open={openAlert}
+                onClose={handleCloseAlert}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {"Error"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Ese empleado ya se encuentra seleccionado.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseAlert}>
+                        Aceptar
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog
+                open={openAlert2}
+                onClose={handleCloseAlert2}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {"Error"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Primero selecciona un empleado para poder continuar
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseAlert2}>
+                        Aceptar
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </div >
     )
 }
 
