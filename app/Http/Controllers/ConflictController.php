@@ -8,6 +8,10 @@ use Inertia\Inertia;
 use Auth;
 use Illuminate\Support\Facades\DB;
 
+use App\Models\Issue;
+use App\Models\Employee;
+use App\Permission\Models\Role;
+
 class ConflictController extends Controller
 {
     /**
@@ -53,6 +57,11 @@ class ConflictController extends Controller
     public function create()
     {
         //
+        return Inertia::render('Oficinas/conflictCrear', [
+            'roles' => fn () => Role::select('name')->get(),
+            'employees' => fn () => Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')
+                ->get()
+        ]);
     }
 
     /**

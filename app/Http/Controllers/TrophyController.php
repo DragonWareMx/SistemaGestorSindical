@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\Employee;
+use App\Permission\Models\Role;
 
 class TrophyController extends Controller
 {
@@ -37,6 +39,11 @@ class TrophyController extends Controller
     public function create()
     {
         //
+        return Inertia::render('Oficinas/femenilCrear', [
+            'roles' => fn () => Role::select('name')->get(),
+            'employees' => fn () => Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')
+                ->get()
+        ]);
     }
 
     /**

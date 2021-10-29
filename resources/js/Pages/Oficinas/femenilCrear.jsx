@@ -59,7 +59,7 @@ const useStyles = makeStyles(
 );
 
 
-const Create = ({ roles, employees }) => {
+const femenilCrear = ({ roles, employees }) => {
     //errores de la validacion de laravel
     const { errors } = usePage().props
 
@@ -186,6 +186,6 @@ const Create = ({ roles, employees }) => {
     )
 }
 
-Create.layout = page => <Layout children={page} title="Escuela Sindical - Honor y Justicia" pageTitle="HONOR Y JUSTICIA" />
+femenilCrear.layout = page => <Layout children={page} title="Escuela Sindical - Acción femenil" pageTitle="ACCIÓN FEMENIL" />
 
-export default Create
+export default femenilCrear
