@@ -98,6 +98,7 @@ const Create = ({ roles, employees }) => {
     //valores para formulario
     const [values, setValues] = useState({
         num_oficio: '',
+        observaciones: '',
         empleado: null
     })
 
@@ -163,30 +164,36 @@ const Create = ({ roles, employees }) => {
     });
 
     function agregarEmpleado() {
-        var arr = emploInfo.empleados.slice();
-        var bandera = true;
-        arr.map(emp => {
-            if (emp.id == values.empleado.id) {
-                bandera = false;
-            }
-        });
-
-        if (bandera) {
-            arr.push({
-                nombre: values.empleado.nombre + ' ' + values.empleado.apellido_p + ' ' + values.empleado.apellido_m,
-                matricula: values.empleado.matricula,
-                id: values.empleado.id,
-                sancionado: false,
-                fecha_inicio: '',
-                fecha_termino: '',
-                sancion: ''
+        if (values.empleado) {
+            var arr = emploInfo.empleados.slice();
+            var bandera = true;
+            arr.map(emp => {
+                if (emp.id == values.empleado.id) {
+                    bandera = false;
+                }
             });
-            setEmploInfo({ empleados: arr });
-            document.getElementsByClassName('MuiAutocomplete-clearIndicator')[0].click();
+
+            if (bandera) {
+                arr.push({
+                    nombre: values.empleado.nombre + ' ' + values.empleado.apellido_p + ' ' + values.empleado.apellido_m,
+                    matricula: values.empleado.matricula,
+                    id: values.empleado.id,
+                    sancionado: false,
+                    fecha_inicio: '',
+                    fecha_termino: '',
+                    sancion: ''
+                });
+                setEmploInfo({ empleados: arr });
+                document.getElementsByClassName('MuiAutocomplete-clearIndicator')[0].click();
+            }
+            else {
+                handleClickOpenAlert();
+            }
         }
         else {
-            handleClickOpenAlert();
+            handleClickOpenAlert2();
         }
+
     }
 
     function removeEmpleado(index) {
@@ -205,29 +212,46 @@ const Create = ({ roles, employees }) => {
         setOpenAlert(false);
     };
 
+    const [openAlert2, setOpenAlert2] = React.useState(false);
+
+    const handleClickOpenAlert2 = () => {
+        setOpenAlert2(true);
+    };
+
+    const handleCloseAlert2 = () => {
+        setOpenAlert2(false);
+    };
+
     function handleChangeSancionado(index) {
         var arr = emploInfo.empleados.slice();
         arr[index].sancionado = !arr[index].sancionado;
         setEmploInfo({ empleados: arr });
     }
 
-    const [checked, setChecked] = useState(true);
-
-    function handleChangeCheck() {
-        setChecked(!checked);
+    function handleChangeDate(newValue, index) {
+        var arr = emploInfo.empleados.slice();
+        arr[index].fecha_inicio = newValue;
+        setEmploInfo({ empleados: arr });
     };
 
-    const [date, setDate] = React.useState(new Date());
-
-    const handleChangeDate = (newValue) => {
-        setDate(newValue);
+    function handleChangeDateTermino(newValue, index) {
+        var arr = emploInfo.empleados.slice();
+        arr[index].fecha_termino = newValue;
+        setEmploInfo({ empleados: arr });
     };
 
-    const [text, setText] = useState('Controlled');
-
-    const handleChangeText = (event) => {
-        setText(event.target.value);
+    function handleChangeText(event, index) {
+        var arr = emploInfo.empleados.slice();
+        arr[index].sancion = event.target.value;
+        setEmploInfo({ empleados: arr });
     };
+
+    const handleChangeTextarea = (event) => {
+        setValues(values => ({
+            ...values,
+            observaciones: event.target.value,
+        }))
+    }
 
     return (
         <div className="row">
@@ -256,7 +280,7 @@ const Create = ({ roles, employees }) => {
                                             }
                                         </div>
                                         <div class="input-field col s12" style={{ marginTop: '15px' }}>
-                                            <textarea id="textarea1" class="materialize-textarea"></textarea>
+                                            <textarea id="textarea1" class="materialize-textarea" onChange={handleChangeTextarea} values={values.observaciones}></textarea>
                                             <label for="textarea1">Observaciones</label>
                                         </div>
                                         <div className="col s12" style={{ marginTop: '10px' }}>
@@ -313,8 +337,8 @@ const Create = ({ roles, employees }) => {
                                                                             clearable
                                                                             clearText="Limpiar"
                                                                             cancelText="Cancelar"
-                                                                            value={date}
-                                                                            onChange={handleChangeDate}
+                                                                            value={emploInfo.empleados[index].fecha_inicio}
+                                                                            onChange={(date) => (handleChangeDate(date, index))}
                                                                             renderInput={(params) => <TextField {...params} style={{}} />}
                                                                         />
                                                                     </LocalizationProvider>
@@ -327,8 +351,8 @@ const Create = ({ roles, employees }) => {
                                                                             clearable
                                                                             clearText="Limpiar"
                                                                             cancelText="Cancelar"
-                                                                            value={date}
-                                                                            onChange={handleChangeDate}
+                                                                            value={emploInfo.empleados[index].fecha_termino}
+                                                                            onChange={(date) => (handleChangeDateTermino(date, index))}
                                                                             renderInput={(params) => <TextField {...params} />}
                                                                         />
                                                                     </LocalizationProvider>
@@ -339,8 +363,8 @@ const Create = ({ roles, employees }) => {
                                                                         label="Sanción"
                                                                         multiline
                                                                         maxRows={6}
-                                                                        value={text}
-                                                                        onChange={handleChangeText}
+                                                                        value={emploInfo.empleados[index].sancion}
+                                                                        onChange={(event) => (handleChangeText(event, index))}
                                                                     />
                                                                 </TableCell>
                                                             </TableRow>
@@ -380,6 +404,27 @@ const Create = ({ roles, employees }) => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseAlert}>
+                        Aceptar
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog
+                open={openAlert2}
+                onClose={handleCloseAlert2}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {"Error"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Primero selecciona un empleado para poder continuar
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseAlert2}>
                         Aceptar
                     </Button>
                 </DialogActions>
