@@ -26,6 +26,10 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
+import Button from '@mui/material/Button';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+
+
 import { es } from "date-fns/locale";
 
 const defaultTheme = createTheme();
@@ -163,6 +167,40 @@ const secretariaICrear = ({ employees, elections }) => {
         });
     };
 
+    const [openAlert, setOpenAlert] = useState(false);
+
+    const handleClickOpenAlert = () => {
+        setOpenAlert(true);
+    };
+
+    const handleCloseAlert = () => {
+        setOpenAlert(false);
+        setFechav('');
+    };
+
+    const [fechav, setFechav] = useState(new Date());
+
+    const handleChangeFechav = (newValue) => {
+        setFechav(newValue);
+    };
+
+    function handleSubmitEleccion(e) {
+        e.preventDefault()
+        Inertia.post(route('secretariaInterior.votacion'), {
+            fecha_votacion: fechav
+        },
+            {
+                onSuccess: () => {
+                    handleCloseAlert();
+                    Inertia.reload({ only: ['elections'] })
+                },
+                onError: () => {
+                    // Inertia.reload({ only: ['units'], data: { regime: values.regimen } })
+                }
+            }
+        )
+    }
+
     return (
         <div className="row">
             <Container>
@@ -213,6 +251,11 @@ const secretariaICrear = ({ employees, elections }) => {
                                                 errors.eleccion &&
                                                 <div className="helper-text" data-error={errors.eleccion} style={{ "marginBottom": "10px" }}>{errors.eleccion}</div>
                                             }
+                                            <div style={{ display: 'flex' }}>
+                                                <Button variant="outlined" style={{ marginTop: 10, marginLeft: 'auto', marginRight: 0 }} color='success' onClick={handleClickOpenAlert} endIcon={<AddCircleIcon />}>
+                                                    Agregar Votación
+                                                </Button>
+                                            </div>
                                         </div>
                                         <div class="input-field col s12" style={{ marginTop: '25px' }}>
                                             <LocalizationProvider dateAdapter={DateAdapter} locale={es}>
@@ -230,7 +273,7 @@ const secretariaICrear = ({ employees, elections }) => {
                                             </LocalizationProvider>
                                             {
                                                 errors.fecha &&
-                                                <div className="helper-text" data-error={errors.fecha} style={{ "marginBottom": "10px" }}>{errors.fecha}</div>
+                                                <div className="helper-text" data-error={errors.fecha} style={{ "marginBottom": "10px", color: 'red' }}>{errors.fecha}</div>
                                             }
                                         </div>
                                     </div>
@@ -247,6 +290,41 @@ const secretariaICrear = ({ employees, elections }) => {
                     </div>
                 </div>
             </Container>
+            <Dialog
+                open={openAlert}
+                onClose={handleCloseAlert}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {"Crear Votación"}
+                </DialogTitle>
+                <DialogContent style={{ paddingTop: 15 }}>
+                    <LocalizationProvider dateAdapter={DateAdapter} locale={es}>
+                        <MobileDatePicker
+                            label="Fecha de la votación"
+                            inputFormat="dd/MM/yyyy"
+                            clearable
+                            clearText="Limpiar"
+                            cancelText="Cancelar"
+                            value={fechav}
+                            disableHighlightToday={true}
+                            onChange={handleChangeFechav}
+                            renderInput={(params) => <TextField {...params} required style={{ width: '100%' }} />}
+                        />
+                    </LocalizationProvider>
+                    {
+                        errors.fecha_votacion &&
+                        <div className="helper-text" data-error={errors.fecha_votacion} style={{ "marginBottom": "10px", color: 'red' }}>{errors.fecha_votacion}</div>
+                    }
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseAlert}>Cancelar</Button>
+                    <Button onClick={handleSubmitEleccion}>
+                        Guardar
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     )
 }

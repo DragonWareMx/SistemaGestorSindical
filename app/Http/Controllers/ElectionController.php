@@ -82,6 +82,27 @@ class ElectionController extends Controller
         }
     }
 
+    public function votacion(Request $request)
+    {
+        $validated = $request->validate([
+            'fecha_votacion' => 'required|date',
+        ]);
+
+        DB::beginTransaction();
+        try {
+
+            $eleccion = new Election();
+            $eleccion->fecha = Carbon::parse($request->fecha_votacion);
+            $eleccion->save();
+            DB::commit();
+            return redirect()->back()->with('success', 'La votación se creó con éxito!');
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+        }
+    }
+
     /**
      * Display the specified resource.
      *
