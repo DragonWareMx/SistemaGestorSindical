@@ -54,10 +54,10 @@ Route::post('/honor-y-justicia/crear', [App\Http\Controllers\IssueController::cl
 Route::get('/conflictos', [App\Http\Controllers\ConflictController::class, 'index'])->name('conflicts');
 Route::get('/conflictos/ver/{id}', [App\Http\Controllers\ConflictController::class, 'conflict'])->name('conflicts.conflict');
 Route::get('/conflictos/crear', [App\Http\Controllers\ConflictController::class, 'create'])->name('conflicts.create');
-//Secretaria del Interior
+//Secretaria del trabajo
 Route::get('/secretaria-del-trabajo', [App\Http\Controllers\ConflictController::class, 'secretariaTrabajo'])->name('secretariaTrabajo');
 Route::get('/secretaria-del-trabajo/{id}', [App\Http\Controllers\ConflictController::class, 'secretariaTrabajoConflict'])->name('secretariaTrabajo.conflict');
-// Secreteria del trabajo
+// Secreteria del interior
 Route::get('/secretaria-del-interior', [App\Http\Controllers\ElectionController::class, 'index'])->name('secretariaInterior');
 Route::get('/secretaria-del-interior/ver/{id}', [App\Http\Controllers\ElectionController::class, 'secretariaInteriorElection'])->name('secretariaInterior.election');
 Route::get('/secretaria-del-interior/crear', [App\Http\Controllers\ElectionController::class, 'create'])->name('secretariaInterior.create');

@@ -34,14 +34,5 @@ class ElectionSeeder extends Seeder
             'fecha_voto'=>'2021-11-12',
             'election_id'=>2,
         ]);
-
-        DB::table('election_employee')->insert([
-            'employee_id'=>'2',
-            'election_id'=>1,
-        ]);
-        DB::table('election_employee')->insert([
-            'employee_id'=>'1',
-            'election_id'=>2,
-        ]);
     }
 }
