@@ -19,8 +19,7 @@ class TrophyController extends Controller
      */
     public function index()
     {
-        $trophies = Trophy::
-            leftJoin('employee_trophie','trophies.id','employee_trophie.trophie_id')
+        $trophies = Trophy::join('employee_trophie','trophies.id','employee_trophie.trophie_id')
             ->leftJoin('employees','employee_trophie.employee_id','employees.id')
             ->select('employees.nombre','matricula','apellido_p','employee_trophie.id as id','trophies.nombre as premio','trophies.observaciones as observaciones')
             ->get();
