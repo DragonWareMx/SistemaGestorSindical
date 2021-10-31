@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Layout from '../../layouts/Layout';
 import { InertiaLink, usePage } from '@inertiajs/inertia-react'
+import AgregarCosa from '../../components/common/AgregarCosa';
 
 import '/css/users.css'
 import '/css/infoAlumno.css'
@@ -15,6 +16,8 @@ import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import { createStyles, makeStyles } from '@mui/styles';
 import { createTheme } from '@mui/material/styles';
+import Button from '@mui/material/Button';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
@@ -59,7 +62,7 @@ const useStyles = makeStyles(
 );
 
 
-const femenilCrear = ({ roles, employees }) => {
+const femenilCrear = ({employees, trophies }) => {
     //errores de la validacion de laravel
     const { errors } = usePage().props
 
@@ -68,7 +71,8 @@ const femenilCrear = ({ roles, employees }) => {
     //valores para formulario
     const [values, setValues] = useState({
         num_oficio: '',
-        empleado: null
+        empleado: null,
+        nombre: '',
     })
 
     //actualiza los hooks cada vez que se modifica un input
@@ -127,6 +131,23 @@ const femenilCrear = ({ roles, employees }) => {
         }
     };
 
+    const defaultPropsTrophie = {
+        options: trophies,
+        getOptionLabel: (option) => option.nombre,
+        onChange: (event, newValue) => {
+            setValues({
+                ...values,
+                nombre: newValue
+                    ? newValue.id
+                    : null,
+            });
+        }
+    };
+
+    function agregarPremio () {
+
+    }
+
     return (
         <div className="row">
             <Container>
@@ -135,7 +156,7 @@ const femenilCrear = ({ roles, employees }) => {
                         <div className="card-content">
                             <div className="col s12 m9 l10 xl10 titulo-modulo left" style={{ marginTop: "15px" }}>
                                 {/* regresar */}
-                                <InertiaLink href={route('honor')} className="icon-back-course tooltipped" data-position="left" data-tooltip="Regresar"><i className="material-icons">keyboard_backspace</i></InertiaLink>
+                                <InertiaLink href={route('accionFemenil')} className="icon-back-course tooltipped" data-position="left" data-tooltip="Regresar"><i className="material-icons">keyboard_backspace</i></InertiaLink>
                                 AGREGAR REGISTRO
                             </div>
 
@@ -156,18 +177,23 @@ const femenilCrear = ({ roles, employees }) => {
                                                 <div className="helper-text" data-error={errors.empleado} style={{ "marginBottom": "10px" }}>{errors.empleado}</div>
                                             }
                                         </div>
-                                        <div className="input-field col s12" style={{ marginTop: '15px' }}>
-                                            <input id="num_oficio" type="text" className={errors.num_oficio ? "validate form-control invalid" : "validate form-control"} name="num_oficio" value={values.num_oficio} required onChange={handleChange} readOnly onFocus={(e) => { e.target.removeAttribute("readonly") }} />
-                                            <label htmlFor="num_oficio">Numero de oficio</label>
+
+                                        <div className="col s12">
+                                            <Autocomplete
+                                                {...defaultPropsTrophie}
+                                                renderInput={(params) => (
+                                                    <TextField {...params} id="nombre" className={classes.textField} required label="Nombre" variant="standard" />
+                                                )}
+                                            />
                                             {
-                                                errors.num_oficio &&
-                                                <span className="helper-text" data-error={errors.num_oficio} style={{ "marginBottom": "10px" }}>{errors.num_oficio}</span>
+                                                errors.nombre &&
+                                                <div className="helper-text" data-error={errors.nombre} style={{ "marginBottom": "10px" }}>{errors.nombre}</div>
                                             }
                                         </div>
-                                        <div class="input-field col s12" style={{ marginTop: '15px' }}>
-                                            <textarea id="textarea1" class="materialize-textarea"></textarea>
-                                            <label for="textarea1">Observaciones</label>
-                                        </div>
+                                        <AgregarCosa
+                                                    cosa={'nombre'}
+                                                    foto={false}
+                                        ></AgregarCosa>
                                     </div>
                                 </div>
                                 <div className="row container-buttons">

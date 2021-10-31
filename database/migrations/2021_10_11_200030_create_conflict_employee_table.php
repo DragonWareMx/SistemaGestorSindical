@@ -20,7 +20,7 @@ class CreateConflictEmployeeTable extends Migration
             $table->date('inicio_sancion')->nullable();
             $table->date('termino_sancion')->nullable();
             $table->text('sancion')->nullable();
-            
+
             $table->timestamps();
 
             $table->unsignedBigInteger('employee_id');
