@@ -16,6 +16,18 @@ import TextField from '@mui/material/TextField';
 import { createStyles, makeStyles } from '@mui/styles';
 import { createTheme } from '@mui/material/styles';
 
+import MobileDatePicker from '@mui/lab/MobileDatePicker';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DateAdapter from '@mui/lab/AdapterDateFns';
+
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
+import { es } from "date-fns/locale";
+
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
     (theme) =>
@@ -59,7 +71,7 @@ const useStyles = makeStyles(
 );
 
 
-const secretariaICrear = ({ employees }) => {
+const secretariaICrear = ({ employees, elections }) => {
     //errores de la validacion de laravel
     const { errors } = usePage().props
 
@@ -68,7 +80,9 @@ const secretariaICrear = ({ employees }) => {
     //valores para formulario
     const [values, setValues] = useState({
         num_oficio: '',
-        empleado: null
+        empleado: null,
+        eleccion: null,
+        fecha: '',
     })
 
     //actualiza los hooks cada vez que se modifica un input
@@ -84,10 +98,10 @@ const secretariaICrear = ({ employees }) => {
     //manda el forumulario
     function handleSubmit(e) {
         e.preventDefault()
-        Inertia.post(route('users.store'), values,
+        Inertia.post(route('secretariaInterior.store'), values,
             {
                 onError: () => {
-                    Inertia.reload({ only: ['units'], data: { regime: values.regimen } })
+                    // Inertia.reload({ only: ['units'], data: { regime: values.regimen } })
                 }
             }
         )
@@ -127,6 +141,28 @@ const secretariaICrear = ({ employees }) => {
         }
     };
 
+    const defaultPropsElection = {
+        options: elections,
+        getOptionLabel: (option) => option.fecha,
+        onChange: (event, newValue) => {
+            setValues({
+                ...values,
+                eleccion: newValue
+                    ? newValue.id
+                    : null,
+            });
+        }
+    };
+
+    //aqui va lo nuevo
+
+    const handleChangeFecha = (newValue) => {
+        setValues({
+            ...values,
+            fecha: newValue
+        });
+    };
+
     return (
         <div className="row">
             <Container>
@@ -135,15 +171,25 @@ const secretariaICrear = ({ employees }) => {
                         <div className="card-content">
                             <div className="col s12 m9 l10 xl10 titulo-modulo left" style={{ marginTop: "15px" }}>
                                 {/* regresar */}
-                                <InertiaLink href={route('honor')} className="icon-back-course tooltipped" data-position="left" data-tooltip="Regresar"><i className="material-icons">keyboard_backspace</i></InertiaLink>
+                                <InertiaLink href={route('secretariaInterior')} className="icon-back-course tooltipped" data-position="left" data-tooltip="Regresar"><i className="material-icons">keyboard_backspace</i></InertiaLink>
                                 AGREGAR REGISTRO
                             </div>
 
-                            <Alertas />
+                            <div className="col s12">
+                                <Alertas />
+                            </div>
                             {/* ----Formulario---- */}
                             <form onSubmit={handleSubmit}>
                                 <div className="row div-form-register" style={{ "padding": "3%" }}>
                                     <div className="col s12 m12 div-division">
+                                        <div className="input-field col s12" style={{ marginTop: '15px' }}>
+                                            <input id="num_oficio" type="text" className={errors.num_oficio ? "validate form-control invalid" : "validate form-control"} name="num_oficio" value={values.num_oficio} required onChange={handleChange} readOnly onFocus={(e) => { e.target.removeAttribute("readonly") }} />
+                                            <label htmlFor="num_oficio">Numero de oficio</label>
+                                            {
+                                                errors.num_oficio &&
+                                                <span className="helper-text" data-error={errors.num_oficio} style={{ "marginBottom": "10px" }}>{errors.num_oficio}</span>
+                                            }
+                                        </div>
                                         <div className="col s12">
                                             <Autocomplete
                                                 {...defaultProps}
@@ -156,17 +202,36 @@ const secretariaICrear = ({ employees }) => {
                                                 <div className="helper-text" data-error={errors.empleado} style={{ "marginBottom": "10px" }}>{errors.empleado}</div>
                                             }
                                         </div>
-                                        <div className="input-field col s12" style={{ marginTop: '15px' }}>
-                                            <input id="num_oficio" type="text" className={errors.num_oficio ? "validate form-control invalid" : "validate form-control"} name="num_oficio" value={values.num_oficio} required onChange={handleChange} readOnly onFocus={(e) => { e.target.removeAttribute("readonly") }} />
-                                            <label htmlFor="num_oficio">Numero de oficio</label>
+                                        <div className="col s12">
+                                            <Autocomplete
+                                                {...defaultPropsElection}
+                                                renderInput={(params) => (
+                                                    <TextField {...params} id="votacion" className={classes.textField} required label="Votación" variant="standard" />
+                                                )}
+                                            />
                                             {
-                                                errors.num_oficio &&
-                                                <span className="helper-text" data-error={errors.num_oficio} style={{ "marginBottom": "10px" }}>{errors.num_oficio}</span>
+                                                errors.eleccion &&
+                                                <div className="helper-text" data-error={errors.eleccion} style={{ "marginBottom": "10px" }}>{errors.eleccion}</div>
                                             }
                                         </div>
-                                        <div class="input-field col s12" style={{ marginTop: '15px' }}>
-                                            <textarea id="textarea1" class="materialize-textarea"></textarea>
-                                            <label for="textarea1">Observaciones</label>
+                                        <div class="input-field col s12" style={{ marginTop: '25px' }}>
+                                            <LocalizationProvider dateAdapter={DateAdapter} locale={es}>
+                                                <MobileDatePicker
+                                                    label="Fecha de voto"
+                                                    inputFormat="dd/MM/yyyy"
+                                                    clearable
+                                                    clearText="Limpiar"
+                                                    cancelText="Cancelar"
+                                                    value={values.fecha}
+                                                    disableHighlightToday={true}
+                                                    onChange={handleChangeFecha}
+                                                    renderInput={(params) => <TextField {...params} required style={{ width: '100%' }} />}
+                                                />
+                                            </LocalizationProvider>
+                                            {
+                                                errors.fecha &&
+                                                <div className="helper-text" data-error={errors.fecha} style={{ "marginBottom": "10px" }}>{errors.fecha}</div>
+                                            }
                                         </div>
                                     </div>
                                 </div>

@@ -7,6 +7,7 @@ use App\Models\Employee;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class ElectionController extends Controller
@@ -41,7 +42,8 @@ class ElectionController extends Controller
         //
         return Inertia::render('Oficinas/secretariaICrear', [
             'employees' => fn () => Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')
-                ->get()
+                ->get(),
+            'elections' => fn () => Election::get()
         ]);
     }
 
@@ -54,6 +56,30 @@ class ElectionController extends Controller
     public function store(Request $request)
     {
         //
+        $validated = $request->validate([
+            'num_oficio' => 'required|max:255',
+            'empleado' => 'required|exists:employees,id',
+            'eleccion' => 'required|exists:elections,id',
+            'fecha' => 'required|date',
+        ]);
+        DB::beginTransaction();
+        try {
+
+            $eleccion = Election::findOrFail($request->eleccion);
+            $data = [
+                'fecha_voto' => Carbon::parse($request->fecha),
+                'num_oficio' => $request->num_oficio,
+            ];
+            $eleccion->employees()->attach($request->empleado, $data);
+
+            DB::commit();
+            return redirect()->back()->with('success', 'El registro se creó con éxito!');
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            dd($th);
+            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+        }
     }
 
     /**
