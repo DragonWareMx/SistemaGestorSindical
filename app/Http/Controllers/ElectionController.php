@@ -19,7 +19,7 @@ class ElectionController extends Controller
      */
     public function index()
     {
-        $elections = Election::leftJoin('election_employee', 'elections.id', 'election_employee.election_id')
+        $elections = Election::join('election_employee', 'elections.id', 'election_employee.election_id')
             ->leftJoin('employees', 'election_employee.employee_id', 'employees.id')
             ->select('election_employee.id', 'employees.nombre', 'matricula', 'apellido_p', 'election_employee.num_oficio', 'elections.fecha', 'fecha_voto')
             ->get();

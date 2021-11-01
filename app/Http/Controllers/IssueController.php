@@ -23,16 +23,39 @@ class IssueController extends Controller
     public function index()
     {
 
-        $issues = Issue::leftJoin('employee_issue', 'issues.id', 'employee_issue.issue_id')
+        $issues = Issue::join('employee_issue', 'issues.id', 'employee_issue.issue_id')
             ->leftJoin('employees', 'employee_issue.employee_id', 'employees.id')
             ->select('num_oficio', 'employees.nombre', 'inicio_sancion', 'termino_sancion', 'matricula', 'apellido_p', 'employee_issue.id as id', 'issues.uuid as uuid')
             ->get();
         return Inertia::render('Oficinas/honorJusticia', ['issues' => $issues]);
     }
 
-    public function issue($uuid)
+    public function issue($numOficio)
     {
-        dd($uuid);
+        $issue = Issue::where('num_oficio',$numOficio)
+            ->with('employees:nombre,matricula,apellido_p,apellido_m,id')
+            ->first();
+
+
+        foreach ($issue['employees'] as $employee) {
+            if($employee->pivot['inicio_sancion']){
+                $date= $employee->pivot['inicio_sancion'];
+                $date=Carbon::parse($date)->addDays(1);
+                $employee->pivot['inicio_sancion'] = $date->toDateString();
+            }
+            if($employee->pivot['termino_sancion']){
+                $date= $employee->pivot['termino_sancion'];
+                $date=Carbon::parse($date)->addDays(1);
+                $employee->pivot['termino_sancion'] = $date->toDateString(); 
+            }
+        }
+
+        $employees = Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')
+            ->get();
+
+        // dd($issue);    
+
+        return Inertia::render('Oficinas/hJEditar', ['issue' => $issue, 'employees' => $employees]);
     }
 
     /**
