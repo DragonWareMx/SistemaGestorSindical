@@ -70,7 +70,6 @@ const femenilCrear = ({employees, trophies }) => {
 
     //valores para formulario
     const [values, setValues] = useState({
-        num_oficio: '',
         empleado: null,
         nombre: '',
     })
@@ -88,10 +87,10 @@ const femenilCrear = ({employees, trophies }) => {
     //manda el forumulario
     function handleSubmit(e) {
         e.preventDefault()
-        Inertia.post(route('users.store'), values,
+        Inertia.post(route('accionFemenil.store'), values,
             {
                 onError: () => {
-                    Inertia.reload({ only: ['units'], data: { regime: values.regimen } })
+
                 }
             }
         )
@@ -99,7 +98,7 @@ const femenilCrear = ({employees, trophies }) => {
 
     //boton de cancelar
     function cancelEditUser() {
-        Inertia.get(route('users.index'))
+        Inertia.get(route('accionFemenil'))
     }
 
     function initializeSelects() {
@@ -138,15 +137,11 @@ const femenilCrear = ({employees, trophies }) => {
             setValues({
                 ...values,
                 nombre: newValue
-                    ? newValue.id
-                    : null,
             });
         }
     };
 
-    function agregarPremio () {
 
-    }
 
     return (
         <div className="row">
