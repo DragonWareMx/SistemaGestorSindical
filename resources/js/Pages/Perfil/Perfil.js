@@ -44,7 +44,7 @@ const Perfil = ({ user }) => {
                                     <div className="row">
                                         <div className="col s12 center-align">
                                             <div className="center-align">
-                                                <img src={user.foto ? "/storage/fotos_perfil/" + user.foto : "/img/avatar1.jpg"} alt="foto de perfil" className="img-profile" />
+                                                <img src={user.foto ? "/storage/fotos_perfil/" + user.foto : "/img/avatar1.png"} alt="foto de perfil" className="img-profile" />
                                             </div>
                                         </div>
                                         <div className="col s12 center-align">

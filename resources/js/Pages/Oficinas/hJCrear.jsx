@@ -1,4 +1,4 @@
-import React, { useEffect, useState, createRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from '../../layouts/Layout';
 import { InertiaLink, usePage } from '@inertiajs/inertia-react'
 
@@ -89,7 +89,7 @@ const useStyles = makeStyles(
 );
 
 
-const Create = ({ roles, employees }) => {
+const Create = ({ employees }) => {
     //errores de la validacion de laravel
     const { errors } = usePage().props
 
@@ -115,18 +115,26 @@ const Create = ({ roles, employees }) => {
     //manda el forumulario
     function handleSubmit(e) {
         e.preventDefault()
-        Inertia.post(route('users.store'), values,
-            {
-                onError: () => {
-                    Inertia.reload({ only: ['units'], data: { regime: values.regimen } })
+        if (emploInfo.empleados.length > 0) {
+            Inertia.post(route('honor.store'), {
+                issue: values,
+                empleados: emploInfo.empleados
+            },
+                {
+                    onError: () => {
+
+                    }
                 }
-            }
-        )
+            )
+        }
+        else {
+            handleClickOpenAlert3();
+        }
     }
 
     //boton de cancelar
     function cancelEditUser() {
-        Inertia.get(route('users.index'))
+        Inertia.get(route('honor'))
     }
 
     function initializeSelects() {
@@ -139,11 +147,6 @@ const Create = ({ roles, employees }) => {
 
         M.updateTextFields();
     }
-
-    //se ejecuta cuando la pagina se renderiza
-    useEffect(() => {
-        initializeSelects();
-    }, [])
 
     const defaultProps = {
         options: employees,
@@ -222,6 +225,16 @@ const Create = ({ roles, employees }) => {
         setOpenAlert2(false);
     };
 
+    const [openAlert3, setOpenAlert3] = React.useState(false);
+
+    const handleClickOpenAlert3 = () => {
+        setOpenAlert3(true);
+    };
+
+    const handleCloseAlert3 = () => {
+        setOpenAlert3(false);
+    };
+
     function handleChangeSancionado(index) {
         var arr = emploInfo.empleados.slice();
         arr[index].sancionado = !arr[index].sancionado;
@@ -265,14 +278,16 @@ const Create = ({ roles, employees }) => {
                                 AGREGAR REGISTRO
                             </div>
 
-                            <Alertas />
+                            <div className="col s12">
+                                <Alertas />
+                            </div>
                             {/* ----Formulario---- */}
                             <form onSubmit={handleSubmit}>
                                 <div className="row div-form-register" style={{ "padding": "3%" }}>
                                     <div className="col s12 m12 div-division">
 
                                         <div className="input-field col s12" style={{ marginTop: '15px' }}>
-                                            <input id="num_oficio" type="text" className={errors.num_oficio ? "validate form-control invalid" : "validate form-control"} name="num_oficio" value={values.num_oficio} required onChange={handleChange} readOnly onFocus={(e) => { e.target.removeAttribute("readonly") }} />
+                                            <input id="num_oficio" type="text" className={errors.num_oficio ? "validate form-control invalid" : "validate form-control"} name="num_oficio" value={values.num_oficio} required onChange={handleChange} readOnly onFocus={(e) => { e.target.removeAttribute("readonly") }} required />
                                             <label htmlFor="num_oficio">Numero de oficio</label>
                                             {
                                                 errors.num_oficio &&
@@ -287,7 +302,7 @@ const Create = ({ roles, employees }) => {
                                             <Autocomplete
                                                 {...defaultProps}
                                                 renderInput={(params) => (
-                                                    <TextField {...params} id="empleado" className={classes.textField} required label="Empleado" variant="standard" />
+                                                    <TextField {...params} id="empleado" className={classes.textField} label="Empleado" variant="standard" />
                                                 )}
                                             />
                                             {
@@ -304,7 +319,7 @@ const Create = ({ roles, employees }) => {
                                                             <TableCell>Empleado</TableCell>
                                                             <TableCell align="center">Sancionado</TableCell>
                                                             <TableCell align="center">Fecha Inicio</TableCell>
-                                                            <TableCell align="center">Fecha Termino</TableCell>
+                                                            <TableCell align="center">Fecha Término</TableCell>
                                                             <TableCell align="center">Sanción</TableCell>
                                                         </TableRow>
                                                     </TableHead>
@@ -338,6 +353,7 @@ const Create = ({ roles, employees }) => {
                                                                             clearText="Limpiar"
                                                                             cancelText="Cancelar"
                                                                             value={emploInfo.empleados[index].fecha_inicio}
+                                                                            disableHighlightToday={true}
                                                                             onChange={(date) => (handleChangeDate(date, index))}
                                                                             renderInput={(params) => <TextField {...params} style={{}} />}
                                                                         />
@@ -346,12 +362,13 @@ const Create = ({ roles, employees }) => {
                                                                 <TableCell align="center">
                                                                     <LocalizationProvider dateAdapter={DateAdapter} locale={es}>
                                                                         <MobileDatePicker
-                                                                            label="Fecha de termino"
+                                                                            label="Fecha de término"
                                                                             inputFormat="dd/MM/yyyy"
                                                                             clearable
                                                                             clearText="Limpiar"
                                                                             cancelText="Cancelar"
                                                                             value={emploInfo.empleados[index].fecha_termino}
+                                                                            disableHighlightToday={true}
                                                                             onChange={(date) => (handleChangeDateTermino(date, index))}
                                                                             renderInput={(params) => <TextField {...params} />}
                                                                         />
@@ -425,6 +442,27 @@ const Create = ({ roles, employees }) => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseAlert2}>
+                        Aceptar
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog
+                open={openAlert3}
+                onClose={handleCloseAlert3}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {"Error"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Agrega por lo menos un empleado antes de continuar
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseAlert3}>
                         Aceptar
                     </Button>
                 </DialogActions>

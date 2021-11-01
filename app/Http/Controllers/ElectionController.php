@@ -7,6 +7,7 @@ use App\Models\Employee;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class ElectionController extends Controller
@@ -16,17 +17,19 @@ class ElectionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(){
-        $elections = Election::leftJoin('election_employee','elections.id','election_employee.election_id')
-        ->leftJoin('employees','election_employee.employee_id','employees.id')
-        ->select('election_employee.id','employees.nombre','matricula','apellido_p','election_employee.num_oficio','elections.fecha','fecha_voto')
-        ->get();
+    public function index()
+    {
+        $elections = Election::leftJoin('election_employee', 'elections.id', 'election_employee.election_id')
+            ->leftJoin('employees', 'election_employee.employee_id', 'employees.id')
+            ->select('election_employee.id', 'employees.nombre', 'matricula', 'apellido_p', 'election_employee.num_oficio', 'elections.fecha', 'fecha_voto')
+            ->get();
 
-        return Inertia::render('Oficinas/secretariaInterior',['elections' => $elections]);
+        return Inertia::render('Oficinas/secretariaInterior', ['elections' => $elections]);
     }
 
-    public function secretariaInteriorElection($id){
-        dd("Welcome to the employee-election row",$id);
+    public function secretariaInteriorElection($id)
+    {
+        dd("Welcome to the employee-election row", $id);
     }
 
     /**
@@ -37,6 +40,11 @@ class ElectionController extends Controller
     public function create()
     {
         //
+        return Inertia::render('Oficinas/secretariaICrear', [
+            'employees' => fn () => Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')
+                ->get(),
+            'elections' => fn () => Election::get()
+        ]);
     }
 
     /**
@@ -48,6 +56,51 @@ class ElectionController extends Controller
     public function store(Request $request)
     {
         //
+        $validated = $request->validate([
+            'num_oficio' => 'required|max:255',
+            'empleado' => 'required|exists:employees,id',
+            'eleccion' => 'required|exists:elections,id',
+            'fecha' => 'required|date',
+        ]);
+        DB::beginTransaction();
+        try {
+
+            $eleccion = Election::findOrFail($request->eleccion);
+            $data = [
+                'fecha_voto' => Carbon::parse($request->fecha),
+                'num_oficio' => $request->num_oficio,
+            ];
+            $eleccion->employees()->attach($request->empleado, $data);
+
+            DB::commit();
+            return redirect()->back()->with('success', 'El registro se creó con éxito!');
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            dd($th);
+            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+        }
+    }
+
+    public function votacion(Request $request)
+    {
+        $validated = $request->validate([
+            'fecha_votacion' => 'required|date',
+        ]);
+
+        DB::beginTransaction();
+        try {
+
+            $eleccion = new Election();
+            $eleccion->fecha = Carbon::parse($request->fecha_votacion);
+            $eleccion->save();
+            DB::commit();
+            return redirect()->back()->with('success', 'La votación se creó con éxito!');
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+        }
     }
 
     /**
