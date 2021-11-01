@@ -200,10 +200,10 @@ const conflictos = ({ conflicts }) => {
       <div className="row contenedor">
         <div className="col contenedor s12">
           <div className="card darken-1 cardUsers">
-          <InertiaLink className="btn-floating btn-large waves-effect waves-light green-sind button-addUser" href={route('conflicts.create')}><i className="material-icons">add</i></InertiaLink>
+            <InertiaLink className="btn-floating btn-large waves-effect waves-light green-sind button-addUser" href={route('conflicts.create')}><i className="material-icons">add</i></InertiaLink>
             <div className="card-content">
               <span className="card-title">Conflictos</span>
-              <div style={{ height: 400, width: '100%' }}>
+              <div style={{ height: '60vh', width: '100%' }}>
                 <ThemeProvider theme={themeEs}>
                   <DataGrid
                     components={{ Toolbar: QuickSearchToolbar }}

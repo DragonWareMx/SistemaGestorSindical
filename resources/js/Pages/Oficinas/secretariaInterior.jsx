@@ -204,7 +204,7 @@ const secretariaInterior = ({ elections }) => {
             <InertiaLink className="btn-floating btn-large waves-effect waves-light green-sind button-addUser" href={route('secretariaInterior.create')}><i className="material-icons">add</i></InertiaLink>
             <div className="card-content">
               <span className="card-title">Secretaria del Interior</span>
-              <div style={{ height: 400, width: '100%' }}>
+              <div style={{ height: '60vh', width: '100%' }}>
                 <ThemeProvider theme={themeEs}>
                   <DataGrid
                     components={{ Toolbar: QuickSearchToolbar }}

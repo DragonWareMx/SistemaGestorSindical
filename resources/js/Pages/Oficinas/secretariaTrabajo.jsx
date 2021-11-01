@@ -202,7 +202,7 @@ const secretariaTrabajo = ({ conflicts }) => {
           <div className="card darken-1 cardUsers">
             <div className="card-content">
               <span className="card-title">Secretaria del Trabajo</span>
-              <div style={{ height: 400, width: '100%' }}>
+              <div style={{ height: '60vh', width: '100%' }}>
                 <ThemeProvider theme={themeEs}>
                   <DataGrid
                     components={{ Toolbar: QuickSearchToolbar }}
