@@ -69,6 +69,7 @@ Route::get('/accion-femenil', [App\Http\Controllers\TrophyController::class, 'in
 Route::get('/accion-femenil/ver/{id}', [App\Http\Controllers\TrophyController::class, 'trophy'])->name('accionFemenil.trophy');
 Route::get('/accion-femenil/crear', [App\Http\Controllers\TrophyController::class, 'create'])->name('accionFemenil.create');
 Route::post('/accion-femenil/trophie/crear', [App\Http\Controllers\TrophyController::class, 'trophie'])->name('trophie.create');
+Route::post('/accion-femenil/store', [App\Http\Controllers\TrophyController::class, 'store'])->name('trophie.store');
 
 
 
