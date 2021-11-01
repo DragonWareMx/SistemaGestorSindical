@@ -172,7 +172,7 @@ const honorJusticia = ({ issues }) => {
       headerName: "VER",
       flex: 0.2,
       renderCell: (params) => (
-        <InertiaLink href={route('honor.issue', params.row.uuid)} style={{ textDecoration: 'none', color: 'gray' }}><VisibilityIcon /></InertiaLink>
+        <InertiaLink href={route('honor.issue', params.row.num_oficio)} style={{ textDecoration: 'none', color: 'gray' }}><VisibilityIcon /></InertiaLink>
       ),
       sortable: false,
       editable: false,
