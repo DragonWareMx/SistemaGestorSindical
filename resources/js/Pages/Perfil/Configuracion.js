@@ -190,7 +190,7 @@ const Configuracion = ({ user }) => {
                                         <p className="titles-sub" style={{ "margin": "1em 0px 1em 3%", "marginBottom": "15px" }}>INFORMACIÓN PERSONAL</p>
 
                                         <div className="col s12" style={{ "display": "flex", "justifyContent": "center", "flexDirection": "column", "marginTop": "5px", "marginBottom": "5px" }}>
-                                            <img id="profileImage" onClick={clickFoto} src={user.foto ? "/storage/fotos_perfil/" + user.foto : "/img/avatar1.jpg"}></img>
+                                            <img id="profileImage" onClick={clickFoto} src={user.foto ? "/storage/fotos_perfil/" + user.foto : "/img/avatar1.png"}></img>
                                             <p id="txt-profile" style={{ "cursor": "pointer" }} onClick={clickFoto}>Foto de perfil</p>
                                         </div>
 

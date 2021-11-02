@@ -117,12 +117,12 @@ export default function BarraBusqueda() {
                     <div className="main-bar-right-rightSide">
                         <div className="truncate">
                             <InertiaLink href={route('perfil')}>
-                                <span className="main-username">{auth.user.employee.nombre + ' ' + auth.user.employee.apellido_p + ' ' + auth.user.employee.apellido_m}</span>
+                                <span className="main-username">{auth.user.employee.apellido_m ? auth.user.employee.nombre + ' ' + auth.user.employee.apellido_p + ' ' + auth.user.employee.apellido_m : auth.user.employee.nombre + ' ' + auth.user.employee.apellido_p}</span>
                             </InertiaLink>
                         </div>
                         <div>
                             <InertiaLink href={route('perfil')}>
-                                <img className="main-userimage" src={auth.user.foto ? "/storage/fotos_perfil/" + auth.user.foto : "/img/avatar1.jpg"} alt="" />
+                                <img className="main-userimage" src={auth.user.foto ? "/storage/fotos_perfil/" + auth.user.foto : "/img/avatar1.png"} alt="" />
                             </InertiaLink>
                         </div>
                     </div>

@@ -19,8 +19,7 @@ class TrophyController extends Controller
      */
     public function index()
     {
-        $trophies = Trophy::
-            leftJoin('employee_trophie','trophies.id','employee_trophie.trophie_id')
+        $trophies = Trophy::join('employee_trophie','trophies.id','employee_trophie.trophie_id')
             ->leftJoin('employees','employee_trophie.employee_id','employees.id')
             ->select('employees.nombre','matricula','apellido_p','employee_trophie.id as id','trophies.nombre as premio','trophies.observaciones as observaciones')
             ->get();
@@ -40,9 +39,9 @@ class TrophyController extends Controller
     {
         //
         return Inertia::render('Oficinas/femenilCrear', [
-            'roles' => fn () => Role::select('name')->get(),
             'employees' => fn () => Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')
-                ->get()
+                ->get(),
+            'trophies' => fn () =>Trophy::select('nombre')->get()
         ]);
     }
 
@@ -55,6 +54,18 @@ class TrophyController extends Controller
     public function store(Request $request)
     {
         //
+    }
+
+    public function trophie(Request $request)
+    {
+        //FALTA EL LOG Y PONER LA TRANSACTION
+        $premio = new Trophy();
+        $premio->nombre=$request->nombre;
+        $premio->observaciones=$request->observaciones;
+
+        $premio->save();
+
+        return redirect()->back();
     }
 
     /**
