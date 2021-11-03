@@ -89,7 +89,7 @@ const useStyles = makeStyles(
 );
 
 
-const Create = ({ roles, employees }) => {
+const Create = ({ employees }) => {
     //errores de la validacion de laravel
     const { errors } = usePage().props
 
@@ -117,9 +117,9 @@ const Create = ({ roles, employees }) => {
     function handleSubmit(e) {
         e.preventDefault()
         if (emploInfo.empleados.length > 0) {
-            Inertia.post(route('secretariaTrabajo.create'), {
-                // issue: values,
-                // empleados: emploInfo.empleados
+            Inertia.post(route('secretariaTrabajo.store'), {
+                conflict: values,
+                empleados: emploInfo.empleados
             },
                 {
                     onError: () => {
@@ -131,14 +131,6 @@ const Create = ({ roles, employees }) => {
         else {
             handleClickOpenAlert3();
         }
-
-        // Inertia.post(route('secretariaTrabajo.create'), values,
-        //     {
-        //         onError: () => {
-                    
-        //         }
-        //     }
-        // )
     }
 
     //boton de cancelar
@@ -158,9 +150,9 @@ const Create = ({ roles, employees }) => {
     }
 
     //se ejecuta cuando la pagina se renderiza
-    useEffect(() => {
-        initializeSelects();
-    }, [])
+    // useEffect(() => {
+    //     initializeSelects();
+    // }, [])
 
     const defaultProps = {
         options: employees,
@@ -191,8 +183,9 @@ const Create = ({ roles, employees }) => {
             });
 
             if (bandera) {
+                const neim = values.empleado.apellido_m ? values.empleado.nombre + ' ' + values.empleado.apellido_p + ' ' + values.empleado.apellido_m : values.empleado.nombre + ' ' + values.empleado.apellido_p;
                 arr.push({
-                    nombre: values.empleado.nombre + ' ' + values.empleado.apellido_p + ' ' + values.empleado.apellido_m,
+                    nombre: neim,
                     matricula: values.empleado.matricula,
                     id: values.empleado.id,
                     sancionado: false,
@@ -273,6 +266,7 @@ const Create = ({ roles, employees }) => {
         arr[index].sancion = event.target.value;
         setEmploInfo({ empleados: arr });
     };
+
     function handleChangeResol(event, index) {
         var arr = emploInfo.empleados.slice();
         arr[index].resolutivo = event.target.value;
@@ -298,14 +292,16 @@ const Create = ({ roles, employees }) => {
                                 AGREGAR REGISTRO
                             </div>
 
-                            <Alertas />
+                            <div className="col s12">
+                                <Alertas />
+                            </div>
                             {/* ----Formulario---- */}
                             <form onSubmit={handleSubmit}>
                                 <div className="row div-form-register" style={{ "padding": "3%" }}>
                                     <div className="col s12 m12 div-division">
 
                                         <div className="input-field col s12" style={{ marginTop: '15px' }}>
-                                            <input id="num_oficio" type="text" className={errors.num_oficio ? "validate form-control invalid" : "validate form-control"} name="num_oficio" value={values.num_oficio} required onChange={handleChange} readOnly onFocus={(e) => { e.target.removeAttribute("readonly") }} />
+                                            <input id="num_oficio" type="text" className={errors.num_oficio ? "validate form-control invalid" : "validate form-control"} name="num_oficio" value={values.num_oficio} required onChange={handleChange} readOnly onFocus={(e) => { e.target.removeAttribute("readonly") }} required />
                                             <label htmlFor="num_oficio">Numero de oficio</label>
                                             {
                                                 errors.num_oficio &&
@@ -320,7 +316,7 @@ const Create = ({ roles, employees }) => {
                                             <Autocomplete
                                                 {...defaultProps}
                                                 renderInput={(params) => (
-                                                    <TextField {...params} id="empleado" className={classes.textField} required label="Empleado" variant="standard" />
+                                                    <TextField {...params} id="empleado" className={classes.textField} label="Empleado" variant="standard" />
                                                 )}
                                             />
                                             {
@@ -422,7 +418,7 @@ const Create = ({ roles, employees }) => {
                                 </div>
                                 <div className="row container-buttons">
                                     <button type="button" className=" center-align  btn waves-effect waves-light cancelar" style={{ marginRight: "15px" }} onClick={cancelEditUser}>Cancelar</button>
-                                    < button type="submit" className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
+                                    <button type="submit" className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
                                         Guardar
                                         <i className="material-icons right">save</i>
                                     </button>

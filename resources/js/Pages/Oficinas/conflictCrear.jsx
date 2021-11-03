@@ -290,7 +290,9 @@ const Create = ({ roles, employees }) => {
                                 AGREGAR REGISTRO
                             </div>
 
-                            <Alertas />
+                            <div className="col s12">
+                                <Alertas />
+                            </div>
                             {/* ----Formulario---- */}
                             <form onSubmit={handleSubmit}>
                                 <div className="row div-form-register" style={{ "padding": "3%" }}>

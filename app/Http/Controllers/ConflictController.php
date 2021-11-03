@@ -70,27 +70,20 @@ class ConflictController extends Controller
 
     public function secretariaTrabajoStore(Request $request)
     {
-        // $validated = $request->validate([
-        //     'issue.num_oficio' =>  ['required', 'unique:issues,num_oficio', 'max:255'],
-        // ]);
-
-        dd("ESTE BOTON ES PARA GUARDAR");
-
-        //validacion a mano por que la de laravel no funciona
-        $issue = Issue::where('num_oficio', $request->issue['num_oficio'])->first();
-        if ($issue) {
+        //FALTA VALIDATES
+        $conflict = Conflict::where('num_oficio', $request->conflict['num_oficio'])->first();
+        if ($conflict) {
             return redirect()->back()->with('error', 'El numero de oficio tiene que ser único, intenta con otro');
         }
 
         DB::beginTransaction();
         try {
-            //code...
-            DB::commit();
-            $honor = new Issue();
-            $honor->num_oficio = $request->issue['num_oficio'];
-            $honor->observaciones = $request->issue['observaciones'];
-            $honor->uuid = Str::uuid();
-            $honor->save();
+            $conflicto = new Conflict();
+            $conflicto->num_oficio = $request->conflict['num_oficio'];
+            $conflicto->observaciones = $request->conflict['observaciones'];
+            $conflicto->uuid = Str::uuid();
+            $conflicto->tipo = 'secretaria';
+            $conflicto->save();
 
             foreach ($request->empleados as $empleado) {
                 # code...
@@ -98,9 +91,10 @@ class ConflictController extends Controller
                     'inicio_sancion' => Carbon::parse($empleado['fecha_inicio']),
                     'termino_sancion' => Carbon::parse($empleado['fecha_termino']),
                     'sancion' => $empleado['sancion'],
+                    'resolutivo'=>$empleado['resolutivo'],
                     'castigado' => $empleado['sancionado']
                 ];
-                $honor->employees()->attach($empleado['id'], $data);
+                $conflicto->employees()->attach($empleado['id'], $data);
             }
 
             DB::commit();
@@ -110,6 +104,7 @@ class ConflictController extends Controller
             DB::rollBack();
             return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
         }
+        //FALTA LOG
     }
 
     /**
@@ -167,7 +162,7 @@ class ConflictController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            dd($th);
+            // dd($th);
             return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
         }
         //FALTA LOG
