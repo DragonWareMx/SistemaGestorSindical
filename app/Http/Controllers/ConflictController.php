@@ -49,6 +49,66 @@ class ConflictController extends Controller
         dd($uuid);
     }
 
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function secretariaTrabajoCreate()
+    {
+        //
+        return Inertia::render('Oficinas/secretariaTrabajoCrear', [
+            'roles' => fn () => Role::select('name')->get(),
+            'employees' => fn () => Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')
+                ->get()
+        ]);
+    }
+
+    public function secretariaTrabajoStore(Request $request)
+    {
+        // $validated = $request->validate([
+        //     'issue.num_oficio' =>  ['required', 'unique:issues,num_oficio', 'max:255'],
+        // ]);
+
+        dd("ESTE BOTON ES PARA GUARDAR");
+
+        //validacion a mano por que la de laravel no funciona
+        $issue = Issue::where('num_oficio', $request->issue['num_oficio'])->first();
+        if ($issue) {
+            return redirect()->back()->with('error', 'El numero de oficio tiene que ser único, intenta con otro');
+        }
+
+        DB::beginTransaction();
+        try {
+            //code...
+            DB::commit();
+            $honor = new Issue();
+            $honor->num_oficio = $request->issue['num_oficio'];
+            $honor->observaciones = $request->issue['observaciones'];
+            $honor->uuid = Str::uuid();
+            $honor->save();
+
+            foreach ($request->empleados as $empleado) {
+                # code...
+                $data = [
+                    'inicio_sancion' => Carbon::parse($empleado['fecha_inicio']),
+                    'termino_sancion' => Carbon::parse($empleado['fecha_termino']),
+                    'sancion' => $empleado['sancion'],
+                    'castigado' => $empleado['sancionado']
+                ];
+                $honor->employees()->attach($empleado['id'], $data);
+            }
+
+            DB::commit();
+            return redirect()->back()->with('success', 'El registro se creó con éxito!');
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+        }
+    }
+
     /**
      * Show the form for creating a new resource.
      *

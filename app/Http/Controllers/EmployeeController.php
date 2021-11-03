@@ -82,6 +82,21 @@ class EmployeeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function admisionCambiosCreate()
+    {
+        //
+        return Inertia::render('Oficinas/secretariaTrabajoCrear', [
+            'roles' => fn () => Role::select('name')->get(),
+            'employees' => fn () => Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')
+                ->get()
+        ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function create(Request $request)
     {
         //valida el rol del usuario
