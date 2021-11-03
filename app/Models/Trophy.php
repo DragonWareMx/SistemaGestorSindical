@@ -12,6 +12,6 @@ class Trophy extends Model
 
     public function employees()
     {
-        return $this->belongsToMany(Employee::class,'employee_trophies','employee_id','trophie_id');
+        return $this->belongsToMany(Employee::class,'employee_trophie','employee_id','trophie_id');
     }
 }
