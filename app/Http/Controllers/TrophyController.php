@@ -19,8 +19,7 @@ class TrophyController extends Controller
      */
     public function index()
     {
-        $trophies = Trophy::
-            leftJoin('employee_trophie','trophies.id','employee_trophie.trophie_id')
+        $trophies = Trophy::join('employee_trophie','trophies.id','employee_trophie.trophie_id')
             ->leftJoin('employees','employee_trophie.employee_id','employees.id')
             ->select('employees.nombre','matricula','apellido_p','employee_trophie.id as id','trophies.nombre as premio','trophies.observaciones as observaciones')
             ->get();
@@ -28,7 +27,19 @@ class TrophyController extends Controller
     }
 
     public function trophy($id){
-        dd($id);
+        $win=DB::table('employee_trophie')->where('id',$id)->first();
+        $employee=Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')->findOrFail($win->employee_id);
+        $trophy=Trophy::findOrFail($win->trophie_id);
+        $employees=Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')->get();
+        $trophies=Trophy::get();
+
+        return Inertia::render('Oficinas/femenilEditar', [
+            'win'=>$win,
+            'employee'=>$employee,
+            'trophy'=>$trophy,
+            'employees'=>$employees,
+            'trophies'=>$trophies,
+        ]);
     }
 
     /**

@@ -27,21 +27,10 @@ class IssueSeeder extends Seeder
             'termino_sancion'=>'2021-11-12',
             'sancion'=>'lorem ipsum dolor ed dolor et istum at lorem ipsum',
         ]);
-        DB::table('employee_issue')->insert([
-            'employee_id'=>'2',
-            'issue_id' => '1',
-            'castigado'=>0,
-        ]);
-
         DB::table('issues')->insert([
             'uuid'=>'9854816487',
             'num_oficio'=>'215468',
             'observaciones' => 'et lorem dolor et Lorem ipsum dolor et',
-        ]);
-        DB::table('employee_issue')->insert([
-            'employee_id'=>'1',
-            'issue_id' => '2',
-            'castigado'=>0,
         ]);
         DB::table('employee_issue')->insert([
             'employee_id'=>'2',

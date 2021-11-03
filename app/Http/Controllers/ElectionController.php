@@ -19,7 +19,7 @@ class ElectionController extends Controller
      */
     public function index()
     {
-        $elections = Election::leftJoin('election_employee', 'elections.id', 'election_employee.election_id')
+        $elections = Election::join('election_employee', 'elections.id', 'election_employee.election_id')
             ->leftJoin('employees', 'election_employee.employee_id', 'employees.id')
             ->select('election_employee.id', 'employees.nombre', 'matricula', 'apellido_p', 'election_employee.num_oficio', 'elections.fecha', 'fecha_voto')
             ->get();
@@ -29,7 +29,19 @@ class ElectionController extends Controller
 
     public function secretariaInteriorElection($id)
     {
-        dd("Welcome to the employee-election row", $id);
+        $vote=DB::table('election_employee')->where('id',$id)->first();
+        $employee=Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')->findOrFail($vote->employee_id);
+        $election=Election::findOrFail($vote->election_id);
+        $employees=Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')->get();
+        $elections=Election::get();
+
+        return Inertia::render('Oficinas/secretariaIEditar', [
+            'vote'=>$vote,
+            'employee'=>$employee,
+            'election'=>$election,
+            'employees'=>$employees,
+            'elections'=>$elections,
+        ]);
     }
 
     /**

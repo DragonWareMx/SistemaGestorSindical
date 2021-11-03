@@ -116,26 +116,18 @@ const Create = ({ roles, employees }) => {
     //manda el forumulario
     function handleSubmit(e) {
         e.preventDefault()
-        if (emploInfo.empleados.length > 0) {
-            Inertia.post(route('conflicts.store'), {
-                conflict: values,
-                empleados: emploInfo.empleados
-            },
-                {
-                    onError: () => {
-
-                    }
+        Inertia.post(route('admisionCambiosStore'), values,
+            {
+                onError: () => {
+                    
                 }
-            )
-        }
-        else {
-            handleClickOpenAlert3();
-        }
+            }
+        )
     }
 
     //boton de cancelar
     function cancelEditUser() {
-        Inertia.get(route('conflicts'))
+        Inertia.get(route('admisionCambios'))
     }
 
     function initializeSelects() {
@@ -232,16 +224,6 @@ const Create = ({ roles, employees }) => {
         setOpenAlert2(false);
     };
 
-    const [openAlert3, setOpenAlert3] = React.useState(false);
-
-    const handleClickOpenAlert3 = () => {
-        setOpenAlert3(true);
-    };
-
-    const handleCloseAlert3 = () => {
-        setOpenAlert3(false);
-    };
-
     function handleChangeSancionado(index) {
         var arr = emploInfo.empleados.slice();
         arr[index].sancionado = !arr[index].sancionado;
@@ -286,13 +268,11 @@ const Create = ({ roles, employees }) => {
                         <div className="card-content">
                             <div className="col s12 m9 l10 xl10 titulo-modulo left" style={{ marginTop: "15px" }}>
                                 {/* regresar */}
-                                <InertiaLink href={route('conflicts')} className="icon-back-course tooltipped" data-position="left" data-tooltip="Regresar"><i className="material-icons">keyboard_backspace</i></InertiaLink>
+                                <InertiaLink href={route('admisionCambios')} className="icon-back-course tooltipped" data-position="left" data-tooltip="Regresar"><i className="material-icons">keyboard_backspace</i></InertiaLink>
                                 AGREGAR REGISTRO
                             </div>
 
-                            <div className="col s12">
-                                <Alertas />
-                            </div>
+                            <Alertas />
                             {/* ----Formulario---- */}
                             <form onSubmit={handleSubmit}>
                                 <div className="row div-form-register" style={{ "padding": "3%" }}>
@@ -314,7 +294,7 @@ const Create = ({ roles, employees }) => {
                                             <Autocomplete
                                                 {...defaultProps}
                                                 renderInput={(params) => (
-                                                    <TextField {...params} id="empleado" className={classes.textField} required label="Empleado" variant="standard" />
+                                                    <TextField {...params} id="empleado" className={classes.textField} label="Empleado" variant="standard" />
                                                 )}
                                             />
                                             {
@@ -471,6 +451,6 @@ const Create = ({ roles, employees }) => {
     )
 }
 
-Create.layout = page => <Layout children={page} title="Escuela Sindical - Conflictos" pageTitle="Conflictos" />
+Create.layout = page => <Layout children={page} title="Escuela Sindical - Admisión y Cambios" pageTitle="Admisión y Cambios" />
 
 export default Create

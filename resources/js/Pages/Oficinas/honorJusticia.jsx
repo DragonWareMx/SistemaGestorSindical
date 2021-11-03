@@ -172,7 +172,7 @@ const honorJusticia = ({ issues }) => {
       headerName: "VER",
       flex: 0.2,
       renderCell: (params) => (
-        <InertiaLink href={route('honor.issue', params.row.uuid)} style={{ textDecoration: 'none', color: 'gray' }}><VisibilityIcon /></InertiaLink>
+        <InertiaLink href={route('honor.issue', params.row.num_oficio)} style={{ textDecoration: 'none', color: 'gray' }}><VisibilityIcon /></InertiaLink>
       ),
       sortable: false,
       editable: false,
@@ -204,7 +204,7 @@ const honorJusticia = ({ issues }) => {
             <InertiaLink className="btn-floating btn-large waves-effect waves-light green-sind button-addUser" href={route('honor.create')}><i className="material-icons">add</i></InertiaLink>
             <div className="card-content">
               <span className="card-title">Honor y Justicia</span>
-              <div style={{ height: 400, width: '100%' }}>
+              <div style={{ height: '60vh', width: '100%' }}>
                 <ThemeProvider theme={themeEs}>
                   <DataGrid
                     components={{ Toolbar: QuickSearchToolbar }}

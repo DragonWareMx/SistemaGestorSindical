@@ -29,13 +29,6 @@ class EmployeeController extends Controller
      */
     public function index(Request $request)
     {
-        // $usuarios = [];
-        // $chunk = DB::table('employees')->orderBy('id')->chunk(100, function($employees) use($usuarios){
-        //     $usuarios = array_merge($usuarios, $employees->toArray());
-        //     // print_r($usuarios);
-        // });
-
-        // print_r($usuarios);
         $employees = Employee::with('category:nombre,id', 'unit:nombre,id,regime_id', 'unit.regime:nombre,id', 'user:id')
         ->when($request->deleted == "true", function ($query, $deleted) {
             return $query->onlyTrashed();
@@ -49,33 +42,8 @@ class EmployeeController extends Controller
             'employees' => Inertia::lazy(fn () => $employees),
             'exists' => Employee::exists()
         ]);
-
-        // $usuarios = [];
-        // $chunk = Employee::with('category:nombre,id', 'unit:nombre,id,regime_id', 'unit.regime:nombre,id', 'user:id')
-        // ->when($request->deleted == "true", function ($query, $deleted) {
-        //     return $query->onlyTrashed();
-        // })
-        // ->when($request->user == "true", function ($query, $user) {
-        //     return $query->whereHas('user');
-        // })
-        // ->select('id', 'uuid', 'nombre', 'apellido_p', 'apellido_m', 'fecha_nac', 'sexo', 'antiguedad', 'estado', 'ciudad', 'colonia', 'calle', 'cp', 'num_ext', 'num_int', 'tel', 'matricula', 'category_id', 'unit_id', 'user_id')
-        // ->orderBy('id')
-        // ->get();
-
-        // print_r($usuarios);
-        // $employees = Employee::with('category:nombre,id', 'unit:nombre,id,regime_id', 'unit.regime:nombre,id', 'user:id')
-        // ->when($request->deleted == "true", function ($query, $deleted) {
-        //     return $query->onlyTrashed();
-        // })
-        // ->when($request->user == "true", function ($query, $user) {
-        //     return $query->whereHas('user');
-        // })
-        // ->get(['id', 'uuid', 'nombre', 'apellido_p', 'apellido_m', 'fecha_nac', 'sexo', 'antiguedad', 'estado', 'ciudad', 'colonia', 'calle', 'cp', 'num_ext', 'num_int', 'tel', 'matricula', 'category_id', 'unit_id', 'user_id']);
-
-        // return Inertia::render('Empleados/Index', [
-        //     'employees' => Inertia::lazy(fn () => $chunk)
-        // ]);
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -113,7 +81,7 @@ class EmployeeController extends Controller
         //valida el rol del usuario
         // \Gate::authorize('haveaccess', 'admin.perm');
 
-        $validated = $request->validate([ 
+        $validated = $request->validate([
             //---informacion personal---
             'nombre' => ['required','max:255','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
             'apellido_paterno' => ['required','max:255','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
@@ -121,17 +89,17 @@ class EmployeeController extends Controller
             'fecha_de_nacimiento' => 'required|date|before:17 years ago',
             'sexo' => 'required|in:h,m,o',
             'antiguedad' => 'nullable|date|before:tomorrow',
-            
-            //---informacion institucional---            
+
+            //---informacion institucional---
             'matricula' => 'required|digits_between:7,10|numeric|unique:employees,matricula',
             'regimen' => 'required|exists:regimes,nombre',
             'unidad' => 'required|exists:units,nombre',
             'categoria' => 'required|exists:categories,nombre',
         ]);
-        
+
         //si se introdujo algun dato para la direccion se validan los campos
         if($request->estado || $request->ciudad || $request->colonia || $request->calle || $request->numero_exterior || $request->numero_interior || $request->codigo_postal || $request->telefono){
-            $validated = $request->validate([ 
+            $validated = $request->validate([
                 //direccion
                 'estado' => ['required','max:50','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
                 'ciudad' => ['required','max:60','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
@@ -225,14 +193,14 @@ class EmployeeController extends Controller
                     $foto = $request->file('foto')->store('public/fotos_perfil');
                     $fileName = $request->file('foto')->hashName();
                     $newUser->foto = $fileName;
-    
+
                     $image = Image::make(Storage::get($foto));
-    
+
                     $image->resize(1280, null, function ($constraint) {
                         $constraint->aspectRatio();
                         $constraint->upsize();
                     });
-    
+
                     Storage::put($foto, (string) $image->encode('jpg', 30));
                 }
 
@@ -249,7 +217,7 @@ class EmployeeController extends Controller
             $newEmployee = new Employee;
 
             $newEmployee->uuid = Str::uuid();
-            
+
             //---informacion personal---
             $newEmployee->nombre = $request->nombre;
             $newEmployee->apellido_p = $request->apellido_paterno;
@@ -257,12 +225,12 @@ class EmployeeController extends Controller
             $newEmployee->fecha_nac = $request->fecha_de_nacimiento;
             $newEmployee->sexo = $request->sexo;
             $newEmployee->antiguedad = $request->antiguedad;
-            
+
             //---informacion institucional---
             $newEmployee->matricula = $request->matricula;
             $newEmployee->unit_id = $unidad[0]->id;
             $newEmployee->category_id = $categoria[0]->id;
-            
+
             //---direccion---
             $newEmployee->estado = $request->estado;
             $newEmployee->ciudad = $request->ciudad;
@@ -272,7 +240,7 @@ class EmployeeController extends Controller
             $newEmployee->num_int = $request->numero_interior;
             $newEmployee->cp = $request->codigo_postal;
             $newEmployee->tel = $request->telefono;
-            
+
             //SE GUARDA EL NUEVO USUARIO
             $newEmployee->save();
 
@@ -299,7 +267,7 @@ class EmployeeController extends Controller
             $newLog = new Log;
 
             $newLog->uuid = Str::uuid();
-            
+
             $newLog->categoria = 'create';
             $newLog->user_id = Auth::id();
             $newLog->accion =
@@ -325,10 +293,10 @@ class EmployeeController extends Controller
             }';
 
             $newLog->descripcion = 'El usuario '.Auth::user()->email.' ha registrado un nuevo empleado con la matricula: '. $newEmployee->matricula;
-                
+
             //SE GUARDA EL LOG
             $newLog->save();
-            
+
             if(!$newEmployee)
             {
                 DB::rollBack();
@@ -354,12 +322,12 @@ class EmployeeController extends Controller
 
             //SE HACE COMMIT
             DB::commit();
-            
+
             //REDIRECCIONA A LA VISTA DE USUARIOS
             return \Redirect::route('employees.index')->with('success','El empleado ha sido registrado con éxito!');
         } catch (\Exception $e) {
             DB::rollBack();
-            
+
             //si hay foto se elimina del servidor
             if($foto)
             {
@@ -383,7 +351,7 @@ class EmployeeController extends Controller
 
         $employee = Employee::withTrashed()->with([
             'category:id,nombre',
-            'unit:id,nombre,regime_id', 
+            'unit:id,nombre,regime_id',
             'unit.regime:id,nombre',
             'user:id,email,foto,uuid'
         ])
@@ -417,7 +385,7 @@ class EmployeeController extends Controller
         //valida el rol del usuario
         // \Gate::authorize('haveaccess', 'admin.perm');
 
-        $validated = $request->validate([ 
+        $validated = $request->validate([
             //---informacion personal---
             'nombre' => ['required','max:255','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
             'apellido_paterno' => ['required','max:255','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
@@ -425,8 +393,8 @@ class EmployeeController extends Controller
             'fecha_de_nacimiento' => 'required|date|before:17 years ago',
             'sexo' => 'required|in:h,m,o',
             'antiguedad' => 'nullable|date|before:tomorrow',
-            
-            //---informacion institucional---            
+
+            //---informacion institucional---
             'matricula' => 'required|digits_between:7,10|numeric|unique:employees,matricula,'.$id,
             'regimen' => 'required|exists:regimes,nombre',
             'unidad' => 'required|exists:units,nombre',
@@ -435,7 +403,7 @@ class EmployeeController extends Controller
         ]);
         //si se introdujo algun dato para la direccion se validan los campos
         if($request->estado || $request->ciudad || $request->colonia || $request->calle || $request->numero_exterior || $request->numero_interior || $request->codigo_postal || $request->telefono){
-            $validated = $request->validate([ 
+            $validated = $request->validate([
                 //direccion
                 'estado' => ['required','max:50','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
                 'ciudad' => ['required','max:60','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
@@ -489,7 +457,7 @@ class EmployeeController extends Controller
 
             //SE CREA EL NUEVO EMPLEADO
             $employee = Employee::findOrFail($id);
-            
+
             //---informacion personal---
             $employee->nombre = $request->nombre;
             $employee->apellido_p = $request->apellido_paterno;
@@ -497,12 +465,12 @@ class EmployeeController extends Controller
             $employee->fecha_nac = $request->fecha_de_nacimiento;
             $employee->sexo = $request->sexo;
             $employee->antiguedad = $request->antiguedad;
-            
+
             //---informacion institucional---
             $employee->matricula = $request->matricula;
             $employee->unit_id = $unidad[0]->id;
             $employee->category_id = $categoria[0]->id;
-            
+
             //---direccion---
             $employee->estado = $request->estado;
             $employee->ciudad = $request->ciudad;
@@ -515,13 +483,13 @@ class EmployeeController extends Controller
 
             if($request->desvincular)
                 $employee->user_id = null;
-            
+
             //SE GUARDA EL NUEVO USUARIO
             $employee->save();
 
             //SE CREA EL LOG
             $newLog = new Log;
-            
+
             $newLog->uuid = Str::uuid();
 
             $newLog->categoria = 'update';
@@ -549,10 +517,10 @@ class EmployeeController extends Controller
             }';
 
             $newLog->descripcion = 'El usuario '.Auth::user()->email.' ha editado al empleado con la matricula: '. $employee->matricula;
-                
+
             //SE GUARDA EL LOG
             $newLog->save();
-            
+
             if(!$employee)
             {
                 DB::rollBack();
@@ -578,12 +546,12 @@ class EmployeeController extends Controller
 
             //SE HACE COMMIT
             DB::commit();
-            
+
             //REDIRECCIONA A LA VISTA DEL EMPLEADO
             return \Redirect::back()->with('success','El empleado ha sido editado con éxito!');
         } catch (\Exception $e) {
             DB::rollBack();
-            
+
             //si hay foto se elimina del servidor
             if($foto)
             {
@@ -692,7 +660,7 @@ class EmployeeController extends Controller
 
             DB::commit();
             return \Redirect::back()->with('success','¡Empleado restaurado con éxito!');
-            
+
         } catch (\Exception $e) {
             DB::rollBack();
             return \Redirect::back()->with('error','Ha ocurrido un error al intentar restaurar el empleado, inténtelo más tarde.');
@@ -712,5 +680,22 @@ class EmployeeController extends Controller
 
     public function admisionCambiosRelative($uuid){
         dd('Welcome to the relative and employee information view', $uuid);
+    }
+
+    public function admisionCambiosCreate()
+    {
+        //
+        return Inertia::render('Oficinas/admisionCambiosCrear', [
+            'roles' => fn () => Role::select('name')->get(),
+            'employees' => fn () => Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')
+                ->get()
+        ]);
+    }
+
+    public function admisionCambiosStore()
+    {
+        dd("ENTRE AQUI");
+        return redirect()->back()->with('success', 'El registro se creó con éxito!');
+        // return \Redirect::route('admisionCambios')->with('success','El registro se creo con éxito!');
     }
 }

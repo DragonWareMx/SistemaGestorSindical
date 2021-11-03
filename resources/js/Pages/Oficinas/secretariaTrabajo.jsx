@@ -22,6 +22,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 
 // Hojas de estilos
 import '/css/usersStyle.css'
+import '/css/users.css'
 
 import { ThemeProvider } from '@mui/material/styles';
 
@@ -200,9 +201,10 @@ const secretariaTrabajo = ({ conflicts }) => {
       <div className="row contenedor">
         <div className="col contenedor s12">
           <div className="card darken-1 cardUsers">
+          <InertiaLink className="btn-floating btn-large waves-effect waves-light green-sind button-addUser" href={route('secretariaTrabajo.create')}><i className="material-icons">add</i></InertiaLink>
             <div className="card-content">
               <span className="card-title">Secretaria del Trabajo</span>
-              <div style={{ height: 400, width: '100%' }}>
+              <div style={{ height: '60vh', width: '100%' }}>
                 <ThemeProvider theme={themeEs}>
                   <DataGrid
                     components={{ Toolbar: QuickSearchToolbar }}

@@ -177,8 +177,9 @@ const Create = ({ employees }) => {
             });
 
             if (bandera) {
+                const neim = values.empleado.apellido_m ? values.empleado.nombre + ' ' + values.empleado.apellido_p + ' ' + values.empleado.apellido_m : values.empleado.nombre + ' ' + values.empleado.apellido_p;
                 arr.push({
-                    nombre: values.empleado.nombre + ' ' + values.empleado.apellido_p + ' ' + values.empleado.apellido_m,
+                    nombre: neim,
                     matricula: values.empleado.matricula,
                     id: values.empleado.id,
                     sancionado: false,
@@ -288,7 +289,7 @@ const Create = ({ employees }) => {
 
                                         <div className="input-field col s12" style={{ marginTop: '15px' }}>
                                             <input id="num_oficio" type="text" className={errors.num_oficio ? "validate form-control invalid" : "validate form-control"} name="num_oficio" value={values.num_oficio} required onChange={handleChange} readOnly onFocus={(e) => { e.target.removeAttribute("readonly") }} required />
-                                            <label htmlFor="num_oficio">Numero de oficio</label>
+                                            <label htmlFor="num_oficio">Número de oficio</label>
                                             {
                                                 errors.num_oficio &&
                                                 <span className="helper-text" data-error={errors.num_oficio} style={{ "marginBottom": "10px" }}>{errors.num_oficio}</span>
