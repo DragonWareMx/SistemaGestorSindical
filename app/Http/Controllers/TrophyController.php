@@ -53,7 +53,22 @@ class TrophyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //falta validar el request
+        $trophy = Trophy::where('nombre',$request->nombre)->first();
+
+        DB::beginTransaction();
+        try {
+            //code...
+           $trophy->employees()->sync($request->empleado);
+           $trophy->save();
+            DB::commit();
+            return redirect()->back()->with('success', 'El registro se creó con éxito!');
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+        }
+        //falta el log
     }
 
     public function trophie(Request $request)
