@@ -202,7 +202,7 @@ const admisionCambios = ({ employees }) => {
           <div className="card darken-1 cardUsers">
             <div className="card-content">
               <span className="card-title">Admisión y Cambios</span>
-              <div style={{ height: 400, width: '100%' }}>
+              <div style={{ height: '60vh', width: '100%' }}>
                 <ThemeProvider theme={themeEs}>
                   <DataGrid
                     components={{ Toolbar: QuickSearchToolbar }}

@@ -37,12 +37,18 @@ class IssueController extends Controller
             ->first();
 
 
-        
-        // foreach ($issue['employees'] as $employee => $index) {
-        //     dd($employee->pivot);
-        //     $employee->pivot_inicio_sancion = (Carbon::createFromFormat('dd/MM/yyyy',$employee->pivot_inicio_sancion))->addDays(1);
-        //     // $employee['pivot']->termino_sancion = (Carbon::createFromFormat('dd/MM/yyyy',$issue.pivot.termino_sancion))->addDays(1);
-        // }
+        foreach ($issue['employees'] as $employee) {
+            if($employee->pivot['inicio_sancion']){
+                $date= $employee->pivot['inicio_sancion'];
+                $date=Carbon::parse($date)->addDays(1);
+                $employee->pivot['inicio_sancion'] = $date->toDateString();
+            }
+            if($employee->pivot['termino_sancion']){
+                $date= $employee->pivot['termino_sancion'];
+                $date=Carbon::parse($date)->addDays(1);
+                $employee->pivot['termino_sancion'] = $date->toDateString(); 
+            }
+        }
 
         $employees = Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')
             ->get();

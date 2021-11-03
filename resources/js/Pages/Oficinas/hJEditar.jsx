@@ -237,25 +237,25 @@ const Edit = ({ employees, issue }) => {
 
     function handleChangeSancionado(index) {
         var arr = emploInfo.empleados.slice();
-        arr[index].sancionado = !arr[index].sancionado;
+        arr[index].pivot.castigado = !arr[index].pivot.castigado;
         setEmploInfo({ empleados: arr });
     }
 
     function handleChangeDate(newValue, index) {
         var arr = emploInfo.empleados.slice();
-        arr[index].fecha_inicio = newValue;
+        arr[index].pivot.inicio_sancion = newValue;
         setEmploInfo({ empleados: arr });
     };
 
     function handleChangeDateTermino(newValue, index) {
         var arr = emploInfo.empleados.slice();
-        arr[index].fecha_termino = newValue;
+        arr[index].pivot.termino_sancion = newValue;
         setEmploInfo({ empleados: arr });
     };
 
     function handleChangeText(event, index) {
         var arr = emploInfo.empleados.slice();
-        arr[index].sancion = event.target.value;
+        arr[index].pivot.sancion = event.target.value;
         setEmploInfo({ empleados: arr });
     };
 
@@ -333,8 +333,8 @@ const Edit = ({ employees, issue }) => {
                                                                 key={index}
                                                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                                             >
-                                                                <TableCell scope="row" style={{display:'none'}}>
-                                                                    <IconButton aria-label="delete" color="error" onClick={() => (removeEmpleado(index))}>
+                                                                <TableCell scope="row">
+                                                                    <IconButton disabled="disabled" aria-label="delete" color="error" onClick={() => (removeEmpleado(index))}>
                                                                         <DeleteIcon />
                                                                     </IconButton>
                                                                 </TableCell>
@@ -343,9 +343,10 @@ const Edit = ({ employees, issue }) => {
                                                                 </TableCell>
                                                                 <TableCell align="center">
                                                                     <Checkbox
-                                                                        checked={emploInfo.empleados[index].sancionado}
+                                                                        checked={emploInfo.empleados[index].pivot.castigado}
                                                                         onClick={() => (handleChangeSancionado(index))}
                                                                         inputProps={{ 'aria-label': 'controlled' }}
+                                                                        disabled="disabled"
                                                                     />
                                                                 </TableCell>
                                                                 <TableCell align="center">
@@ -360,6 +361,7 @@ const Edit = ({ employees, issue }) => {
                                                                             disableHighlightToday={true}
                                                                             onChange={(date) => (handleChangeDate(date, index))}
                                                                             renderInput={(params) => <TextField {...params} style={{}} />}
+                                                                            disabled="disabled"
                                                                         />
                                                                     </LocalizationProvider>
                                                                 </TableCell>
@@ -375,6 +377,7 @@ const Edit = ({ employees, issue }) => {
                                                                             disableHighlightToday={true}
                                                                             onChange={(date) => (handleChangeDateTermino(date, index))}
                                                                             renderInput={(params) => <TextField {...params} />}
+                                                                            disabled="disabled"
                                                                         />
                                                                     </LocalizationProvider>
                                                                 </TableCell>
@@ -386,6 +389,7 @@ const Edit = ({ employees, issue }) => {
                                                                         maxRows={6}
                                                                         value={emploInfo.empleados[index].pivot.sancion}
                                                                         onChange={(event) => (handleChangeText(event, index))}
+                                                                        disabled="disabled"
                                                                     />
                                                                 </TableCell>
                                                             </TableRow>
@@ -405,6 +409,12 @@ const Edit = ({ employees, issue }) => {
                                     </button>
                                 </div>
                             </form>
+                            <div className="row container-buttons">
+                                < button className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
+                                    Editar
+                                    <i className="material-icons right">edit</i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div >

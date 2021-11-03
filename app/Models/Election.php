@@ -11,6 +11,6 @@ class Election extends Model
 
     public function employees()
     {
-        return $this->belongsToMany(Employee::class, 'election_employee', 'employee_id', 'election_id');
+        return $this->belongsToMany(Employee::class, 'election_employee', 'election_id', 'employee_id');
     }
 }

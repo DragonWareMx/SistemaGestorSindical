@@ -177,8 +177,9 @@ const Create = ({ employees }) => {
             });
 
             if (bandera) {
+                const neim = values.empleado.apellido_m ? values.empleado.nombre + ' ' + values.empleado.apellido_p + ' ' + values.empleado.apellido_m : values.empleado.nombre + ' ' + values.empleado.apellido_p;
                 arr.push({
-                    nombre: values.empleado.nombre + ' ' + values.empleado.apellido_p + ' ' + values.empleado.apellido_m,
+                    nombre: neim,
                     matricula: values.empleado.matricula,
                     id: values.empleado.id,
                     sancionado: false,

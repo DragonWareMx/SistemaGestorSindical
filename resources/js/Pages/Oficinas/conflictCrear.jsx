@@ -116,18 +116,26 @@ const Create = ({ roles, employees }) => {
     //manda el forumulario
     function handleSubmit(e) {
         e.preventDefault()
-        Inertia.post(route('users.store'), values,
-            {
-                onError: () => {
-                    Inertia.reload({ only: ['units'], data: { regime: values.regimen } })
+        if (emploInfo.empleados.length > 0) {
+            Inertia.post(route('conflicts.store'), {
+                conflict: values,
+                empleados: emploInfo.empleados
+            },
+                {
+                    onError: () => {
+
+                    }
                 }
-            }
-        )
+            )
+        }
+        else {
+            handleClickOpenAlert3();
+        }
     }
 
     //boton de cancelar
     function cancelEditUser() {
-        Inertia.get(route('users.index'))
+        Inertia.get(route('conflicts'))
     }
 
     function initializeSelects() {
@@ -222,6 +230,16 @@ const Create = ({ roles, employees }) => {
 
     const handleCloseAlert2 = () => {
         setOpenAlert2(false);
+    };
+
+    const [openAlert3, setOpenAlert3] = React.useState(false);
+
+    const handleClickOpenAlert3 = () => {
+        setOpenAlert3(true);
+    };
+
+    const handleCloseAlert3 = () => {
+        setOpenAlert3(false);
     };
 
     function handleChangeSancionado(index) {
