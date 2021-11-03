@@ -89,7 +89,7 @@ const useStyles = makeStyles(
 );
 
 
-const Create = ({ roles, employees }) => {
+const Edit = ({ employees, conflict }) => {
     //errores de la validacion de laravel
     const { errors } = usePage().props
 
@@ -97,8 +97,8 @@ const Create = ({ roles, employees }) => {
 
     //valores para formulario
     const [values, setValues] = useState({
-        num_oficio: '',
-        observaciones: '',
+        num_oficio: conflict.num_oficio || '',
+        observaciones: conflict.observaciones || '',
         empleado: null,
         resolutivo: ''
     })
@@ -117,7 +117,7 @@ const Create = ({ roles, employees }) => {
     function handleSubmit(e) {
         e.preventDefault()
         if (emploInfo.empleados.length > 0) {
-            Inertia.post(route('conflicts.store'), {
+            Inertia.post(route('secretariaTrabajo.store'), {
                 conflict: values,
                 empleados: emploInfo.empleados
             },
@@ -135,7 +135,7 @@ const Create = ({ roles, employees }) => {
 
     //boton de cancelar
     function cancelEditUser() {
-        Inertia.get(route('conflicts'))
+        Inertia.get(route('secretariaTrabajo'))
     }
 
     function initializeSelects() {
@@ -150,9 +150,9 @@ const Create = ({ roles, employees }) => {
     }
 
     //se ejecuta cuando la pagina se renderiza
-    useEffect(() => {
-        initializeSelects();
-    }, [])
+    // useEffect(() => {
+    //     initializeSelects();
+    // }, [])
 
     const defaultProps = {
         options: employees,
@@ -169,7 +169,7 @@ const Create = ({ roles, employees }) => {
 
     //esto de aqui es provisional :v
     const [emploInfo, setEmploInfo] = useState({
-        empleados: []
+        empleados: conflict.employees 
     });
 
     function agregarEmpleado() {
@@ -183,8 +183,9 @@ const Create = ({ roles, employees }) => {
             });
 
             if (bandera) {
+                const neim = values.empleado.apellido_m ? values.empleado.nombre + ' ' + values.empleado.apellido_p + ' ' + values.empleado.apellido_m : values.empleado.nombre + ' ' + values.empleado.apellido_p;
                 arr.push({
-                    nombre: values.empleado.nombre + ' ' + values.empleado.apellido_p + ' ' + values.empleado.apellido_m,
+                    nombre: neim,
                     matricula: values.empleado.matricula,
                     id: values.empleado.id,
                     sancionado: false,
@@ -244,30 +245,31 @@ const Create = ({ roles, employees }) => {
 
     function handleChangeSancionado(index) {
         var arr = emploInfo.empleados.slice();
-        arr[index].sancionado = !arr[index].sancionado;
+        arr[index].pivot.castigado = !arr[index].pivot.castigado;
         setEmploInfo({ empleados: arr });
     }
 
     function handleChangeDate(newValue, index) {
         var arr = emploInfo.empleados.slice();
-        arr[index].fecha_inicio = newValue;
+        arr[index].pivot.inicio_sancion = newValue;
         setEmploInfo({ empleados: arr });
     };
 
     function handleChangeDateTermino(newValue, index) {
         var arr = emploInfo.empleados.slice();
-        arr[index].fecha_termino = newValue;
+        arr[index].pivot.termino_sancion = newValue;
         setEmploInfo({ empleados: arr });
     };
 
     function handleChangeText(event, index) {
         var arr = emploInfo.empleados.slice();
-        arr[index].sancion = event.target.value;
+        arr[index].pivot.sancion = event.target.value;
         setEmploInfo({ empleados: arr });
     };
+
     function handleChangeResol(event, index) {
         var arr = emploInfo.empleados.slice();
-        arr[index].resolutivo = event.target.value;
+        arr[index].pivot.resolutivo = event.target.value;
         setEmploInfo({ empleados: arr });
     };
 
@@ -278,6 +280,10 @@ const Create = ({ roles, employees }) => {
         }))
     }
 
+    $(function() {
+        M.updateTextFields();
+    });
+
     return (
         <div className="row">
             <Container>
@@ -286,8 +292,8 @@ const Create = ({ roles, employees }) => {
                         <div className="card-content">
                             <div className="col s12 m9 l10 xl10 titulo-modulo left" style={{ marginTop: "15px" }}>
                                 {/* regresar */}
-                                <InertiaLink href={route('conflicts')} className="icon-back-course tooltipped" data-position="left" data-tooltip="Regresar"><i className="material-icons">keyboard_backspace</i></InertiaLink>
-                                AGREGAR REGISTRO
+                                <InertiaLink href={route('secretariaTrabajo')} className="icon-back-course tooltipped" data-position="left" data-tooltip="Regresar"><i className="material-icons">keyboard_backspace</i></InertiaLink>
+                                REGISTRO
                             </div>
 
                             <div className="col s12">
@@ -299,7 +305,7 @@ const Create = ({ roles, employees }) => {
                                     <div className="col s12 m12 div-division">
 
                                         <div className="input-field col s12" style={{ marginTop: '15px' }}>
-                                            <input id="num_oficio" type="text" className={errors.num_oficio ? "validate form-control invalid" : "validate form-control"} name="num_oficio" value={values.num_oficio} required onChange={handleChange} readOnly onFocus={(e) => { e.target.removeAttribute("readonly") }} />
+                                            <input id="num_oficio" type="text" disabled className={errors.num_oficio ? "validate form-control invalid" : "validate form-control"} name="num_oficio" value={values.num_oficio} required onChange={handleChange} readOnly onFocus={(e) => { e.target.removeAttribute("readonly") }} required />
                                             <label htmlFor="num_oficio">Numero de oficio</label>
                                             {
                                                 errors.num_oficio &&
@@ -307,21 +313,22 @@ const Create = ({ roles, employees }) => {
                                             }
                                         </div>
                                         <div class="input-field col s12" style={{ marginTop: '15px' }}>
-                                            <textarea id="textarea1" class="materialize-textarea" onChange={handleChangeTextarea} values={values.observaciones}></textarea>
+                                            <textarea id="textarea1" class="materialize-textarea" onChange={handleChangeTextarea} disabled value={values.observaciones}></textarea>
                                             <label for="textarea1">Observaciones</label>
                                         </div>
                                         <div className="col s12" style={{ marginTop: '10px' }}>
                                             <Autocomplete
+                                                style={{display:'none'}}
                                                 {...defaultProps}
                                                 renderInput={(params) => (
-                                                    <TextField {...params} id="empleado" className={classes.textField}  label="Empleado" variant="standard" />
+                                                    <TextField {...params} id="empleado" className={classes.textField} label="Empleado" variant="standard" />
                                                 )}
                                             />
                                             {
                                                 errors.empleado &&
                                                 <div className="helper-text" data-error={errors.empleado} style={{ "marginBottom": "10px" }}>{errors.empleado}</div>
                                             }
-                                            <Button variant="outlined" startIcon={<AddCircleOutlineIcon />} color="success" onClick={agregarEmpleado} style={{ float: "right", marginTop: '5px', marginBottom: '10px' }}>Agregar</Button>
+                                            <Button variant="outlined" startIcon={<AddCircleOutlineIcon />} color="success" onClick={agregarEmpleado} style={{ float: "right", marginTop: '5px', marginBottom: '10px', display:'none' }}>Agregar</Button>
 
                                             <TableContainer component={Paper}>
                                                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -343,7 +350,7 @@ const Create = ({ roles, employees }) => {
                                                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                                             >
                                                                 <TableCell scope="row">
-                                                                    <IconButton aria-label="delete" color="error" onClick={() => (removeEmpleado(index))}>
+                                                                    <IconButton aria-label="delete" color="error" disabled onClick={() => (removeEmpleado(index))}>
                                                                         <DeleteIcon />
                                                                     </IconButton>
                                                                 </TableCell>
@@ -352,7 +359,8 @@ const Create = ({ roles, employees }) => {
                                                                 </TableCell>
                                                                 <TableCell align="center">
                                                                     <Checkbox
-                                                                        checked={emploInfo.empleados[index].sancionado}
+                                                                        disabled
+                                                                        checked={emploInfo.empleados[index].pivot.castigado}
                                                                         onClick={() => (handleChangeSancionado(index))}
                                                                         inputProps={{ 'aria-label': 'controlled' }}
                                                                     />
@@ -360,12 +368,13 @@ const Create = ({ roles, employees }) => {
                                                                 <TableCell align="center">
                                                                     <LocalizationProvider dateAdapter={DateAdapter} locale={es}>
                                                                         <MobileDatePicker
+                                                                            disabled
                                                                             label="Fecha de inicio"
                                                                             inputFormat="dd/MM/yyyy"
                                                                             clearable
                                                                             clearText="Limpiar"
                                                                             cancelText="Cancelar"
-                                                                            value={emploInfo.empleados[index].fecha_inicio}
+                                                                            value={emploInfo.empleados[index].pivot.inicio_sancion}
                                                                             onChange={(date) => (handleChangeDate(date, index))}
                                                                             renderInput={(params) => <TextField {...params} style={{}} />}
                                                                         />
@@ -374,12 +383,13 @@ const Create = ({ roles, employees }) => {
                                                                 <TableCell align="center">
                                                                     <LocalizationProvider dateAdapter={DateAdapter} locale={es}>
                                                                         <MobileDatePicker
+                                                                            disabled
                                                                             label="Fecha de termino"
                                                                             inputFormat="dd/MM/yyyy"
                                                                             clearable
                                                                             clearText="Limpiar"
                                                                             cancelText="Cancelar"
-                                                                            value={emploInfo.empleados[index].fecha_termino}
+                                                                            value={emploInfo.empleados[index].pivot.termino_sancion}
                                                                             onChange={(date) => (handleChangeDateTermino(date, index))}
                                                                             renderInput={(params) => <TextField {...params} />}
                                                                         />
@@ -387,21 +397,23 @@ const Create = ({ roles, employees }) => {
                                                                 </TableCell>
                                                                 <TableCell align="center">
                                                                     <TextField
+                                                                        disabled
                                                                         id="outlined-multiline-flexible"
                                                                         label="Sanción"
                                                                         multiline
                                                                         maxRows={6}
-                                                                        value={emploInfo.empleados[index].sancion}
+                                                                        value={emploInfo.empleados[index].pivot.sancion}
                                                                         onChange={(event) => (handleChangeText(event, index))}
                                                                     />
                                                                 </TableCell>
                                                                 <TableCell align="center">
                                                                     <TextField
+                                                                        disabled
                                                                         id="outlined-multiline-flexible"
                                                                         label="Resolutivo"
                                                                         multiline
                                                                         maxRows={6}
-                                                                        value={emploInfo.empleados[index].resolutivo}
+                                                                        value={emploInfo.empleados[index].pivot.resolutivo}
                                                                         onChange={(event) => (handleChangeResol(event, index))}
                                                                     />
                                                                 </TableCell>
@@ -414,14 +426,20 @@ const Create = ({ roles, employees }) => {
                                     </div>
 
                                 </div>
-                                <div className="row container-buttons">
+                                <div className="row container-buttons" style={{display:'none'}}>
                                     <button type="button" className=" center-align  btn waves-effect waves-light cancelar" style={{ marginRight: "15px" }} onClick={cancelEditUser}>Cancelar</button>
-                                    < button type="submit" className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
+                                    <button type="submit" className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
                                         Guardar
                                         <i className="material-icons right">save</i>
                                     </button>
                                 </div>
                             </form>
+                            <div className="row container-buttons">
+                                < button className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
+                                    Editar
+                                    <i className="material-icons right">edit</i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div >
@@ -467,10 +485,31 @@ const Create = ({ roles, employees }) => {
                     </Button>
                 </DialogActions>
             </Dialog>
+
+            <Dialog
+                open={openAlert3}
+                onClose={handleCloseAlert3}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {"Error"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Agrega por lo menos un empleado antes de continuar
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseAlert3}>
+                        Aceptar
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div >
     )
 }
 
-Create.layout = page => <Layout children={page} title="Escuela Sindical - Conflictos" pageTitle="Conflictos" />
+Edit.layout = page => <Layout children={page} title="Escuela Sindical - Secretaría del Trabajo" pageTitle="Secretaría del Trabajo" />
 
-export default Create
+export default Edit
