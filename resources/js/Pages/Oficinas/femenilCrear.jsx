@@ -137,6 +137,8 @@ const femenilCrear = ({employees, trophies }) => {
             setValues({
                 ...values,
                 nombre: newValue
+                    ? newValue.id
+                    : null,
             });
         }
     };

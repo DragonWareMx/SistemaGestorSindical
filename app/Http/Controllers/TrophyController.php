@@ -42,7 +42,7 @@ class TrophyController extends Controller
         return Inertia::render('Oficinas/femenilCrear', [
             'employees' => fn () => Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')
                 ->get(),
-            'trophies' => fn () =>Trophy::select('nombre')->get()
+            'trophies' => fn () =>Trophy::select('id','nombre')->get()
         ]);
     }
 
@@ -55,7 +55,7 @@ class TrophyController extends Controller
     public function store(Request $request)
     {
         //falta validar el request
-        $trophy = Trophy::where('nombre',$request->nombre)->first();
+        $trophy = Trophy::find($request->nombre);
 
         DB::beginTransaction();
         try {
