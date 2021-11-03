@@ -72,6 +72,7 @@ Route::post('/secretaria-del-interior/votacion/crear', [App\Http\Controllers\Ele
 Route::get('/admision-y-cambios', [App\Http\Controllers\EmployeeController::class, 'admisionCambios'])->name('admisionCambios');
 Route::get('/admision-y-cambios/ver/{id}', [App\Http\Controllers\EmployeeController::class, 'admisionCambiosRelative'])->name('admisionCambiosRelative');
 Route::get('/admision-y-cambios/crear', [App\Http\Controllers\EmployeeController::class, 'admisionCambiosCreate'])->name('admisionCambiosCreate');
+Route::post('/admision-y-cambios/crear', [App\Http\Controllers\EmployeeController::class, 'admisionCambiosStore'])->name('admisionCambiosStore');
 
 //Acción Femenil
 Route::get('/accion-femenil', [App\Http\Controllers\TrophyController::class, 'index'])->name('accionFemenil');

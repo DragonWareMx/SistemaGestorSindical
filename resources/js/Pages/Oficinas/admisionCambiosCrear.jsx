@@ -116,7 +116,7 @@ const Create = ({ roles, employees }) => {
     //manda el forumulario
     function handleSubmit(e) {
         e.preventDefault()
-        Inertia.post(route('admisionCambiosCreate'), values,
+        Inertia.post(route('admisionCambiosStore'), values,
             {
                 onError: () => {
                     
@@ -268,7 +268,7 @@ const Create = ({ roles, employees }) => {
                         <div className="card-content">
                             <div className="col s12 m9 l10 xl10 titulo-modulo left" style={{ marginTop: "15px" }}>
                                 {/* regresar */}
-                                <InertiaLink href={route('secretariaTrabajo')} className="icon-back-course tooltipped" data-position="left" data-tooltip="Regresar"><i className="material-icons">keyboard_backspace</i></InertiaLink>
+                                <InertiaLink href={route('admisionCambios')} className="icon-back-course tooltipped" data-position="left" data-tooltip="Regresar"><i className="material-icons">keyboard_backspace</i></InertiaLink>
                                 AGREGAR REGISTRO
                             </div>
 
@@ -294,7 +294,7 @@ const Create = ({ roles, employees }) => {
                                             <Autocomplete
                                                 {...defaultProps}
                                                 renderInput={(params) => (
-                                                    <TextField {...params} id="empleado" className={classes.textField} required label="Empleado" variant="standard" />
+                                                    <TextField {...params} id="empleado" className={classes.textField} label="Empleado" variant="standard" />
                                                 )}
                                             />
                                             {
