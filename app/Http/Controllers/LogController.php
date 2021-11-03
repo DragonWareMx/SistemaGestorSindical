@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Log;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class LogController extends Controller
 {
@@ -14,7 +15,25 @@ class LogController extends Controller
      */
     public function index()
     {
-        //
+        $logs = Log::leftJoin('users', 'users.id', '=', 'logs.user_id')
+                    ->leftJoin('employees', 'users.id', '=', 'employees.user_id')
+                    ->select('categoria', 'descripcion', 'logs.id', 'users.email', 'users.foto', 'matricula', 'nombre', 'apellido_p', 'apellido_m')
+                    ->orderBy('id', 'desc')
+                    ->take(2000)
+                    ->get();
+        // $employees = Employee::with('category:nombre,id', 'unit:nombre,id,regime_id', 'unit.regime:nombre,id', 'user:id')
+        // ->when($request->deleted == "true", function ($query, $deleted) {
+        //     return $query->onlyTrashed();
+        // })
+        // ->when($request->user == "true", function ($query, $user) {
+        //     return $query->whereHas('user');
+        // })
+        // ->get(['id', 'uuid', 'nombre', 'apellido_p', 'apellido_m', 'fecha_nac', 'sexo', 'antiguedad', 'estado', 'ciudad', 'colonia', 'calle', 'cp', 'num_ext', 'num_int', 'tel', 'matricula', 'category_id', 'unit_id', 'user_id']);
+
+        return Inertia::render('Logs/Index', [
+            'logs' => Inertia::lazy(fn () => $logs),
+            'exists' => Log::exists()
+        ]);
     }
 
     /**

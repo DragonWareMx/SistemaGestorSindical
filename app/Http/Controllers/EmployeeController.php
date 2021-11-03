@@ -29,13 +29,6 @@ class EmployeeController extends Controller
      */
     public function index(Request $request)
     {
-        // $usuarios = [];
-        // $chunk = DB::table('employees')->orderBy('id')->chunk(100, function($employees) use($usuarios){
-        //     $usuarios = array_merge($usuarios, $employees->toArray());
-        //     // print_r($usuarios);
-        // });
-
-        // print_r($usuarios);
         $employees = Employee::with('category:nombre,id', 'unit:nombre,id,regime_id', 'unit.regime:nombre,id', 'user:id')
         ->when($request->deleted == "true", function ($query, $deleted) {
             return $query->onlyTrashed();
@@ -49,32 +42,6 @@ class EmployeeController extends Controller
             'employees' => Inertia::lazy(fn () => $employees),
             'exists' => Employee::exists()
         ]);
-
-        // $usuarios = [];
-        // $chunk = Employee::with('category:nombre,id', 'unit:nombre,id,regime_id', 'unit.regime:nombre,id', 'user:id')
-        // ->when($request->deleted == "true", function ($query, $deleted) {
-        //     return $query->onlyTrashed();
-        // })
-        // ->when($request->user == "true", function ($query, $user) {
-        //     return $query->whereHas('user');
-        // })
-        // ->select('id', 'uuid', 'nombre', 'apellido_p', 'apellido_m', 'fecha_nac', 'sexo', 'antiguedad', 'estado', 'ciudad', 'colonia', 'calle', 'cp', 'num_ext', 'num_int', 'tel', 'matricula', 'category_id', 'unit_id', 'user_id')
-        // ->orderBy('id')
-        // ->get();
-
-        // print_r($usuarios);
-        // $employees = Employee::with('category:nombre,id', 'unit:nombre,id,regime_id', 'unit.regime:nombre,id', 'user:id')
-        // ->when($request->deleted == "true", function ($query, $deleted) {
-        //     return $query->onlyTrashed();
-        // })
-        // ->when($request->user == "true", function ($query, $user) {
-        //     return $query->whereHas('user');
-        // })
-        // ->get(['id', 'uuid', 'nombre', 'apellido_p', 'apellido_m', 'fecha_nac', 'sexo', 'antiguedad', 'estado', 'ciudad', 'colonia', 'calle', 'cp', 'num_ext', 'num_int', 'tel', 'matricula', 'category_id', 'unit_id', 'user_id']);
-
-        // return Inertia::render('Empleados/Index', [
-        //     'employees' => Inertia::lazy(fn () => $chunk)
-        // ]);
     }
 
 

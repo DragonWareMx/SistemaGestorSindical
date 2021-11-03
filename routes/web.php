@@ -45,6 +45,17 @@ Route::name('employees.')->middleware('auth')->group(function () {
     Route::put('empleados/{id}/restore',  [App\Http\Controllers\EmployeeController::class, 'restore'])->name('restore');
 });
 
+//Bitacora
+Route::name('logs.')->middleware('auth')->group(function () {
+    Route::get('/bitacora', [App\Http\Controllers\LogController::class, 'index'])->name('index');
+    // Route::get('/bitacora/crear', [App\Http\Controllers\EmployeeController::class, 'create'])->name('create');
+    // Route::post('/bitacora', [App\Http\Controllers\EmployeeController::class, 'store'])->name('store');
+    // Route::get('/bitacora/{id}/editar', [App\Http\Controllers\EmployeeController::class, 'edit'])->name('edit');
+    // Route::patch('/bitacora/{id}', [App\Http\Controllers\EmployeeController::class, 'update'])->name('update');
+    // Route::delete('bitacora/{id}',  [App\Http\Controllers\EmployeeController::class, 'destroy'])->name('delete');
+    // Route::put('bitacora/{id}/restore',  [App\Http\Controllers\EmployeeController::class, 'restore'])->name('restore');
+});
+
 // RUTAS OFICINAS
 Route::get('/honor-y-justicia', [App\Http\Controllers\IssueController::class, 'index'])->name('honor');
 Route::get('/honor-y-justicia/ver/{id}', [App\Http\Controllers\IssueController::class, 'issue'])->name('honor.issue');
