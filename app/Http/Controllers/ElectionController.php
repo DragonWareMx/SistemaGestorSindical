@@ -35,6 +35,13 @@ class ElectionController extends Controller
         $employees=Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')->get();
         $elections=Election::get();
 
+        if($vote->fecha_voto){
+            $date= $vote->fecha_voto;
+            $date=Carbon::parse($date)->addDays(1);
+            $vote->fecha_voto = $date->toDateString();
+        }
+        
+
         return Inertia::render('Oficinas/secretariaIEditar', [
             'vote'=>$vote,
             'employee'=>$employee,
