@@ -8,6 +8,7 @@ import Pagination from '@mui/material/Pagination';
 
 //componentes
 import Alertas from '../../components/common/Alertas';
+import RenderCellExpand from '../../components/Common/RenderCellExpand'
 
 //estilos
 import '/css/usersStyle.css'
@@ -187,35 +188,6 @@ function QuickSearchToolbar(props) {
                 <GridToolbarFilterButton />
                 <GridToolbarDensitySelector />
                 <GridToolbarExport />
-
-                {/* <Grid style={{ margin: 4 }} container>
-                    {/* <Grid item>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={checked}
-                                    onChange={handleChange}
-                                    name="checkedB"
-                                    color="primary"
-                                />
-                            }
-                            label="Ver eliminados"
-                        />
-                    </Grid> */}
-                    {/* <Grid item>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={checkedU}
-                                    onChange={handleChangeU}
-                                    name="checkedB"
-                                    color="primary"
-                                />
-                            }
-                            label="Ver empleados con usuario"
-                        />
-                    </Grid> 
-                </Grid> */}
             </div>
             <TextField
                 variant="standard"
@@ -254,7 +226,6 @@ function CustomPagination() {
     const [state] = useGridState(apiRef);
     const classes = useStyles();
   
-    console.log(state.rows.totalRowCount)
     return (
         <>
             <div style={{marginRight: "auto", marginLeft: "12px"}}>
@@ -267,7 +238,7 @@ function CustomPagination() {
                 count={state.pagination.pageCount}
                 page={state.pagination.page + 1}
                 onChange={(event, value) => apiRef.current.setPage(value - 1)}
-                style={{backgroundColor: 'white', '-webkit-box-shadow': "none", "box-shadow": "none"}}
+                style={{backgroundColor: 'white', '-webkit-box-shadow': "none", "boxShadow": "none"}}
             />
             </div>
         </>
@@ -332,36 +303,6 @@ function getFullName(params) {
         } ${params.getValue(params.id, "apellido_m") || ""}`
 }
 
-
-function getCategory(params) {
-    return `${params.row.category ? params.row.category.nombre || "Sin categoría" : "Sin categoría"}`
-}
-
-function getUnit(params) {
-    return `${params.row.unit ? params.row.unit.nombre || "Sin unidad" : "Sin unidad"}`
-}
-
-function getRegime(params) {
-    return `${params.row.unit ? params.row.unit.regime ? params.row.unit.regime.nombre || "Sin régimen" : "Sin régimen" : "Sin régimen"}`
-}
-
-function getAddress(params) {
-    if (!params.getValue(params.id, "calle"))
-        return null
-    return `${params.getValue(params.id, "calle") || ""} ${params.getValue(params.id, "num_ext") || ""} ${params.getValue(params.id, "num_int") || ""}, colonia ${params.getValue(params.id, "colonia") || ""}, código postal ${params.getValue(params.id, "cp") || ""}, ${params.getValue(params.id, "ciudad") || ""}, ${params.getValue(params.id, "estado") || ""}`
-}
-
-function getAge(dateString) {
-    var today = new Date();
-    var birthDate = new Date(dateString);
-    var age = today.getFullYear() - birthDate.getFullYear();
-    var m = today.getMonth() - birthDate.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-        age--;
-    }
-    return age;
-}
-
 const columns = [
     { field: 'id', headerName: 'ID', width: 100 },
     {
@@ -379,7 +320,7 @@ const columns = [
         },
         disableExport: true
     },
-    { field: 'email', headerName: 'CORREO', width: 200 },
+    { field: 'email', headerName: 'CORREO', width: 200, renderCell: RenderCellExpand, },
     { field: 'matricula', headerName: 'MATRICULA', width: 120 },
     {
         field: 'nombre',
@@ -387,108 +328,35 @@ const columns = [
         editable: false,
         disableColumnSelector: false,
         width: 200,
+        renderCell: RenderCellExpand,
         valueGetter: getFullName,
         sortComparator: (v1, v2, cellParams1, cellParams2) =>
             getFullName(cellParams1).localeCompare(getFullName(cellParams2)),
     },
-    // {
-    //     field: 'edad',
-    //     headerName: 'EDAD',
-    //     editable: false,
-    //     valueGetter: (params) => {
-    //         return getAge(params.getValue(params.id, "fecha_nac"))
-    //     },
-    //     width: 100,
-    // },
-    // {
-    //     field: 'fecha_nac',
-    //     headerName: 'FECHA NACIMIENTO',
-    //     editable: false,
-    //     width: 170,
-    //     valueFormatter: (params) => {
-    //         return `${params.value}`;
-    //     },
-    // },
-    // {
-    //     field: 'sexo',
-    //     headerName: 'SEXO',
-    //     editable: false,
-    //     width: 100,
-    //     valueGetter: (params) => {
-    //         if (params.value == 'h') return "hombre"
-    //         else if (params.value == 'm') return "mujer"
-    //         else return "otro"
-    //     },
-    // },
     {
         field: 'descripcion',
         headerName: 'DESCRIPCIÓN',
-        width: 500,
+        renderCell: RenderCellExpand,
+        width: 700,
     },
     {
+        type: 'string',
         field: 'categoria',
         headerName: 'CATEGORÍA',
         width: 120,
+        valueFormatter: (params) => {
+            if(params.value == 'create')
+                return 'Registro'
+            else if (params.value == 'update')
+                return 'Actualización'
+            else if(params.value == 'delete')
+                return 'Eliminación'
+            else if(params.value == 'restore')
+                return 'Restauración'
+        },
+        type: 'singleSelect',
+        valueOptions: ['Registro', 'Actualización', 'Eliminación', 'Restauración']
     },
-    // {
-    //     field: 'category',
-    //     headerName: 'CATEGORÍA',
-    //     width: 120,
-    //     valueGetter: getCategory,
-    //     sortComparator: (v1, v2, cellParams1, cellParams2) =>
-    //         getAddress(cellParams1).localeCompare(getAddress(cellParams2)),
-    // },
-    // {
-    //     field: 'unit',
-    //     headerName: 'UNIDAD',
-    //     width: 250,
-    //     valueGetter: getUnit,
-    //     sortComparator: (v1, v2, cellParams1, cellParams2) =>
-    //         getAddress(cellParams1).localeCompare(getAddress(cellParams2)),
-    // },
-    // {
-    //     field: 'regime',
-    //     headerName: 'RÉGIMEN',
-    //     width: 120,
-    //     valueGetter: getRegime,
-    //     sortComparator: (v1, v2, cellParams1, cellParams2) =>
-    //         getAddress(cellParams1).localeCompare(getAddress(cellParams2)),
-    // },
-    // {
-    //     field: 'tel',
-    //     headerName: 'TELÉFONO',
-    //     width: 120,
-    //     valueFormatter: (params) => {
-    //         return params.value ?? 'Sin teléfono'
-    //     }
-    // },
-    // {
-    //     field: 'direccion',
-    //     headerName: 'DIRECCIÓN',
-    //     width: 700,
-    //     valueGetter: getAddress,
-    //     sortComparator: (v1, v2, cellParams1, cellParams2) =>
-    //         getAddress(cellParams1).localeCompare(getAddress(cellParams2)),
-    //     valueFormatter: (params) => {
-    //         return params.value ?? 'Sin dirección registrada'
-    //     }
-    // },
-    // {
-    //     field: 'usuario',
-    //     headerName: 'USUARIO',
-    //     width: 120,
-    //     valueGetter: (params) => {
-    //         if (params.row.user)
-    //             return "Si"
-    //         else
-    //             return "No"
-    //     },
-    //     sortComparator: (v1, v2, cellParams1, cellParams2) =>
-    //         getAddress(cellParams1).localeCompare(getAddress(cellParams2)),
-    //     valueFormatter: (params) => {
-    //         return params.value
-    //     }
-    // },
 ];
 
 const Index = ({ logs, exists }) => {
@@ -520,9 +388,7 @@ const Index = ({ logs, exists }) => {
         }
         else if(!exists){
             setLoading(false)
-            console.log('sin datos')
         }
-        console.log("cargo la pagina")
     });
 
     return (
@@ -533,7 +399,7 @@ const Index = ({ logs, exists }) => {
                         <div className="card darken-1 cardUsers">
                             {/* <InertiaLink className="btn-floating btn-large waves-effect waves-light green-sind button-addUser" href={route('logs.create')}><i className="material-icons">add</i></InertiaLink> */}
                             <div className="card-content">
-                                <span className="card-title">Empleados</span>
+                                <span className="card-title">Bitácora</span>
                                 <Alertas />
 
                                 <div style={{ height: 500, width: '100%' }}>

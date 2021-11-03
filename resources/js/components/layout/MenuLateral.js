@@ -172,8 +172,8 @@ export default function MenuLateral() {
           {/* BITACORA */}
           {/* {auth && auth.roles && auth.roles.length > 0 && auth.roles[0].name == "Administrador" && */}
           <li>
-            <InertiaLink href={'#'} className={isUrl("log") ? "icono-menu current-menu-text" : "icono-menu"}>
-              <i className={isUrl("log") ? "material-icons icono-menu current-menu" : "material-icons icono-menu"}>history</i>Bitácora
+            <InertiaLink href={route('logs.index')} className={isUrl("log") ? "icono-menu current-menu-text" : "icono-menu"}>
+              <i className={isUrl("bitacora") ? "material-icons icono-menu current-menu" : "material-icons icono-menu"}>history</i>Bitácora
             </InertiaLink>
           </li>
           {/* } */}
@@ -283,8 +283,8 @@ export default function MenuLateral() {
         {/* BITACORA */}
         {/* {auth && auth.roles && auth.roles.length > 0 && auth.roles[0].name == "Administrador" && */}
         <div className="col s12">
-          <InertiaLink href={'#'} className="icono-menu">
-            <i className={isUrl("log") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Bitácora">history</i>
+          <InertiaLink href={route('logs.index')} className="icono-menu">
+            <i className={isUrl("bitacora") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Bitácora">history</i>
           </InertiaLink>
         </div>
         {/* } */}
