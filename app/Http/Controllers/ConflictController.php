@@ -34,7 +34,29 @@ class ConflictController extends Controller
     }
 
     public function conflict($uuid){
-        dd($uuid);
+        $conflict = Conflict::where('uuid',$uuid)
+            ->with('employees:nombre,matricula,apellido_p,apellido_m,id')
+            ->first();
+
+
+        foreach ($conflict['employees'] as $employee) {
+            if($employee->pivot['inicio_sancion']){
+                $date= $employee->pivot['inicio_sancion'];
+                $date=Carbon::parse($date)->addDays(1);
+                $employee->pivot['inicio_sancion'] = $date->toDateString();
+            }
+            if($employee->pivot['termino_sancion']){
+                $date= $employee->pivot['termino_sancion'];
+                $date=Carbon::parse($date)->addDays(1);
+                $employee->pivot['termino_sancion'] = $date->toDateString(); 
+            }
+        }
+
+
+        return Inertia::render('Oficinas/conflictEditar', [ 'conflict' => $conflict,
+            'employees' => fn () => Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')
+                ->get()
+        ]);
     }
 
     public function secretariaTrabajo()

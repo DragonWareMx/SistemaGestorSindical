@@ -434,6 +434,12 @@ const Edit = ({ employees, conflict }) => {
                                     </button>
                                 </div>
                             </form>
+                            <div className="row container-buttons">
+                                < button className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
+                                    Editar
+                                    <i className="material-icons right">edit</i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div >
