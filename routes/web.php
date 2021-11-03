@@ -66,9 +66,11 @@ Route::get('/conflictos', [App\Http\Controllers\ConflictController::class, 'inde
 Route::get('/conflictos/ver/{id}', [App\Http\Controllers\ConflictController::class, 'conflict'])->name('conflicts.conflict');
 Route::get('/conflictos/crear', [App\Http\Controllers\ConflictController::class, 'create'])->name('conflicts.create');
 Route::post('/conflictos/store', [App\Http\Controllers\ConflictController::class, 'store'])->name('conflicts.store');
-//Secretaria del Interior
+//Secretaria del trabajo
 Route::get('/secretaria-del-trabajo', [App\Http\Controllers\ConflictController::class, 'secretariaTrabajo'])->name('secretariaTrabajo');
-Route::get('/secretaria-del-trabajo/{id}', [App\Http\Controllers\ConflictController::class, 'secretariaTrabajoConflict'])->name('secretariaTrabajo.conflict');
+Route::get('/secretaria-del-trabajo/ver/{id}', [App\Http\Controllers\ConflictController::class, 'secretariaTrabajoConflict'])->name('secretariaTrabajo.conflict');
+Route::get('/secretaria-del-trabajo/crear', [App\Http\Controllers\ConflictController::class, 'secretariaTrabajoCreate'])->name('secretariaTrabajo.create');
+Route::post('/secretaria-del-trabajo/crear', [App\Http\Controllers\ConflictController::class, 'secretariaTrabajoStore'])->name('secretariaTrabajo.store');
 // Secreteria del interior
 Route::get('/secretaria-del-interior', [App\Http\Controllers\ElectionController::class, 'index'])->name('secretariaInterior');
 Route::get('/secretaria-del-interior/ver/{id}', [App\Http\Controllers\ElectionController::class, 'secretariaInteriorElection'])->name('secretariaInterior.election');
@@ -79,8 +81,9 @@ Route::post('/secretaria-del-interior/votacion/crear', [App\Http\Controllers\Ele
 
 //Admisión y cambios
 Route::get('/admision-y-cambios', [App\Http\Controllers\EmployeeController::class, 'admisionCambios'])->name('admisionCambios');
-Route::get('/admision-y-cambios/{id}', [App\Http\Controllers\EmployeeController::class, 'admisionCambiosRelative'])->name('admisionCambiosRelative');
-
+Route::get('/admision-y-cambios/ver/{id}', [App\Http\Controllers\EmployeeController::class, 'admisionCambiosRelative'])->name('admisionCambiosRelative');
+Route::get('/admision-y-cambios/crear', [App\Http\Controllers\EmployeeController::class, 'admisionCambiosCreate'])->name('admisionCambiosCreate');
+Route::post('/admision-y-cambios/crear', [App\Http\Controllers\EmployeeController::class, 'admisionCambiosStore'])->name('admisionCambiosStore');
 
 //Acción Femenil
 Route::get('/accion-femenil', [App\Http\Controllers\TrophyController::class, 'index'])->name('accionFemenil');

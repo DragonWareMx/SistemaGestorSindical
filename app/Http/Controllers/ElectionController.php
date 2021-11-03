@@ -29,7 +29,19 @@ class ElectionController extends Controller
 
     public function secretariaInteriorElection($id)
     {
-        dd("Welcome to the employee-election row", $id);
+        $vote=DB::table('election_employee')->where('id',$id)->first();
+        $employee=Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')->findOrFail($vote->employee_id);
+        $election=Election::findOrFail($vote->election_id);
+        $employees=Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')->get();
+        $elections=Election::get();
+
+        return Inertia::render('Oficinas/secretariaIEditar', [
+            'vote'=>$vote,
+            'employee'=>$employee,
+            'election'=>$election,
+            'employees'=>$employees,
+            'elections'=>$elections,
+        ]);
     }
 
     /**
