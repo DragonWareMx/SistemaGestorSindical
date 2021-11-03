@@ -89,7 +89,7 @@ const useStyles = makeStyles(
 );
 
 
-const Create = ({ employees }) => {
+const Edit = ({ employees, issue }) => {
     //errores de la validacion de laravel
     const { errors } = usePage().props
 
@@ -97,9 +97,9 @@ const Create = ({ employees }) => {
 
     //valores para formulario
     const [values, setValues] = useState({
-        num_oficio: '',
-        observaciones: '',
-        empleado: null
+        num_oficio: issue.num_oficio || '',
+        observaciones: issue.observaciones || '',
+        empleado: null,
     })
 
     //actualiza los hooks cada vez que se modifica un input
@@ -163,7 +163,7 @@ const Create = ({ employees }) => {
 
     //esto de aqui es provisional :v
     const [emploInfo, setEmploInfo] = useState({
-        empleados: []
+        empleados: issue.employees
     });
 
     function agregarEmpleado() {
@@ -177,9 +177,8 @@ const Create = ({ employees }) => {
             });
 
             if (bandera) {
-                const neim = values.empleado.apellido_m ? values.empleado.nombre + ' ' + values.empleado.apellido_p + ' ' + values.empleado.apellido_m : values.empleado.nombre + ' ' + values.empleado.apellido_p;
                 arr.push({
-                    nombre: neim,
+                    nombre: values.empleado.nombre + ' ' + values.empleado.apellido_p + ' ' + values.empleado.apellido_m,
                     matricula: values.empleado.matricula,
                     id: values.empleado.id,
                     sancionado: false,
@@ -238,25 +237,25 @@ const Create = ({ employees }) => {
 
     function handleChangeSancionado(index) {
         var arr = emploInfo.empleados.slice();
-        arr[index].sancionado = !arr[index].sancionado;
+        arr[index].pivot.castigado = !arr[index].pivot.castigado;
         setEmploInfo({ empleados: arr });
     }
 
     function handleChangeDate(newValue, index) {
         var arr = emploInfo.empleados.slice();
-        arr[index].fecha_inicio = newValue;
+        arr[index].pivot.inicio_sancion = newValue;
         setEmploInfo({ empleados: arr });
     };
 
     function handleChangeDateTermino(newValue, index) {
         var arr = emploInfo.empleados.slice();
-        arr[index].fecha_termino = newValue;
+        arr[index].pivot.termino_sancion = newValue;
         setEmploInfo({ empleados: arr });
     };
 
     function handleChangeText(event, index) {
         var arr = emploInfo.empleados.slice();
-        arr[index].sancion = event.target.value;
+        arr[index].pivot.sancion = event.target.value;
         setEmploInfo({ empleados: arr });
     };
 
@@ -267,6 +266,10 @@ const Create = ({ employees }) => {
         }))
     }
 
+    $(function() {
+        M.updateTextFields();
+    });
+
     return (
         <div className="row">
             <Container>
@@ -276,7 +279,7 @@ const Create = ({ employees }) => {
                             <div className="col s12 m9 l10 xl10 titulo-modulo left" style={{ marginTop: "15px" }}>
                                 {/* regresar */}
                                 <InertiaLink href={route('honor')} className="icon-back-course tooltipped" data-position="left" data-tooltip="Regresar"><i className="material-icons">keyboard_backspace</i></InertiaLink>
-                                AGREGAR REGISTRO
+                                REGISTRO
                             </div>
 
                             <div className="col s12">
@@ -288,7 +291,7 @@ const Create = ({ employees }) => {
                                     <div className="col s12 m12 div-division">
 
                                         <div className="input-field col s12" style={{ marginTop: '15px' }}>
-                                            <input id="num_oficio" type="text" className={errors.num_oficio ? "validate form-control invalid" : "validate form-control"} name="num_oficio" value={values.num_oficio} required onChange={handleChange} readOnly onFocus={(e) => { e.target.removeAttribute("readonly") }} required />
+                                            <input id="num_oficio" type="text" className={errors.num_oficio ? "validate form-control invalid" : "validate form-control"} name="num_oficio" value={values.num_oficio} required onChange={handleChange} disabled />
                                             <label htmlFor="num_oficio">Número de oficio</label>
                                             {
                                                 errors.num_oficio &&
@@ -296,11 +299,11 @@ const Create = ({ employees }) => {
                                             }
                                         </div>
                                         <div class="input-field col s12" style={{ marginTop: '15px' }}>
-                                            <textarea id="textarea1" class="materialize-textarea" onChange={handleChangeTextarea} values={values.observaciones}></textarea>
+                                            <textarea id="textarea1" class="materialize-textarea" onChange={handleChangeTextarea} value={values.observaciones} disabled></textarea>
                                             <label for="textarea1">Observaciones</label>
                                         </div>
                                         <div className="col s12" style={{ marginTop: '10px' }}>
-                                            <Autocomplete
+                                            <Autocomplete style={{display:'none'}}
                                                 {...defaultProps}
                                                 renderInput={(params) => (
                                                     <TextField {...params} id="empleado" className={classes.textField} label="Empleado" variant="standard" />
@@ -310,7 +313,7 @@ const Create = ({ employees }) => {
                                                 errors.empleado &&
                                                 <div className="helper-text" data-error={errors.empleado} style={{ "marginBottom": "10px" }}>{errors.empleado}</div>
                                             }
-                                            <Button variant="outlined" startIcon={<AddCircleOutlineIcon />} color="success" onClick={agregarEmpleado} style={{ float: "right", marginTop: '5px', marginBottom: '10px' }}>Agregar</Button>
+                                            <Button variant="outlined" startIcon={<AddCircleOutlineIcon />} color="success" onClick={agregarEmpleado} style={{ float: "right", marginTop: '5px', marginBottom: '10px' , display:'none'}}>Agregar</Button>
 
                                             <TableContainer component={Paper}>
                                                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -331,7 +334,7 @@ const Create = ({ employees }) => {
                                                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                                             >
                                                                 <TableCell scope="row">
-                                                                    <IconButton aria-label="delete" color="error" onClick={() => (removeEmpleado(index))}>
+                                                                    <IconButton disabled="disabled" aria-label="delete" color="error" onClick={() => (removeEmpleado(index))}>
                                                                         <DeleteIcon />
                                                                     </IconButton>
                                                                 </TableCell>
@@ -340,9 +343,10 @@ const Create = ({ employees }) => {
                                                                 </TableCell>
                                                                 <TableCell align="center">
                                                                     <Checkbox
-                                                                        checked={emploInfo.empleados[index].sancionado}
+                                                                        checked={emploInfo.empleados[index].pivot.castigado}
                                                                         onClick={() => (handleChangeSancionado(index))}
                                                                         inputProps={{ 'aria-label': 'controlled' }}
+                                                                        disabled="disabled"
                                                                     />
                                                                 </TableCell>
                                                                 <TableCell align="center">
@@ -353,10 +357,11 @@ const Create = ({ employees }) => {
                                                                             clearable
                                                                             clearText="Limpiar"
                                                                             cancelText="Cancelar"
-                                                                            value={emploInfo.empleados[index].fecha_inicio}
+                                                                            value={emploInfo.empleados[index].pivot.inicio_sancion}
                                                                             disableHighlightToday={true}
                                                                             onChange={(date) => (handleChangeDate(date, index))}
                                                                             renderInput={(params) => <TextField {...params} style={{}} />}
+                                                                            disabled="disabled"
                                                                         />
                                                                     </LocalizationProvider>
                                                                 </TableCell>
@@ -368,10 +373,11 @@ const Create = ({ employees }) => {
                                                                             clearable
                                                                             clearText="Limpiar"
                                                                             cancelText="Cancelar"
-                                                                            value={emploInfo.empleados[index].fecha_termino}
+                                                                            value={emploInfo.empleados[index].pivot.termino_sancion}
                                                                             disableHighlightToday={true}
                                                                             onChange={(date) => (handleChangeDateTermino(date, index))}
                                                                             renderInput={(params) => <TextField {...params} />}
+                                                                            disabled="disabled"
                                                                         />
                                                                     </LocalizationProvider>
                                                                 </TableCell>
@@ -381,8 +387,9 @@ const Create = ({ employees }) => {
                                                                         label="Sanción"
                                                                         multiline
                                                                         maxRows={6}
-                                                                        value={emploInfo.empleados[index].sancion}
+                                                                        value={emploInfo.empleados[index].pivot.sancion}
                                                                         onChange={(event) => (handleChangeText(event, index))}
+                                                                        disabled="disabled"
                                                                     />
                                                                 </TableCell>
                                                             </TableRow>
@@ -394,7 +401,7 @@ const Create = ({ employees }) => {
                                     </div>
 
                                 </div>
-                                <div className="row container-buttons">
+                                <div className="row container-buttons" style={{display:'none'}}>
                                     <button type="button" className=" center-align  btn waves-effect waves-light cancelar" style={{ marginRight: "15px" }} onClick={cancelEditUser}>Cancelar</button>
                                     < button type="submit" className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
                                         Guardar
@@ -402,6 +409,12 @@ const Create = ({ employees }) => {
                                     </button>
                                 </div>
                             </form>
+                            <div className="row container-buttons">
+                                < button className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
+                                    Editar
+                                    <i className="material-icons right">edit</i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div >
@@ -472,6 +485,6 @@ const Create = ({ employees }) => {
     )
 }
 
-Create.layout = page => <Layout children={page} title="Escuela Sindical - Honor y Justicia" pageTitle="HONOR Y JUSTICIA" />
+Edit.layout = page => <Layout children={page} title="Escuela Sindical - Honor y Justicia" pageTitle="HONOR Y JUSTICIA" />
 
-export default Create
+export default Edit

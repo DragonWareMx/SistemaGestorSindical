@@ -27,7 +27,7 @@ const Configuracion = ({ user }) => {
         apellido_materno: user.employee.apellido_m || "",
         fecha_de_nacimiento: user.employee.fecha_nac || "",
         sexo: user.employee.sexo || "",
-        
+
         estado: user.employee.estado || "",
         ciudad: user.employee.ciudad || "",
         colonia: user.employee.colonia || "",
@@ -36,12 +36,12 @@ const Configuracion = ({ user }) => {
         numero_exterior: user.employee.num_ext || "",
         numero_interior: user.employee.num_int || "",
         telefono: user.employee.tel || "",
-        
+
         email: user.email || "",
         cambiar_contrasena: false,
         contrasena: "",
         confirmar_contrasena: "",
-        
+
         foto: null,
         tarjeton_de_pago: "",
         deleted_at: user.employee.deleted_at,
@@ -70,7 +70,7 @@ const Configuracion = ({ user }) => {
                         cambiar_contrasena: false,
                         cambiar_tarjeton: false
                     }))
-                    M.updateTextFields();     
+                    M.updateTextFields();
                 }
             }
         )
@@ -136,24 +136,23 @@ const Configuracion = ({ user }) => {
                 labelMonthSelect: 'Selecciona un mes',
                 labelYearSelect: 'Selecciona un año',
             },
-            onClose: ()=>{
+            onClose: () => {
                 setValues(values => ({
                     ...values,
                     fecha_de_nacimiento: document.getElementById("fecha_de_nacimiento").value,
                 }))
             },
-          };
+        };
         const instancesDate = M.Datepicker.init(elems, options);
     }
 
-    function cambiarContrasena(){
+    function cambiarContrasena() {
         setValues(values => ({
             ...values,
             cambiar_contrasena: !values.cambiar_contrasena,
         }))
 
-        if(!values.cambiar_contrasena == false)
-        {
+        if (!values.cambiar_contrasena == false) {
             setValues(values => ({
                 ...values,
                 contrasena: "",
@@ -173,14 +172,13 @@ const Configuracion = ({ user }) => {
                 <div className="col contenedor s12">
                     <div className="card darken-1 cardUsers">
                         <div className="card-content">
-                            <div className="col s12 m9 l10 xl10 titulo-modulo left" style={{marginTop:"15px"}}>
+                            <div className="col s12 m9 l10 xl10 titulo-modulo left" style={{ marginTop: "15px" }}>
                                 {/* regresar */}
-                                <InertiaLink  href={route('perfil')}  className="icon-back-course tooltipped" data-position="left" data-tooltip="Regresar"><i className="material-icons">keyboard_backspace</i></InertiaLink>
+                                <InertiaLink href={route('perfil')} className="icon-back-course tooltipped" data-position="left" data-tooltip="Regresar"><i className="material-icons">keyboard_backspace</i></InertiaLink>
                                 CONFIGURACIÓN
                             </div>
-                            {console.log(user)}
                             <div className="col s12">
-                                <div style={{margin: "auto"}}>
+                                <div style={{ margin: "auto" }}>
                                     <Alertas />
                                 </div>
                             </div>
@@ -189,10 +187,10 @@ const Configuracion = ({ user }) => {
                             <form onSubmit={handleSubmit}>
                                 <div className="row div-form-register" style={{ "padding": "3%" }}>
                                     <div className="col s12 m6 div-division">
-                                        <p className="titles-sub" style={{ "margin": "1em 0px 1em 3%" , "marginBottom":"15px"}}>INFORMACIÓN PERSONAL</p>
+                                        <p className="titles-sub" style={{ "margin": "1em 0px 1em 3%", "marginBottom": "15px" }}>INFORMACIÓN PERSONAL</p>
 
                                         <div className="col s12" style={{ "display": "flex", "justifyContent": "center", "flexDirection": "column", "marginTop": "5px", "marginBottom": "5px" }}>
-                                            <img id="profileImage" onClick={clickFoto} src={user.foto ? "/storage/fotos_perfil/"+user.foto : "/storage/fotos_perfil/avatar1.jpg"}></img>
+                                            <img id="profileImage" onClick={clickFoto} src={user.foto ? "/storage/fotos_perfil/" + user.foto : "/img/avatar1.png"}></img>
                                             <p id="txt-profile" style={{ "cursor": "pointer" }} onClick={clickFoto}>Foto de perfil</p>
                                         </div>
 
@@ -257,18 +255,18 @@ const Configuracion = ({ user }) => {
                                         </div>
 
                                         <div className="input-field col s12 input-50-re">
-                                            <input  maxLength="25" id="telefono" type="text" className={errors.telefono ? "validate form-control invalid" : "validate"} name="telefono" value={values.telefono} autoComplete="telefono" onChange={handleChange} />
+                                            <input maxLength="25" id="telefono" type="text" className={errors.telefono ? "validate form-control invalid" : "validate"} name="telefono" value={values.telefono} autoComplete="telefono" onChange={handleChange} />
                                             <label htmlFor="telefono">Teléfono (opcional)</label>
                                             {
                                                 errors.telefono &&
                                                 <span className="helper-text" data-error={errors.telefono} style={{ "marginBottom": "10px" }}>{errors.telefono}</span>
                                             }
                                         </div>
-                                        
+
                                     </div>
 
                                     <div className="col s12 m6 div-division user-form-border2">
-                                        <p className="titles-sub" style={{ "margin": "1em 0px 1em 3%" , "marginBottom":"25px" }}>DIRECCIÓN</p>
+                                        <p className="titles-sub" style={{ "margin": "1em 0px 1em 3%", "marginBottom": "25px" }}>DIRECCIÓN</p>
 
                                         <div className="input-field col s12 ">
                                             <input disabled={false} maxLength="50" id="estado" type="text" className={errors.estado ? "validate form-control invalid" : "validate"} name="estado" value={values.estado} required autoComplete="estado" onChange={handleChange} />
@@ -333,7 +331,7 @@ const Configuracion = ({ user }) => {
                                             }
                                         </div>
 
-                                        <p className="titles-sub" style={{ "margin": "1em 0px 1em 3%" , "marginBottom":"25px" }}>CUENTA</p>
+                                        <p className="titles-sub" style={{ "margin": "1em 0px 1em 3%", "marginBottom": "25px" }}>CUENTA</p>
 
                                         <div className="input-field col s12">
                                             <input disabled={true} id="email" type="email" className={errors.email ? "validate form-control invalid" : "validate form-control"} name="email" value={values.email} required autoComplete="email" onChange={handleChange} />
@@ -343,14 +341,14 @@ const Configuracion = ({ user }) => {
                                                 <span className="helper-text" data-error={errors.email} style={{ "marginBottom": "10px" }}>{errors.email}</span>
                                             }
 
-                                            <p style={{"marginTop":"0px","fontFamily":"Montserrat","fontSize":"13px",color:"rgb(159, 157, 157)", cursor:"pointer"}}>¿Cambiar contraseña?</p>
-                                            
+                                            <p style={{ "marginTop": "0px", "fontFamily": "Montserrat", "fontSize": "13px", color: "rgb(159, 157, 157)", cursor: "pointer" }}>¿Cambiar contraseña?</p>
+
                                             <div className="switch">
                                                 <label>
-                                                No
-                                                <input id="cambiar_contrasena" type="checkbox"  checked={values.cambiar_contrasena} onChange={cambiarContrasena} />
-                                                <span className="lever"></span>
-                                                Sí
+                                                    No
+                                                    <input id="cambiar_contrasena" type="checkbox" checked={values.cambiar_contrasena} onChange={cambiarContrasena} />
+                                                    <span className="lever"></span>
+                                                    Sí
                                                 </label>
                                             </div>
                                         </div>
@@ -386,7 +384,7 @@ const Configuracion = ({ user }) => {
                                     <button type="button" className=" center-align  btn waves-effect waves-light cancelar" style={{ marginRight: "15px" }} onClick={cancelEditUser}>Cancelar</button>
                                     <button type="submit" className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
                                         Guardar
-                                            < i className="material-icons right" > save</i>
+                                        < i className="material-icons right" > save</i>
                                     </button>
                                 </div>
                             </form>

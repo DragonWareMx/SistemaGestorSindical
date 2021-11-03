@@ -23,10 +23,10 @@ const Perfil = ({ user }) => {
         const year = dob.getFullYear();
 
         var del = "del"
-        if(year < 2000)
+        if (year < 2000)
             del = "de"
 
-        return `${day} de ${monthNames[monthIndex]} `+ del +` ${year}`;
+        return `${day} de ${monthNames[monthIndex]} ` + del + ` ${year}`;
     }
 
     useEffect(() => {
@@ -44,10 +44,9 @@ const Perfil = ({ user }) => {
                                     <div className="row">
                                         <div className="col s12 center-align">
                                             <div className="center-align">
-                                                <img src={user.foto ? "/storage/fotos_perfil/"+user.foto : "/storage/fotos_perfil/avatar1.jpg"} alt="foto de perfil" className="img-profile" />
+                                                <img src={user.foto ? "/storage/fotos_perfil/" + user.foto : "/img/avatar1.png"} alt="foto de perfil" className="img-profile" />
                                             </div>
                                         </div>
-                                        {console.log(user)}
                                         <div className="col s12 center-align">
                                             <div className="profile-txt-category">
                                                 {user.roles ? user.roles.length > 0 ? user.roles[0].name : "Sin rol" : "Sin rol"}
@@ -62,7 +61,7 @@ const Perfil = ({ user }) => {
                                         </div>
                                         {/* Boton de enviar mensaje */}
                                         <div className="col s12 center-align" style={{ "padding": "0%" }}>
-                                            <a className="waves-effect waves-light btn boton-verde" href={"mailto:"+user.email}><i className="material-icons right" style={{ "fontSize": "18px" }}>send</i>Mensaje</a>
+                                            <a className="waves-effect waves-light btn boton-verde" href={"mailto:" + user.email}><i className="material-icons right" style={{ "fontSize": "18px" }}>send</i>Mensaje</a>
                                         </div>
                                     </div>
                                 </div>
@@ -130,9 +129,9 @@ const Perfil = ({ user }) => {
                                                 <b>No. Exterior:</b> {user.employee.num_ext}
                                             </div>
                                             {user.num_int &&
-                                            <div className="info-txt-format">
-                                                <b>No. Exterior:</b> {user.employee.num_int}
-                                            </div>
+                                                <div className="info-txt-format">
+                                                    <b>No. Exterior:</b> {user.employee.num_int}
+                                                </div>
                                             }
                                             <div className="info-txt-format">
                                                 <b>Código Postal:</b> {user.employee.cp}
@@ -141,7 +140,7 @@ const Perfil = ({ user }) => {
                                         {/* Boton de editar */}
                                         <div className="col s12 m12 right-align" style={{ "marginTop": "25px" }}>
                                             {/* <InertiaLink href={route('perfil.edit')} className="waves-effect waves-light btn boton-verde"><i className="material-icons right" style={{ "fontSize": "18px" }}>settings</i>Configuración</InertiaLink> */}
-                                            
+
                                         </div>
                                     </div>
                                 </div>

@@ -20,7 +20,7 @@ class CreateConflictsTable extends Migration
             $table->text('num_oficio'); //guarda la informacion del log, es decir, lo que el usuario realizo
             $table->text('observaciones');
             $table->enum('tipo',['conflictos','secretaria']);
-            
+
             $table->softDeletes();
             $table->timestamps();
         });

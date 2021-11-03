@@ -8,6 +8,13 @@ use Inertia\Inertia;
 use Auth;
 use Illuminate\Support\Facades\DB;
 
+use App\Models\Issue;
+use App\Models\Employee;
+use App\Permission\Models\Role;
+use Carbon\Carbon;
+use Illuminate\Support\Str;
+
+
 class ConflictController extends Controller
 {
     /**
@@ -45,6 +52,61 @@ class ConflictController extends Controller
         dd($uuid);
     }
 
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function secretariaTrabajoCreate()
+    {
+        //
+        return Inertia::render('Oficinas/secretariaTrabajoCrear', [
+            'roles' => fn () => Role::select('name')->get(),
+            'employees' => fn () => Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')
+                ->get()
+        ]);
+    }
+
+    public function secretariaTrabajoStore(Request $request)
+    {
+        //FALTA VALIDATES
+        $conflict = Conflict::where('num_oficio', $request->conflict['num_oficio'])->first();
+        if ($conflict) {
+            return redirect()->back()->with('error', 'El numero de oficio tiene que ser único, intenta con otro');
+        }
+
+        DB::beginTransaction();
+        try {
+            $conflicto = new Conflict();
+            $conflicto->num_oficio = $request->conflict['num_oficio'];
+            $conflicto->observaciones = $request->conflict['observaciones'];
+            $conflicto->uuid = Str::uuid();
+            $conflicto->tipo = 'secretaria';
+            $conflicto->save();
+
+            foreach ($request->empleados as $empleado) {
+                # code...
+                $data = [
+                    'inicio_sancion' => Carbon::parse($empleado['fecha_inicio']),
+                    'termino_sancion' => Carbon::parse($empleado['fecha_termino']),
+                    'sancion' => $empleado['sancion'],
+                    'resolutivo'=>$empleado['resolutivo'],
+                    'castigado' => $empleado['sancionado']
+                ];
+                $conflicto->employees()->attach($empleado['id'], $data);
+            }
+
+            DB::commit();
+            return redirect()->back()->with('success', 'El registro se creó con éxito!');
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+        }
+        //FALTA LOG
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -53,6 +115,11 @@ class ConflictController extends Controller
     public function create()
     {
         //
+        return Inertia::render('Oficinas/conflictCrear', [
+            'roles' => fn () => Role::select('name')->get(),
+            'employees' => fn () => Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')
+                ->get()
+        ]);
     }
 
     /**
@@ -63,7 +130,42 @@ class ConflictController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //FALTA VALIDATES
+        $conflict = Conflict::where('num_oficio', $request->conflict['num_oficio'])->first();
+        if ($conflict) {
+            return redirect()->back()->with('error', 'El numero de oficio tiene que ser único, intenta con otro');
+        }
+
+        DB::beginTransaction();
+        try {
+            $conflicto = new Conflict();
+            $conflicto->num_oficio = $request->conflict['num_oficio'];
+            $conflicto->observaciones = $request->conflict['observaciones'];
+            $conflicto->uuid = Str::uuid();
+            $conflicto->tipo = 'conflictos';
+            $conflicto->save();
+
+            foreach ($request->empleados as $empleado) {
+                # code...
+                $data = [
+                    'inicio_sancion' => Carbon::parse($empleado['fecha_inicio']),
+                    'termino_sancion' => Carbon::parse($empleado['fecha_termino']),
+                    'sancion' => $empleado['sancion'],
+                    'resolutivo'=>$empleado['resolutivo'],
+                    'castigado' => $empleado['sancionado']
+                ];
+                $conflicto->employees()->attach($empleado['id'], $data);
+            }
+
+            DB::commit();
+            return redirect()->back()->with('success', 'El registro se creó con éxito!');
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            // dd($th);
+            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+        }
+        //FALTA LOG
     }
 
     /**
