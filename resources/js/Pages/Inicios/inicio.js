@@ -10,6 +10,6 @@ const inicio = ({}) => {
         )
 }
 
-inicio.layout = page => <Layout children={page} title="Inicio" pageTitle="INICIO"/>
+inicio.layout = page => <Layout children={page} title="Inicio" pageTitle="Inicio"/>
 
 export default inicio

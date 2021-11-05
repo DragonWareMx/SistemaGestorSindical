@@ -286,6 +286,6 @@ const Index = ({ users }) => {
     )
 }
 
-Index.layout = page => <Layout children={page} title="Escuela Sindical - Comité" pageTitle="COMITÉ" />
+Index.layout = page => <Layout children={page} title="Escuela Sindical - Comité" pageTitle="Comité" />
 
 export default Index

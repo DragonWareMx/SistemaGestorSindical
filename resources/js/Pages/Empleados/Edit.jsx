@@ -501,6 +501,6 @@ const Edit = ({ employee, categories, regimes, units }) => {
     )
 }
 
-Edit.layout = page => <Layout children={page} title="Escuela Sindical - Empleados" pageTitle="EMPLEADOS" />
+Edit.layout = page => <Layout children={page} title="Escuela Sindical - Empleados" pageTitle="Empleados" />
 
 export default Edit

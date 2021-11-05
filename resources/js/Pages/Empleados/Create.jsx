@@ -484,6 +484,6 @@ const Create = ({ categories, regimes, units, roles }) => {
     )
 }
 
-Create.layout = page => <Layout children={page} title="Escuela Sindical - Empleado" pageTitle="EMPLEADO" />
+Create.layout = page => <Layout children={page} title="Escuela Sindical - Empleado" pageTitle="Empleado" />
 
 export default Create

@@ -79,6 +79,6 @@ const PerfilPublico = ({ user, cursos, participantes }) => {
     )
 }
 
-PerfilPublico.layout = page => <Layout children={page} title="Escuela Sindical - Usuario" pageTitle="PERFIL" />
+PerfilPublico.layout = page => <Layout children={page} title="Escuela Sindical - Usuario" pageTitle="Perfil" />
 
 export default PerfilPublico

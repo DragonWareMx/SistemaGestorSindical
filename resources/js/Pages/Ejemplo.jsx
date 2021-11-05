@@ -10,6 +10,6 @@ const Ejemplo = ({}) => {
         )
 }
 
-Ejemplo.layout = page => <Layout children={page} title="Inicio" pageTitle="INICIO"/>
+Ejemplo.layout = page => <Layout children={page} title="Inicio" pageTitle="Inicio"/>
 
 export default Ejemplo

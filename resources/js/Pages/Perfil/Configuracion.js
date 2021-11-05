@@ -397,6 +397,6 @@ const Configuracion = ({ user }) => {
     )
 }
 
-Configuracion.layout = page => <Layout children={page} title="Escuela Sindical - Configuración" pageTitle="CONFIGURACIÓN" />
+Configuracion.layout = page => <Layout children={page} title="Escuela Sindical - Configuración" pageTitle="Configuración" />
 
 export default Configuracion
