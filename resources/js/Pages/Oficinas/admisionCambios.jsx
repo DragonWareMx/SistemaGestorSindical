@@ -132,7 +132,7 @@ const admisionCambios = ({ employees }) => {
     },
     {
       field: 'nombreRelative',
-      headerName: 'Nombre',
+      headerName: 'NOMBRE DEL EMPLEADO',
       editable: false,
       disableColumnSelector: false,
       flex: 0.3,

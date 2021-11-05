@@ -97,10 +97,12 @@ const Create = ({ roles, employees }) => {
 
     //valores para formulario
     const [values, setValues] = useState({
-        num_oficio: '',
-        observaciones: '',
         empleado: null,
-        resolutivo: ''
+        familiar: null,
+        antiguedad: '',
+        ingresoBosla: '',
+        parentesco: '',
+        zona: ''
     })
 
     //actualiza los hooks cada vez que se modifica un input
@@ -116,6 +118,7 @@ const Create = ({ roles, employees }) => {
     //manda el forumulario
     function handleSubmit(e) {
         e.preventDefault()
+        // console.log(values);
         Inertia.post(route('admisionCambiosStore'), values,
             {
                 onError: () => {
@@ -159,13 +162,30 @@ const Create = ({ roles, employees }) => {
         }
     };
 
+    const defaultProps2 = {
+        options: employees,
+        getOptionLabel: (option) => option.matricula + " " + option.nombre + " " + option.apellido_p + " " + (option.apellido_m ? option.apellido_m : ""),
+        onChange: (event, newValue) => {
+            setValues({
+                ...values,
+                familiar: newValue
+                    ? newValue
+                    : null,
+            });
+        }
+    };
+
     //esto de aqui es provisional :v
     const [emploInfo, setEmploInfo] = useState({
         empleados: []
     });
 
+    const [famInfo, setFamInfo] = useState({
+        familiar: []
+    });
+
     function agregarEmpleado() {
-        if (values.empleado) {
+        // if (values.empleado) {
             var arr = emploInfo.empleados.slice();
             var bandera = true;
             arr.map(emp => {
@@ -179,11 +199,6 @@ const Create = ({ roles, employees }) => {
                     nombre: values.empleado.nombre + ' ' + values.empleado.apellido_p + ' ' + values.empleado.apellido_m,
                     matricula: values.empleado.matricula,
                     id: values.empleado.id,
-                    sancionado: false,
-                    fecha_inicio: '',
-                    fecha_termino: '',
-                    sancion: '',
-                    resolutivo:'',
                 });
                 setEmploInfo({ empleados: arr });
                 document.getElementsByClassName('MuiAutocomplete-clearIndicator')[0].click();
@@ -191,17 +206,40 @@ const Create = ({ roles, employees }) => {
             else {
                 handleClickOpenAlert();
             }
-        }
-        else {
-            handleClickOpenAlert2();
-        }
+        // }
+        // else {
+        //     handleClickOpenAlert2();
+        // }
 
     }
 
-    function removeEmpleado(index) {
-        var arr = emploInfo.empleados.slice();
-        arr.splice(index, 1);
-        setEmploInfo({ empleados: arr });
+    function agregarFamiliar() {
+        // if (values.familiar) {
+            var arr = famInfo.familiar.slice();
+            var bandera = true;
+            arr.map(fam => {
+                if (fam.id == values.familiar.id) {
+                    bandera = false;
+                }
+            });
+
+            if (bandera) {
+                arr.push({
+                    nombre: values.familiar.nombre + ' ' + values.familiar.apellido_p + ' ' + values.familiar.apellido_m,
+                    matricula: values.familiar.matricula,
+                    id: values.familiar.id,
+                });
+                setFamInfo({ familiar: arr });
+                document.getElementsByClassName('MuiAutocomplete-clearIndicator')[0].click();
+            }
+            else {
+                handleClickOpenAlert();
+            }
+        // }
+        // else {
+        //     handleClickOpenAlert2();
+        // }
+
     }
 
     const [openAlert, setOpenAlert] = React.useState(false);
@@ -224,39 +262,17 @@ const Create = ({ roles, employees }) => {
         setOpenAlert2(false);
     };
 
-    function handleChangeSancionado(index) {
-        var arr = emploInfo.empleados.slice();
-        arr[index].sancionado = !arr[index].sancionado;
-        setEmploInfo({ empleados: arr });
-    }
-
-    function handleChangeDate(newValue, index) {
-        var arr = emploInfo.empleados.slice();
-        arr[index].fecha_inicio = newValue;
-        setEmploInfo({ empleados: arr });
-    };
-
-    function handleChangeDateTermino(newValue, index) {
-        var arr = emploInfo.empleados.slice();
-        arr[index].fecha_termino = newValue;
-        setEmploInfo({ empleados: arr });
-    };
-
-    function handleChangeText(event, index) {
-        var arr = emploInfo.empleados.slice();
-        arr[index].sancion = event.target.value;
-        setEmploInfo({ empleados: arr });
-    };
-    function handleChangeResol(event, index) {
-        var arr = emploInfo.empleados.slice();
-        arr[index].resolutivo = event.target.value;
-        setEmploInfo({ empleados: arr });
-    };
-
     const handleChangeTextarea = (event) => {
         setValues(values => ({
             ...values,
-            observaciones: event.target.value,
+            parentesco: event.target.value,
+        }))
+    }
+
+    const handleChangeTextarea2 = (event) => {
+        setValues(values => ({
+            ...values,
+            zona: event.target.value,
         }))
     }
 
@@ -272,124 +288,48 @@ const Create = ({ roles, employees }) => {
                                 AGREGAR REGISTRO
                             </div>
 
-                            <Alertas />
+                            <div className="col s12">
+                                <Alertas />
+                            </div>
                             {/* ----Formulario---- */}
                             <form onSubmit={handleSubmit}>
                                 <div className="row div-form-register" style={{ "padding": "3%" }}>
                                     <div className="col s12 m12 div-division">
 
-                                        <div className="input-field col s12" style={{ marginTop: '15px' }}>
-                                            <input id="num_oficio" type="text" className={errors.num_oficio ? "validate form-control invalid" : "validate form-control"} name="num_oficio" value={values.num_oficio} required onChange={handleChange} readOnly onFocus={(e) => { e.target.removeAttribute("readonly") }} />
-                                            <label htmlFor="num_oficio">Numero de oficio</label>
-                                            {
-                                                errors.num_oficio &&
-                                                <span className="helper-text" data-error={errors.num_oficio} style={{ "marginBottom": "10px" }}>{errors.num_oficio}</span>
-                                            }
-                                        </div>
-                                        <div class="input-field col s12" style={{ marginTop: '15px' }}>
-                                            <textarea id="textarea1" class="materialize-textarea" onChange={handleChangeTextarea} values={values.observaciones}></textarea>
-                                            <label for="textarea1">Observaciones</label>
-                                        </div>
                                         <div className="col s12" style={{ marginTop: '10px' }}>
                                             <Autocomplete
                                                 {...defaultProps}
                                                 renderInput={(params) => (
-                                                    <TextField {...params} id="empleado" className={classes.textField} label="Empleado" variant="standard" />
+                                                    <TextField {...params} id="empleado" className={classes.textField} label="Empleado" variant="standard" onChange={agregarEmpleado} />
                                                 )}
                                             />
                                             {
                                                 errors.empleado &&
                                                 <div className="helper-text" data-error={errors.empleado} style={{ "marginBottom": "10px" }}>{errors.empleado}</div>
                                             }
-                                            <Button variant="outlined" startIcon={<AddCircleOutlineIcon />} color="success" onClick={agregarEmpleado} style={{ float: "right", marginTop: '5px', marginBottom: '10px' }}>Agregar</Button>
+                                        </div>
 
-                                            <TableContainer component={Paper}>
-                                                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                                                    <TableHead>
-                                                        <TableRow>
-                                                            <TableCell></TableCell>
-                                                            <TableCell>Empleado</TableCell>
-                                                            <TableCell align="center">Castigado</TableCell>
-                                                            <TableCell align="center">Fecha Inicio</TableCell>
-                                                            <TableCell align="center">Fecha Termino</TableCell>
-                                                            <TableCell align="center">Sanción</TableCell>
-                                                            <TableCell align="center">Resolutivo</TableCell>
-                                                        </TableRow>
-                                                    </TableHead>
-                                                    <TableBody>
-                                                        {emploInfo.empleados.map((trabajador, index) => (
-                                                            <TableRow
-                                                                key={index}
-                                                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                                            >
-                                                                <TableCell scope="row">
-                                                                    <IconButton aria-label="delete" color="error" onClick={() => (removeEmpleado(index))}>
-                                                                        <DeleteIcon />
-                                                                    </IconButton>
-                                                                </TableCell>
-                                                                <TableCell component="th" scope="row">
-                                                                    {trabajador.matricula + ' - ' + trabajador.nombre}
-                                                                </TableCell>
-                                                                <TableCell align="center">
-                                                                    <Checkbox
-                                                                        checked={emploInfo.empleados[index].sancionado}
-                                                                        onClick={() => (handleChangeSancionado(index))}
-                                                                        inputProps={{ 'aria-label': 'controlled' }}
-                                                                    />
-                                                                </TableCell>
-                                                                <TableCell align="center">
-                                                                    <LocalizationProvider dateAdapter={DateAdapter} locale={es}>
-                                                                        <MobileDatePicker
-                                                                            label="Fecha de inicio"
-                                                                            inputFormat="dd/MM/yyyy"
-                                                                            clearable
-                                                                            clearText="Limpiar"
-                                                                            cancelText="Cancelar"
-                                                                            value={emploInfo.empleados[index].fecha_inicio}
-                                                                            onChange={(date) => (handleChangeDate(date, index))}
-                                                                            renderInput={(params) => <TextField {...params} style={{}} />}
-                                                                        />
-                                                                    </LocalizationProvider>
-                                                                </TableCell>
-                                                                <TableCell align="center">
-                                                                    <LocalizationProvider dateAdapter={DateAdapter} locale={es}>
-                                                                        <MobileDatePicker
-                                                                            label="Fecha de termino"
-                                                                            inputFormat="dd/MM/yyyy"
-                                                                            clearable
-                                                                            clearText="Limpiar"
-                                                                            cancelText="Cancelar"
-                                                                            value={emploInfo.empleados[index].fecha_termino}
-                                                                            onChange={(date) => (handleChangeDateTermino(date, index))}
-                                                                            renderInput={(params) => <TextField {...params} />}
-                                                                        />
-                                                                    </LocalizationProvider>
-                                                                </TableCell>
-                                                                <TableCell align="center">
-                                                                    <TextField
-                                                                        id="outlined-multiline-flexible"
-                                                                        label="Sanción"
-                                                                        multiline
-                                                                        maxRows={6}
-                                                                        value={emploInfo.empleados[index].sancion}
-                                                                        onChange={(event) => (handleChangeText(event, index))}
-                                                                    />
-                                                                </TableCell>
-                                                                <TableCell align="center">
-                                                                    <TextField
-                                                                        id="outlined-multiline-flexible"
-                                                                        label="Resolutivo"
-                                                                        multiline
-                                                                        maxRows={6}
-                                                                        value={emploInfo.empleados[index].resolutivo}
-                                                                        onChange={(event) => (handleChangeResol(event, index))}
-                                                                    />
-                                                                </TableCell>
-                                                            </TableRow>
-                                                        ))}
-                                                    </TableBody>
-                                                </Table>
-                                            </TableContainer>
+                                        <div className="col s12" style={{ marginTop: '10px' }}>
+                                            <Autocomplete
+                                                {...defaultProps2}
+                                                renderInput={(params) => (
+                                                    <TextField {...params} id="familiar" className={classes.textField} label="Familiar" variant="standard" onChange={agregarFamiliar} />
+                                                )}
+                                            />
+                                            {
+                                                errors.familiar &&
+                                                <div className="helper-text" data-error={errors.familiar} style={{ "marginBottom": "10px" }}>{errors.familiar}</div>
+                                            }
+                                        </div>
+
+                                        <div class="input-field col s12" style={{ marginTop: '15px' }}>
+                                            <textarea id="textarea1" class="materialize-textarea" onChange={handleChangeTextarea} values={values.parentesco}></textarea>
+                                            <label for="textarea1">Parentesco</label>
+                                        </div>
+
+                                        <div class="input-field col s12" style={{ marginTop: '15px' }}>
+                                            <textarea id="textarea2" class="materialize-textarea" onChange={handleChangeTextarea2} values={values.zona}></textarea>
+                                            <label for="textarea2">Zona</label>
                                         </div>
                                     </div>
 
