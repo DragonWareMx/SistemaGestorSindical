@@ -77,6 +77,7 @@ class EmployeeSeeder extends Seeder
             'category_id'=>'1',
             'unit_id'=>'2',
             'estatus'=>'Aceptado',
+            'user_id'=>'3'
         ]);
 
         DB::table('employee_relative')->insert([
