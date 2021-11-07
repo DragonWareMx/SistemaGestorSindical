@@ -694,7 +694,7 @@ class EmployeeController extends Controller
 
     public function admisionCambiosStore()
     {
-        dd("ENTRE AQUI");
+        // dd("ENTRE AQUI");
         return redirect()->back()->with('success', 'El registro se creó con éxito!');
         // return \Redirect::route('admisionCambios')->with('success','El registro se creo con éxito!');
     }

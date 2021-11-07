@@ -42,6 +42,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 import { es } from "date-fns/locale";
 
+import Eliminar from '../../components/common/Eliminar'
+
 // import moment from "moment";
 // import "moment/locale/es-mx";
 
@@ -266,7 +268,7 @@ const Edit = ({ employees, issue }) => {
         }))
     }
 
-    $(function() {
+    $(function () {
         M.updateTextFields();
     });
 
@@ -303,7 +305,7 @@ const Edit = ({ employees, issue }) => {
                                             <label for="textarea1">Observaciones</label>
                                         </div>
                                         <div className="col s12" style={{ marginTop: '10px' }}>
-                                            <Autocomplete style={{display:'none'}}
+                                            <Autocomplete style={{ display: 'none' }}
                                                 {...defaultProps}
                                                 renderInput={(params) => (
                                                     <TextField {...params} id="empleado" className={classes.textField} label="Empleado" variant="standard" />
@@ -313,7 +315,7 @@ const Edit = ({ employees, issue }) => {
                                                 errors.empleado &&
                                                 <div className="helper-text" data-error={errors.empleado} style={{ "marginBottom": "10px" }}>{errors.empleado}</div>
                                             }
-                                            <Button variant="outlined" startIcon={<AddCircleOutlineIcon />} color="success" onClick={agregarEmpleado} style={{ float: "right", marginTop: '5px', marginBottom: '10px' , display:'none'}}>Agregar</Button>
+                                            <Button variant="outlined" startIcon={<AddCircleOutlineIcon />} color="success" onClick={agregarEmpleado} style={{ float: "right", marginTop: '5px', marginBottom: '10px', display: 'none' }}>Agregar</Button>
 
                                             <TableContainer component={Paper}>
                                                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -401,8 +403,9 @@ const Edit = ({ employees, issue }) => {
                                     </div>
 
                                 </div>
-                                <div className="row container-buttons" style={{display:'none'}}>
+                                <div className="row container-buttons" style={{ display: 'none' }}>
                                     <button type="button" className=" center-align  btn waves-effect waves-light cancelar" style={{ marginRight: "15px" }} onClick={cancelEditUser}>Cancelar</button>
+
                                     < button type="submit" className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
                                         Guardar
                                         <i className="material-icons right">save</i>

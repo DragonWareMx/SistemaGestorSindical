@@ -88,17 +88,17 @@ export default function MenuLateral() {
             </InertiaLink>
           </li>
 
-          {/* USUARIOS */}
+          {/* COMITÉ */}
           <li>
             <a className="subheader division-menu">
-              USUARIOS
+              COMITÉ
             </a>
           </li>
           {/* {auth && auth.roles && auth.roles.length > 0 && auth.roles[0].name != "Administrador" && */}
           <li>
-            <InertiaLink href={route('users.index')} className="icono-menu" className={isUrl("usuarios") ? "icono-menu current-menu-text" : "icono-menu"}>
-              <i className={isUrl("usuarios") ? "material-icons icono-menu current-menu" : "material-icons icono-menu"}>people</i>
-              Usuarios
+            <InertiaLink href={route('users.index')} className="icono-menu" className={isUrl("comite") ? "icono-menu current-menu-text" : "icono-menu"}>
+              <i className={isUrl("comite") ? "material-icons icono-menu current-menu" : "material-icons icono-menu"}>people</i>
+              Comité
             </InertiaLink>
           </li>
           <li>
@@ -146,7 +146,7 @@ export default function MenuLateral() {
           {/* ACCION FEMENIL */}
           <li>
             <InertiaLink href={route('accionFemenil')} className={isUrl("solicitudes") ? "icono-menu current-menu-text" : "icono-menu"}>
-              <i className={isUrl("accion-femenil") ? "material-icons icono-menu current-menu" : "material-icons icono-menu"}>woman</i>Acción femenil
+              <i className={isUrl("accion-femenil") ? "material-icons icono-menu current-menu" : "material-icons icono-menu"}>woman</i>Acción Femenil
             </InertiaLink>
           </li>
 
@@ -172,8 +172,8 @@ export default function MenuLateral() {
           {/* BITACORA */}
           {/* {auth && auth.roles && auth.roles.length > 0 && auth.roles[0].name == "Administrador" && */}
           <li>
-            <InertiaLink href={'#'} className={isUrl("log") ? "icono-menu current-menu-text" : "icono-menu"}>
-              <i className={isUrl("log") ? "material-icons icono-menu current-menu" : "material-icons icono-menu"}>history</i>Bitácora
+            <InertiaLink href={route('logs.index')} className={isUrl("log") ? "icono-menu current-menu-text" : "icono-menu"}>
+              <i className={isUrl("bitacora") ? "material-icons icono-menu current-menu" : "material-icons icono-menu"}>history</i>Bitácora
             </InertiaLink>
           </li>
           {/* } */}
@@ -215,11 +215,11 @@ export default function MenuLateral() {
           </InertiaLink>
         </div>
 
-        {/* USUARIOS */}
+        {/* COMITÉ */}
         {/* {auth && auth.roles && auth.roles.length > 0 && auth.roles[0].name == "Administrador" && */}
         <div className="col s12">
           <InertiaLink href={route('users.index')} className="icono-menu">
-            <i className={isUrl("usuarios") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Usuarios">people</i>
+            <i className={isUrl("comite") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Comité">people</i>
           </InertiaLink>
         </div>
         {/* } */}
@@ -261,7 +261,7 @@ export default function MenuLateral() {
         {/* ACCION FEMENIL */}
         <div className="col s12">
           <InertiaLink href={route('accionFemenil')} className="icono-menu">
-            <i className={isUrl("accion-femenil") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Acción femenil">woman</i>
+            <i className={isUrl("accion-femenil") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Acción Femenil">woman</i>
           </InertiaLink>
         </div>
         {/* ADMISION Y CAMBIOS */}
@@ -283,8 +283,8 @@ export default function MenuLateral() {
         {/* BITACORA */}
         {/* {auth && auth.roles && auth.roles.length > 0 && auth.roles[0].name == "Administrador" && */}
         <div className="col s12">
-          <InertiaLink href={'#'} className="icono-menu">
-            <i className={isUrl("log") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Bitácora">history</i>
+          <InertiaLink href={route('logs.index')} className="icono-menu">
+            <i className={isUrl("bitacora") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Bitácora">history</i>
           </InertiaLink>
         </div>
         {/* } */}

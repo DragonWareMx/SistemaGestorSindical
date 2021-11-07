@@ -256,7 +256,7 @@ const secretariaIEditar = ({vote, employee, election, employees, elections }) =>
                                                 <div className="helper-text" data-error={errors.eleccion} style={{ "marginBottom": "10px" }}>{errors.eleccion}</div>
                                             }
                                             <div style={{ display: 'flex' }}>
-                                                <Button disabled variant="outlined" style={{ marginTop: 10, marginLeft: 'auto', marginRight: 0 }} color='success' onClick={handleClickOpenAlert} endIcon={<AddCircleIcon />}>
+                                                <Button variant="outlined" style={{ marginTop: 10, marginLeft: 'auto', marginRight: 0 , display:'none'}} color='success' onClick={handleClickOpenAlert} endIcon={<AddCircleIcon />}>
                                                     Agregar Votación
                                                 </Button>
                                             </div>

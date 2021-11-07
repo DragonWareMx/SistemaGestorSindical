@@ -12,6 +12,6 @@ class Conflict extends Model
 
     public function employees()
     {
-        return $this->belongsToMany(Employee::class);
+        return $this->belongsToMany(Employee::class)->withPivot(['sancion','inicio_sancion','termino_sancion','castigado','resolutivo']);
     }
 }
