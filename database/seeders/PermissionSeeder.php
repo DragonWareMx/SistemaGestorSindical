@@ -23,19 +23,18 @@ class PermissionSeeder extends Seeder
             'description' => 'Administrador',
             'full-access' => 'no'
         ]);
-        // $rolPonente = Role::create([
-        //     'name' => 'Ponente',
-        //     'slug' => 'ponente',
-        //     'description' => 'ponente',
-        //     'full-access' => 'no'
-        // ]);
-        // $rolAlumno = Role::create([
-        //     'name' => 'Alumno',
-        //     'slug' => 'alumno',
-        //     'description' => 'alumno',
-        //     'full-access' => 'no'
-        // ]);
-
+        $rolResponsable = Role::create([
+            'name' => 'Responsable',
+            'slug' => 'resp',
+            'description' => '',
+            'full-access' => 'no'
+        ]);
+        $rolAsistente = Role::create([
+            'name' => 'Asistente',
+            'slug' => 'asist',
+            'description' => '',
+            'full-access' => 'no'
+        ]);
 
         // $user1 = User::find(1);
         // $user2 = User::find(2);
