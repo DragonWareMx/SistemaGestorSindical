@@ -687,14 +687,16 @@ class EmployeeController extends Controller
         //
         return Inertia::render('Oficinas/admisionCambiosCrear', [
             'roles' => fn () => Role::select('name')->get(),
-            'employees' => fn () => Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')
+            'employees' => fn () => Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id', 'antiguedad')
                 ->get()
         ]);
     }
 
-    public function admisionCambiosStore()
+    public function admisionCambiosStore(Request $request)
     {
         // dd("ENTRE AQUI");
+        dd($request);
+
         return redirect()->back()->with('success', 'El registro se creó con éxito!');
         // return \Redirect::route('admisionCambios')->with('success','El registro se creo con éxito!');
     }

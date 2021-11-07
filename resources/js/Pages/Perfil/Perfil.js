@@ -154,6 +154,6 @@ const Perfil = ({ user }) => {
     )
 }
 
-Perfil.layout = page => <Layout children={page} title="Escuela Sindical - Perfil" pageTitle="PERFIL" />
+Perfil.layout = page => <Layout children={page} title="Escuela Sindical - Perfil" pageTitle="Perfil" />
 
 export default Perfil

@@ -100,7 +100,7 @@ const Create = ({ roles, employees }) => {
         empleado: null,
         familiar: null,
         antiguedad: '',
-        ingresoBosla: '',
+        ingresoBolsa: '',
         parentesco: '',
         zona: ''
     })
@@ -119,13 +119,18 @@ const Create = ({ roles, employees }) => {
     function handleSubmit(e) {
         e.preventDefault()
         // console.log(values);
-        Inertia.post(route('admisionCambiosStore'), values,
-            {
-                onError: () => {
-                    
+        if(values.empleado !== values.familiar){
+            Inertia.post(route('admisionCambiosStore'), values,
+                {
+                    onError: () => {
+                        
+                    }
                 }
-            }
-        )
+            )
+        }
+        else {
+            handleClickOpenAlert();
+        }
     }
 
     //boton de cancelar
@@ -310,6 +315,10 @@ const Create = ({ roles, employees }) => {
                                         </div>
 
                                         <div className="col s12" style={{ marginTop: '10px' }}>
+                                            Último ingreso a bolsa: {values.ingresoBolsa === "" ? "Seleccione un empleado" : values.ingresoBolsa}
+                                        </div>
+
+                                        <div className="col s12" style={{ marginTop: '10px' }}>
                                             <Autocomplete
                                                 {...defaultProps2}
                                                 renderInput={(params) => (
@@ -357,7 +366,7 @@ const Create = ({ roles, employees }) => {
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        Ese empleado ya se encuentra seleccionado.
+                        El empleado y el familiar no pueden ser el mismo.
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
