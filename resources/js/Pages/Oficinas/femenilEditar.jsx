@@ -19,6 +19,8 @@ import { createTheme } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
+import Eliminar from '../../components/common/Eliminar'
+
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
     (theme) =>
@@ -62,7 +64,7 @@ const useStyles = makeStyles(
 );
 
 
-const femenilEditar = ({win,employee,trophy,employees, trophies }) => {
+const femenilEditar = ({ win, employee, trophy, employees, trophies }) => {
     //errores de la validacion de laravel
     const { errors } = usePage().props
 
@@ -73,8 +75,8 @@ const femenilEditar = ({win,employee,trophy,employees, trophies }) => {
         empleado: employee.id || null,
         editar: true,
         nombre: trophy || '',
-        oldempleado:employee.id ||null,
-        oldnombre:trophy.id || '',
+        oldempleado: employee.id || null,
+        oldnombre: trophy.id || '',
     })
 
     //actualiza los hooks cada vez que se modifica un input
@@ -90,7 +92,7 @@ const femenilEditar = ({win,employee,trophy,employees, trophies }) => {
     //manda el forumulario
     function handleSubmit(e) {
         e.preventDefault()
-        Inertia.post(route('accionFemenil.update',employee.id), values,
+        Inertia.post(route('accionFemenil.update', employee.id), values,
             {
                 onSuccess: () => {
                     window.location.reload(false);
@@ -144,11 +146,11 @@ const femenilEditar = ({win,employee,trophy,employees, trophies }) => {
         }
     };
 
-    function editar(){
-        document.getElementById('btn-editar').style.display="none";
-        document.getElementById('btns-form').style.display="flex";
-        document.getElementById('btn-add').style.display="flex";
-        document.getElementById('observaciones').style.display="none";
+    function editar() {
+        document.getElementById('btn-editar').style.display = "none";
+        document.getElementById('btns-form').style.display = "flex";
+        document.getElementById('btn-add').style.display = "flex";
+        document.getElementById('observaciones').style.display = "none";
 
         setValues(values => ({
             ...values,
@@ -171,7 +173,7 @@ const femenilEditar = ({win,employee,trophy,employees, trophies }) => {
                             </div>
 
                             <div className='col s12'>
-                            <Alertas />    
+                                <Alertas />
                             </div>
                             {/* ----Formulario---- */}
                             <form onSubmit={handleSubmit}>
@@ -184,7 +186,7 @@ const femenilEditar = ({win,employee,trophy,employees, trophies }) => {
                                                 renderInput={(params) => (
                                                     <TextField {...params} id="empleado" className={classes.textField} required label="Empleado" variant="standard" />
                                                 )}
-                                                defaultValue={{matricula:employee.matricula,nombre:employee.nombre,apellido_p:employee.apellido_p,apellido_m:employee.apellido_m}}
+                                                defaultValue={{ matricula: employee.matricula, nombre: employee.nombre, apellido_p: employee.apellido_p, apellido_m: employee.apellido_m }}
                                             />
                                             {
                                                 errors.empleado &&
@@ -192,34 +194,35 @@ const femenilEditar = ({win,employee,trophy,employees, trophies }) => {
                                             }
                                         </div>
 
-                                        <div className="col s12" style={{marginBottom:'25px'}}>
+                                        <div className="col s12" style={{ marginBottom: '25px' }}>
                                             <Autocomplete
                                                 disabled={values.editar}
                                                 {...defaultPropsTrophie}
                                                 renderInput={(params) => (
                                                     <TextField {...params} id="nombre" className={classes.textField} required label="Trofeo" variant="standard" />
                                                 )}
-                                                defaultValue={{nombre:trophy.nombre}}
+                                                defaultValue={{ nombre: trophy.nombre }}
                                             />
                                             {
                                                 errors.nombre &&
                                                 <div className="helper-text" data-error={errors.nombre} style={{ "marginBottom": "10px" }}>{errors.nombre}</div>
                                             }
                                         </div>
-                                        <div  className="col s12" style={{display:'none'}} id="btn-add">
+                                        <div className="col s12" style={{ display: 'none' }} id="btn-add">
                                             <AgregarCosa
-                                                    cosa={'Trofeo'}
-                                                    foto={false}
+                                                cosa={'Trofeo'}
+                                                foto={false}
                                             ></AgregarCosa>
                                         </div>
-                                        <div id="observaciones" style={{diplay:'flex',flexWrap:'wrap',marginLeft:'12px'}}>
-                                            <div style={{fontFamily:'Montserrat',fontSize:'14px',color:'#134e39'}}>OBSERVACIONES</div>
+                                        <div id="observaciones" style={{ diplay: 'flex', flexWrap: 'wrap', marginLeft: '12px' }}>
+                                            <div style={{ fontFamily: 'Montserrat', fontSize: '14px', color: '#134e39' }}>OBSERVACIONES</div>
                                             {trophy.observaciones}
                                         </div>
                                     </div>
                                 </div>
-                                <div className="row container-buttons" style={{display:'none'}}  id="btns-form">
+                                <div className="row container-buttons" style={{ display: 'none' }} id="btns-form">
                                     <button type="button" className=" center-align  btn waves-effect waves-light cancelar" style={{ marginRight: "15px" }} onClick={cancelEditUser}>Cancelar</button>
+                                    <Eliminar oficina={'Acción Femenil'} ruta={'accionFemenil.destroy'} id={employee.matricula} data={{ trofeo: trophy.id }} />
                                     < button type="submit" className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
                                         Guardar
                                         <i className="material-icons right">save</i>

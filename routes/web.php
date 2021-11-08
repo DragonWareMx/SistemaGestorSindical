@@ -95,7 +95,7 @@ Route::get('/accion-femenil/ver/{id}', [App\Http\Controllers\TrophyController::c
 Route::get('/accion-femenil/crear', [App\Http\Controllers\TrophyController::class, 'create'])->name('accionFemenil.create')->middleware('af');
 Route::post('/accion-femenil/trophie/crear', [App\Http\Controllers\TrophyController::class, 'trophie'])->name('trophie.create')->middleware('af');
 Route::post('/accion-femenil/store', [App\Http\Controllers\TrophyController::class, 'store'])->name('accionFemenil.store')->middleware('af');
-Route::post('/accion-femenil/delete', [App\Http\Controllers\TrophyController::class, 'destroy'])->name('accionFemenil.destroy')->middleware('af');
+Route::delete('/accion-femenil/delete/{uuid}', [App\Http\Controllers\TrophyController::class, 'destroy'])->name('accionFemenil.destroy')->middleware('af');
 
 
 Auth::routes(['register' => false]);

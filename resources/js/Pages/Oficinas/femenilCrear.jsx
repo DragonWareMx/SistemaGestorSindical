@@ -62,7 +62,7 @@ const useStyles = makeStyles(
 );
 
 
-const femenilCrear = ({employees, trophies }) => {
+const femenilCrear = ({ employees, trophies }) => {
     //errores de la validacion de laravel
     const { errors } = usePage().props
 
@@ -157,7 +157,9 @@ const femenilCrear = ({employees, trophies }) => {
                                 AGREGAR REGISTRO
                             </div>
 
-                            <Alertas />
+                            <div className='col s12'>
+                                <Alertas />
+                            </div>
                             {/* ----Formulario---- */}
                             <form onSubmit={handleSubmit}>
                                 <div className="row div-form-register" style={{ "padding": "3%" }}>
@@ -188,8 +190,8 @@ const femenilCrear = ({employees, trophies }) => {
                                             }
                                         </div>
                                         <AgregarCosa
-                                                    cosa={'nombre'}
-                                                    foto={false}
+                                            cosa={'nombre'}
+                                            foto={false}
                                         ></AgregarCosa>
                                     </div>
                                 </div>
