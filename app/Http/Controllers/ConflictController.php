@@ -130,8 +130,8 @@ class ConflictController extends Controller
             foreach ($request->empleados as $empleado) {
                 # code...
                 $data = [
-                    'inicio_sancion' => Carbon::parse($empleado['fecha_inicio']),
-                    'termino_sancion' => Carbon::parse($empleado['fecha_termino']),
+                    'inicio_sancion' => Carbon::parse($empleado['fecha_inicio'])->subDays(1),
+                    'termino_sancion' => Carbon::parse($empleado['fecha_termino'])->subDays(1),
                     'sancion' => $empleado['sancion'],
                     'resolutivo'=>$empleado['resolutivo'],
                     'castigado' => $empleado['sancionado']

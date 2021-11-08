@@ -43,7 +43,7 @@ class ConflictSeeder extends Seeder
         ]);
         DB::table('conflicts')->insert([
             'uuid'=>'84598454154',
-            'num_oficio'=>'632145',
+            'num_oficio'=>'632111',
             'observaciones' => 'Lorem ipsum dolor et Lorem ipsum dolor et',
             'tipo'=>'secretaria',
         ]);

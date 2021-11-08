@@ -334,7 +334,6 @@ const Edit = ({ employees, conflict }) => {
                                         <div className="col s12" style={{ marginTop: '10px' }}>
                                             <div className="col s12" style={{display:'none'}} id="id-complete">
                                             <Autocomplete
-                                                style={{display:'none'}}
                                                 {...defaultProps}
                                                 renderInput={(params) => (
                                                     <TextField {...params} id="empleado" className={classes.textField} label="Empleado" variant="standard" />
