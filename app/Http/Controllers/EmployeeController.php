@@ -37,8 +37,8 @@ class EmployeeController extends Controller
         //     return $query->whereHas('user');
         // })
         // ->get(['id', 'uuid', 'nombre', 'apellido_p', 'apellido_m', 'fecha_nac', 'sexo', 'antiguedad', 'estado', 'ciudad', 'colonia', 'calle', 'cp', 'num_ext', 'num_int', 'tel', 'matricula', 'category_id', 'unit_id', 'user_id']);
-        $columns = ['employees.user_id', 'employees.id', 'employees.uuid', 'nombre', 'fecha_nac', 'sexo', 'antiguedad','direccion', 'tel', 'matricula', 'category_id', 'unit_id', 'user_id', 'categoria', 'unidad', 'regime'];
-        $employees = Employee::select('employees.id', 'employees.uuid', 'fecha_nac', 'sexo', 'antiguedad', 'tel', 'matricula', 'category_id', 'unit_id', 'user_id', 'categories.nombre AS categoria', 'units.nombre AS unidad', 'regimes.nombre AS regime')
+        $columns = ['employees.user_id', 'employees.id', 'employees.uuid', 'nombre', 'fecha_nac', 'sexo', 'antiguedad','direccion', 'tel', 'matricula', 'category_id', 'unit_id', 'user_id', 'categoria', 'unidad', 'regime', 'employees.created_at'];
+        $employees = Employee::select('employees.id', 'employees.uuid', 'fecha_nac', 'sexo', 'antiguedad', 'tel', 'matricula', 'category_id', 'unit_id', 'user_id', 'categories.nombre AS categoria', 'units.nombre AS unidad', 'regimes.nombre AS regime', 'employees.created_at')
                             ->selectRaw("CONCAT_WS(' ', employees.nombre , apellido_p , apellido_m) AS nombre, CONCAT_WS(' ', calle , CONCAT('#', num_ext) , num_int, CONCAT(colonia, ', '),ciudad, estado, cp) AS direccion, TIMESTAMPDIFF(YEAR, fecha_nac, CURDATE()) AS edad")
                             ->leftJoin('users', 'users.id', '=', 'employees.user_id')
                             ->leftJoin('categories', 'categories.id', '=', 'employees.category_id')

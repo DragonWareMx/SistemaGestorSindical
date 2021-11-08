@@ -30,7 +30,7 @@ class EmployeeFactory extends Factory
 
             'fecha_nac' => $this->faker->date(),
             'antiguedad' => $this->faker->date(),
-            'sexo' => $this->faker->randomElement(['h', 'm', 'o']),
+            'sexo' => $this->faker->randomElement(['hombre', 'mujer', 'otro']),
 
             'category_id' => $this->faker->randomElement([1, 2]),
             'unit_id' => $this->faker->randomElement([1, 2, 3]),

@@ -12,7 +12,6 @@ import Alertas from '../../components/common/Alertas';
 import '/css/usersStyle.css'
 import '/css/users.css'
 
-import RenderCellExpand from '../../components/Common/RenderCellExpand'
 import { createTheme } from '@mui/material/styles';
 import { createStyles, makeStyles } from '@mui/styles';
 import EditIcon from '@mui/icons-material/Edit';
@@ -20,68 +19,24 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
 
+import RenderCellExpand from '../../components/Common/RenderCellExpand'
 import DataGridPlus from '../../components/common/DataGridPlus';
 
-const defaultTheme = createTheme();
-const useStyles = makeStyles(
-(theme) =>
-    createStyles({
-    root: {
-        padding: theme.spacing(0.5, 0.5, 0),
-        justifyContent: 'space-between',
-        display: 'flex',
-        alignItems: 'flex-start',
-        flexWrap: 'wrap',
-    },
-    textField: {
-        [theme.breakpoints.down('xs')]: {
-        width: '100%',
-        },
-        margin: theme.spacing(1, 0.5, 1.5),
-        '& .MuiSvgIcon-root': {
-        marginRight: theme.spacing(0.5),
-        },
-        '& .MuiInput-underline:before': {
-        borderBottom: `none`,
-        },
-        '& .MuiInput-underline:after': {
-            borderBottom: "none",
-        },
-        '& .MuiInput-underline:focus': {
-            borderBottom: "none",
-        },
-        '& .MuiInputBase-root-MuiInput-root:hover:not(.Mui-disabled):before' : {
-            borderBottom: "0px solid white",
-        },
-        '& .css-1480iag-MuiInputBase-root-MuiInput-root:hover:not(.Mui-disabled):before' : {
-            borderBottom: "0px solid white",
-        },
-    },
-    rootOverlay: {
-        flexDirection: 'column',
-        '& .ant-empty-img-1': {
-          fill: theme.palette.mode === 'light' ? '#aeb8c2' : '#262626',
-        },
-        '& .ant-empty-img-2': {
-          fill: theme.palette.mode === 'light' ? '#f5f5f7' : '#595959',
-        },
-        '& .ant-empty-img-3': {
-          fill: theme.palette.mode === 'light' ? '#dce0e6' : '#434343',
-        },
-        '& .ant-empty-img-4': {
-          fill: theme.palette.mode === 'light' ? '#fff' : '#1c1c1c',
-        },
-        '& .ant-empty-img-5': {
-          fillOpacity: theme.palette.mode === 'light' ? '0.8' : '0.08',
-          fill: theme.palette.mode === 'light' ? '#f5f5f5' : '#fff',
-        },
-      },
-      label: {
-        marginTop: theme.spacing(1),
-      },
-    }),
-{ defaultTheme },
-);
+function dateFormat(date) {
+    if (!date)
+        return 'Sin fecha'
+    var date = new Date(date)
+    var month = date.getMonth()
+    if (month < 10) month = '0' + month
+    var day = date.getDate()
+    if (day < 10) day = '0' + day
+    var year = date.getFullYear()
+    var hours = date.getHours();
+    if (hours < 10) hours = '0' + hours
+    var minutes = date.getMinutes();
+    if (minutes < 10) minutes = '0' + minutes
+    return day + "/" + month + "/" + year + " " + hours + ":" + minutes
+}
 
 const columns = [
     {
@@ -92,7 +47,8 @@ const columns = [
             <InertiaLink href={route('employees.edit', params.row.uuid)} style={{ textDecoration: 'none', color: 'gray' }}><EditIcon /></InertiaLink>
         ),
         sortable: false,
-        filterable: false
+        filterable: false,
+        disableExport: true
     },
     { field: 'id', headerName: 'ID', width: 100 },
     { field: 'matricula', headerName: 'MATRICULA', width: 120 },
@@ -121,6 +77,9 @@ const columns = [
         field: 'sexo',
         headerName: 'SEXO',
         width: 100,
+        valueFormatter: (params) => {
+            return params.value ?? 'vacío'
+        }
     },
     {
         field: 'antiguedad',
@@ -157,7 +116,7 @@ const columns = [
     {
         field: 'direccion',
         headerName: 'DIRECCIÓN',
-        width: 700,
+        width: 300,
         valueFormatter: (params) => {
             return params.value ? params.value.length > 0 ? params.value : 'vacío' : 'vacío'
         },
@@ -177,6 +136,15 @@ const columns = [
             return params.value
         },
         filterable: false
+    },
+    {
+        field: 'created_at',
+        headerName: 'FECHA REGISTRO',
+        width: 200,
+        valueFormatter: (params) => {
+            return dateFormat(params.value)
+        },
+        type: 'dateTime'
     },
 ];
 
