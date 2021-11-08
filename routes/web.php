@@ -65,6 +65,7 @@ Route::post('/honor-y-justicia/crear', [App\Http\Controllers\IssueController::cl
 //Conflictos
 Route::get('/conflictos', [App\Http\Controllers\ConflictController::class, 'index'])->name('conflicts');
 Route::get('/conflictos/ver/{id}', [App\Http\Controllers\ConflictController::class, 'conflict'])->name('conflicts.conflict');
+Route::post('/conflictos/ver/{id}', [App\Http\Controllers\ConflictController::class, 'update'])->name('conflicts.update');
 Route::get('/conflictos/crear', [App\Http\Controllers\ConflictController::class, 'create'])->name('conflicts.create');
 Route::post('/conflictos/store', [App\Http\Controllers\ConflictController::class, 'store'])->name('conflicts.store');
 //Secretaria del trabajo

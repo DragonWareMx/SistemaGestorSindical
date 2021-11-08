@@ -118,7 +118,7 @@ const Edit = ({ employees, conflict }) => {
     function handleSubmit(e) {
         e.preventDefault()
         if (emploInfo.empleados.length > 0) {
-            Inertia.post(route('conflicts.store'), {
+            Inertia.post(route('conflicts.update',conflict.num_oficio), {
                 conflict: values,
                 empleados: emploInfo.empleados
             },
