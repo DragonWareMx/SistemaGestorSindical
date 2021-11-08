@@ -124,9 +124,9 @@ class TrophyController extends Controller
      * @param  \App\Models\Trophy  $trophy
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Trophy $trophy)
+    public function update(Request $request,  $trophy)
     {
-        //
+        dd("es un papucho");
     }
 
     /**

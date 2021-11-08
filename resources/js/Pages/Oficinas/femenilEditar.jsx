@@ -88,10 +88,10 @@ const femenilEditar = ({win,employee,trophy,employees, trophies }) => {
     //manda el forumulario
     function handleSubmit(e) {
         e.preventDefault()
-        Inertia.post(route('accionFemenil.store'), values,
+        Inertia.post(route('accionFemenil.update',employee.id), values,
             {
-                onError: () => {
-
+                onSuccess: () => {
+                    window.location.reload(false);
                 }
             }
         )

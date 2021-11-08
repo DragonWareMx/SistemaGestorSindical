@@ -101,6 +101,10 @@ class ElectionController extends Controller
         }
     }
 
+    public function secretariaInteriorElectionUpdate(Request $request, $voto){
+        dd("estoy akiiiiiiiii");
+    }
+
     public function votacion(Request $request)
     {
         $validated = $request->validate([

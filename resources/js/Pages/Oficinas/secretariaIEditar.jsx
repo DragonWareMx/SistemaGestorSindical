@@ -103,10 +103,10 @@ const secretariaIEditar = ({vote, employee, election, employees, elections }) =>
     //manda el forumulario
     function handleSubmit(e) {
         e.preventDefault()
-        Inertia.post(route('secretariaInterior.store'), values,
+        Inertia.post(route('secretariaInterior.update', vote.num_oficio), values,
             {
-                onError: () => {
-                    // Inertia.reload({ only: ['units'], data: { regime: values.regimen } })
+                onSuccess: () => {
+                    window.location.reload(false);
                 }
             }
         )

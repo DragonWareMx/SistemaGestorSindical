@@ -77,6 +77,7 @@ Route::post('/secretaria-del-trabajo/crear', [App\Http\Controllers\ConflictContr
 // Secreteria del interior
 Route::get('/secretaria-del-interior', [App\Http\Controllers\ElectionController::class, 'index'])->name('secretariaInterior');
 Route::get('/secretaria-del-interior/ver/{id}', [App\Http\Controllers\ElectionController::class, 'secretariaInteriorElection'])->name('secretariaInterior.election');
+Route::post('/secretaria-del-interior/ver/{id}', [App\Http\Controllers\ElectionController::class, 'secretariaInteriorElectionUpdate'])->name('secretariaInterior.update');
 Route::get('/secretaria-del-interior/crear', [App\Http\Controllers\ElectionController::class, 'create'])->name('secretariaInterior.create');
 Route::post('/secretaria-del-interior/crear', [App\Http\Controllers\ElectionController::class, 'store'])->name('secretariaInterior.store');
 Route::post('/secretaria-del-interior/votacion/crear', [App\Http\Controllers\ElectionController::class, 'votacion'])->name('secretariaInterior.votacion');
@@ -91,6 +92,7 @@ Route::post('/admision-y-cambios/crear', [App\Http\Controllers\EmployeeControlle
 //Acción Femenil
 Route::get('/accion-femenil', [App\Http\Controllers\TrophyController::class, 'index'])->name('accionFemenil');
 Route::get('/accion-femenil/ver/{id}', [App\Http\Controllers\TrophyController::class, 'trophy'])->name('accionFemenil.trophy');
+Route::post('/accion-femenil/ver/{id}', [App\Http\Controllers\TrophyController::class, 'update'])->name('accionFemenil.update');
 Route::get('/accion-femenil/crear', [App\Http\Controllers\TrophyController::class, 'create'])->name('accionFemenil.create');
 Route::post('/accion-femenil/trophie/crear', [App\Http\Controllers\TrophyController::class, 'trophie'])->name('trophie.create');
 Route::post('/accion-femenil/store', [App\Http\Controllers\TrophyController::class, 'store'])->name('accionFemenil.store');
