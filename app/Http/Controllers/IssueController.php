@@ -51,9 +51,7 @@ class IssueController extends Controller
         }
 
         $employees = Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')
-            ->get();
-
-        // dd($issue);    
+            ->get(); 
 
         return Inertia::render('Oficinas/hJEditar', ['issue' => $issue, 'employees' => $employees]);
     }
@@ -87,13 +85,12 @@ class IssueController extends Controller
         //validacion a mano por que la de laravel no funciona
         $issue = Issue::where('num_oficio', $request->issue['num_oficio'])->first();
         if ($issue) {
-            return redirect()->back()->with('error', 'El numero de oficio tiene que ser único, intenta con otro');
+            return redirect()->back()->with('error', 'El número de oficio tiene que ser único, intenta con otro');
         }
 
         DB::beginTransaction();
         try {
             //code...
-            DB::commit();
             $honor = new Issue();
             $honor->num_oficio = $request->issue['num_oficio'];
             $honor->observaciones = $request->issue['observaciones'];
@@ -103,8 +100,8 @@ class IssueController extends Controller
             foreach ($request->empleados as $empleado) {
                 # code...
                 $data = [
-                    'inicio_sancion' => Carbon::parse($empleado['fecha_inicio']),
-                    'termino_sancion' => Carbon::parse($empleado['fecha_termino']),
+                    'inicio_sancion' => Carbon::parse($empleado['fecha_inicio'])->subDays(1),
+                    'termino_sancion' => Carbon::parse($empleado['fecha_termino'])->subDays(1),
                     'sancion' => $empleado['sancion'],
                     'castigado' => $empleado['sancionado']
                 ];
@@ -149,9 +146,42 @@ class IssueController extends Controller
      * @param  \App\Models\Issue  $issue
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Issue $issue)
+    public function update(Request $request, $issue)
     {
-        dd($request);
+        // dd($request);
+        DB::beginTransaction();
+        try {
+            // dd($request);
+            $honor =Issue::where('num_oficio',$issue)->first();
+            $honor->observaciones = $request->issue['observaciones'];
+            $honor->save();
+            
+            $honor->employees()->detach();
+            foreach ($request->empleados as $empleado) {
+                if($empleado['pivot']['inicio_sancion'] && $empleado['pivot']['termino_sancion']){
+                    $data = [
+                        'inicio_sancion' => Carbon::parse($empleado['pivot']['inicio_sancion'])->subDays(1),
+                        'termino_sancion' => Carbon::parse($empleado['pivot']['termino_sancion'])->subDays(1),
+                        'sancion' => $empleado['pivot']['sancion'],
+                        'castigado' => $empleado['pivot']['castigado'],
+                    ];
+                }
+                else{
+                    $data = [
+                        'sancion' => $empleado['pivot']['sancion'],
+                        'castigado' => $empleado['pivot']['castigado'],
+                    ];
+                }
+                $honor->employees()->attach($empleado['id'], $data);
+            }
+
+            DB::commit();
+            return redirect()->back()->with('success', 'El registro se creó con éxito!');
+        } catch (\Throwable $th) {
+            dd($th);
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+        }
     }
 
     /**

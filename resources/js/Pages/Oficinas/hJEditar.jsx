@@ -125,8 +125,8 @@ const Edit = ({ employees, issue }) => {
                 empleados: emploInfo.empleados
             },
                 {
-                    onError: () => {
-
+                    onSuccess: () => {
+                        window.location.reload(false);
                     }
                 }
             )
@@ -185,10 +185,16 @@ const Edit = ({ employees, issue }) => {
                     nombre: values.empleado.nombre + ' ' + values.empleado.apellido_p + ' ' + values.empleado.apellido_m,
                     matricula: values.empleado.matricula,
                     id: values.empleado.id,
-                    castigado: false,
-                    inicio_sancion: '',
-                    termino_sancion: '',
-                    sancion: ''
+                    // castigado: false,
+                    // inicio_sancion: '',
+                    // termino_sancion: '',
+                    // sancion: '',
+                    pivot:{
+                        castigado:false,
+                        inicio_sancion: '',
+                        termino_sancion: '',
+                        sancion: '',
+                    },
                 });
                 setEmploInfo({ empleados: arr });
                 document.getElementsByClassName('MuiAutocomplete-clearIndicator')[0].click();
@@ -307,7 +313,7 @@ const Edit = ({ employees, issue }) => {
                                     <div className="col s12 m12 div-division">
 
                                         <div className="input-field col s12" style={{ marginTop: '15px' }}>
-                                            <input id="num_oficio" type="text" className={errors.num_oficio ? "validate form-control invalid" : "validate form-control"} name="num_oficio" value={values.num_oficio} required onChange={handleChange} disabled={values.editar} />
+                                            <input id="num_oficio" type="text" className={errors.num_oficio ? "validate form-control invalid" : "validate form-control"} name="num_oficio" value={values.num_oficio} required onChange={handleChange} disabled/>
                                             <label htmlFor="num_oficio">Número de oficio</label>
                                             {
                                                 errors.num_oficio &&
