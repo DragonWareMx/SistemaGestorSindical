@@ -59,6 +59,7 @@ Route::name('logs.')->middleware('auth')->group(function () {
 // RUTAS OFICINAS
 Route::get('/honor-y-justicia', [App\Http\Controllers\IssueController::class, 'index'])->name('honor');
 Route::get('/honor-y-justicia/ver/{id}', [App\Http\Controllers\IssueController::class, 'issue'])->name('honor.issue');
+Route::post('/honor-y-justicia/ver/{id}', [App\Http\Controllers\IssueController::class, 'update'])->name('honor.update');
 Route::get('/honor-y-justicia/crear', [App\Http\Controllers\IssueController::class, 'create'])->name('honor.create');
 Route::post('/honor-y-justicia/crear', [App\Http\Controllers\IssueController::class, 'store'])->name('honor.store');
 //Conflictos

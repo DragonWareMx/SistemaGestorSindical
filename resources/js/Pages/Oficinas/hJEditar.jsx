@@ -120,7 +120,7 @@ const Edit = ({ employees, issue }) => {
     function handleSubmit(e) {
         e.preventDefault()
         if (emploInfo.empleados.length > 0) {
-            Inertia.post(route('honor.store'), {
+            Inertia.post(route('honor.update',issue.num_oficio), {
                 issue: values,
                 empleados: emploInfo.empleados
             },
@@ -138,7 +138,7 @@ const Edit = ({ employees, issue }) => {
 
     //boton de cancelar
     function cancelEditUser() {
-        Inertia.get(route('honor'))
+        window.location.reload(false);
     }
 
     function initializeSelects() {
@@ -185,9 +185,9 @@ const Edit = ({ employees, issue }) => {
                     nombre: values.empleado.nombre + ' ' + values.empleado.apellido_p + ' ' + values.empleado.apellido_m,
                     matricula: values.empleado.matricula,
                     id: values.empleado.id,
-                    sancionado: false,
-                    fecha_inicio: '',
-                    fecha_termino: '',
+                    castigado: false,
+                    inicio_sancion: '',
+                    termino_sancion: '',
                     sancion: ''
                 });
                 setEmploInfo({ empleados: arr });

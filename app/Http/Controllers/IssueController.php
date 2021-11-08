@@ -151,7 +151,7 @@ class IssueController extends Controller
      */
     public function update(Request $request, Issue $issue)
     {
-        //
+        dd($request);
     }
 
     /**
