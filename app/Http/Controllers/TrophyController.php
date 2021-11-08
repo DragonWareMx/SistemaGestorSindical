@@ -126,7 +126,23 @@ class TrophyController extends Controller
      */
     public function update(Request $request,  $trophy)
     {
-        dd("es un papucho");
+         DB::beginTransaction();
+         try {
+             //code...
+            //falta validar el request
+            $trophy = DB::table('employee_trophie')->where('employee_id',$request->oldempleado)->where('trophie_id',$request->oldnombre)
+            ->update([
+                'trophie_id'=>$request->nombre['id']
+            ]);
+
+             DB::commit();
+             return redirect()->back()->with('success', 'El registro se editó con éxito!');
+         } catch (\Throwable $th) {
+             //throw $th;
+             dd($th);
+             DB::rollBack();
+             return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+         }
     }
 
     /**

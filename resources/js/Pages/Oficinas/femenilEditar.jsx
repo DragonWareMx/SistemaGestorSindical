@@ -73,6 +73,8 @@ const femenilEditar = ({win,employee,trophy,employees, trophies }) => {
         empleado: employee.id || null,
         editar: true,
         nombre: trophy || '',
+        oldempleado:employee.id ||null,
+        oldnombre:trophy.id || '',
     })
 
     //actualiza los hooks cada vez que se modifica un input
@@ -168,14 +170,16 @@ const femenilEditar = ({win,employee,trophy,employees, trophies }) => {
                                 REGISTRO
                             </div>
 
-                            <Alertas />
+                            <div className='col s12'>
+                            <Alertas />    
+                            </div>
                             {/* ----Formulario---- */}
                             <form onSubmit={handleSubmit}>
                                 <div className="row div-form-register" style={{ "padding": "3%" }}>
                                     <div className="col s12 m12 div-division">
                                         <div className="col s12">
                                             <Autocomplete
-                                                disabled={values.editar}
+                                                disabled
                                                 {...defaultProps}
                                                 renderInput={(params) => (
                                                     <TextField {...params} id="empleado" className={classes.textField} required label="Empleado" variant="standard" />
@@ -193,7 +197,7 @@ const femenilEditar = ({win,employee,trophy,employees, trophies }) => {
                                                 disabled={values.editar}
                                                 {...defaultPropsTrophie}
                                                 renderInput={(params) => (
-                                                    <TextField {...params} id="nombre" className={classes.textField} required label="Nombre" variant="standard" />
+                                                    <TextField {...params} id="nombre" className={classes.textField} required label="Trofeo" variant="standard" />
                                                 )}
                                                 defaultValue={{nombre:trophy.nombre}}
                                             />
@@ -204,7 +208,7 @@ const femenilEditar = ({win,employee,trophy,employees, trophies }) => {
                                         </div>
                                         <div  className="col s12" style={{display:'none'}} id="btn-add">
                                             <AgregarCosa
-                                                    cosa={'nombre'}
+                                                    cosa={'Trofeo'}
                                                     foto={false}
                                             ></AgregarCosa>
                                         </div>

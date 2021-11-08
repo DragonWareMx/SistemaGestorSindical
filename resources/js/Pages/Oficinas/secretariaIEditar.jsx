@@ -247,7 +247,7 @@ const secretariaIEditar = ({vote, employee, election, employees, elections }) =>
                                                     <TextField {...params} id="empleado" className={classes.textField} required label="Empleado" variant="standard" />
                                                 )}
                                                 defaultValue={{matricula:employee.matricula,nombre:employee.nombre,apellido_p:employee.apellido_p,apellido_m:employee.apellido_m}}
-                                                disabled={values.editar}
+                                                disabled
                                             />
                                             {
                                                 errors.empleado &&
