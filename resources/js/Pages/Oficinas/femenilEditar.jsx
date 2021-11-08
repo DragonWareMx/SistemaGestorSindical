@@ -71,6 +71,7 @@ const femenilEditar = ({win,employee,trophy,employees, trophies }) => {
     //valores para formulario
     const [values, setValues] = useState({
         empleado: employee.id || null,
+        editar: true,
         nombre: trophy || '',
     })
 
@@ -98,7 +99,7 @@ const femenilEditar = ({win,employee,trophy,employees, trophies }) => {
 
     //boton de cancelar
     function cancelEditUser() {
-        Inertia.get(route('accionFemenil'))
+        window.location.reload(false);
     }
 
     function initializeSelects() {
@@ -141,6 +142,18 @@ const femenilEditar = ({win,employee,trophy,employees, trophies }) => {
         }
     };
 
+    function editar(){
+        document.getElementById('btn-editar').style.display="none";
+        document.getElementById('btns-form').style.display="flex";
+        document.getElementById('btn-add').style.display="flex";
+        document.getElementById('observaciones').style.display="none";
+
+        setValues(values => ({
+            ...values,
+            editar: false,
+        }))
+    }
+
 
 
     return (
@@ -162,7 +175,7 @@ const femenilEditar = ({win,employee,trophy,employees, trophies }) => {
                                     <div className="col s12 m12 div-division">
                                         <div className="col s12">
                                             <Autocomplete
-                                                disabled
+                                                disabled={values.editar}
                                                 {...defaultProps}
                                                 renderInput={(params) => (
                                                     <TextField {...params} id="empleado" className={classes.textField} required label="Empleado" variant="standard" />
@@ -177,7 +190,7 @@ const femenilEditar = ({win,employee,trophy,employees, trophies }) => {
 
                                         <div className="col s12" style={{marginBottom:'25px'}}>
                                             <Autocomplete
-                                                disabled
+                                                disabled={values.editar}
                                                 {...defaultPropsTrophie}
                                                 renderInput={(params) => (
                                                     <TextField {...params} id="nombre" className={classes.textField} required label="Nombre" variant="standard" />
@@ -189,19 +202,19 @@ const femenilEditar = ({win,employee,trophy,employees, trophies }) => {
                                                 <div className="helper-text" data-error={errors.nombre} style={{ "marginBottom": "10px" }}>{errors.nombre}</div>
                                             }
                                         </div>
-                                        <div style={{display:'none'}}>
+                                        <div  className="col s12" style={{display:'none'}} id="btn-add">
                                             <AgregarCosa
                                                     cosa={'nombre'}
                                                     foto={false}
                                             ></AgregarCosa>
                                         </div>
-                                        <div style={{diplay:'flex',flexWrap:'wrap',marginLeft:'12px'}}>
+                                        <div id="observaciones" style={{diplay:'flex',flexWrap:'wrap',marginLeft:'12px'}}>
                                             <div style={{fontFamily:'Montserrat',fontSize:'14px',color:'#134e39'}}>OBSERVACIONES</div>
                                             {trophy.observaciones}
                                         </div>
                                     </div>
                                 </div>
-                                <div className="row container-buttons" style={{display:'none'}}>
+                                <div className="row container-buttons" style={{display:'none'}}  id="btns-form">
                                     <button type="button" className=" center-align  btn waves-effect waves-light cancelar" style={{ marginRight: "15px" }} onClick={cancelEditUser}>Cancelar</button>
                                     < button type="submit" className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
                                         Guardar
@@ -210,7 +223,7 @@ const femenilEditar = ({win,employee,trophy,employees, trophies }) => {
                                 </div>
                             </form>
                             <div className="row container-buttons">
-                                < button className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
+                                < button id="btn-editar" onClick={editar} className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
                                     Editar
                                     <i className="material-icons right">edit</i>
                                 </button>
