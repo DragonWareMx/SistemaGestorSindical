@@ -59,10 +59,6 @@ const Perfil = ({ user }) => {
                                             </div>
                                             <div className="profile-txt-email valign-wrapper truncate"><i className="material-icons profile-icon-email">mail_outline</i>{user.email}</div>
                                         </div>
-                                        {/* Boton de enviar mensaje */}
-                                        <div className="col s12 center-align" style={{ "padding": "0%" }}>
-                                            <a className="waves-effect waves-light btn boton-verde" href={"mailto:" + user.email}><i className="material-icons right" style={{ "fontSize": "18px" }}>send</i>Mensaje</a>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -149,7 +145,6 @@ const Perfil = ({ user }) => {
                     </div>
                 </div>
             </div>
-            <FlotanteAyuda />
         </>
     )
 }
