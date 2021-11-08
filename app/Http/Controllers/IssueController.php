@@ -20,13 +20,26 @@ class IssueController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-
+        $columns = ['num_oficio', 'nombre', 'inicio_sancion', 'termino_sancion', 'matricula', 'employee_issue.id', 'issues.uuid'];
         $issues = Issue::join('employee_issue', 'issues.id', 'employee_issue.issue_id')
             ->leftJoin('employees', 'employee_issue.employee_id', 'employees.id')
-            ->select('num_oficio', 'employees.nombre', 'inicio_sancion', 'termino_sancion', 'matricula', 'apellido_p', 'employee_issue.id as id', 'issues.uuid as uuid')
-            ->get();
+            ->select('num_oficio', 'inicio_sancion', 'termino_sancion', 'matricula', 'employee_issue.id as id', 'issues.uuid as uuid')
+            ->selectRaw("CONCAT_WS(' ', employees.nombre , apellido_p , apellido_m) AS nombre")
+            ->when($request->column && $request->operator, function ($query) use ($request) {
+                return $query->getFilteredRows($request->column, $request->operator, $request->value, 'employee_issue');
+            })
+            ->when($request->field && $request->sort, function ($query) use ($request) {
+                return $query->orderBy($request->field, $request->sort);
+            })
+            ->when($request->search, function ($query, $search) use ($request, $columns) {
+                foreach ($columns as $id => $column) {
+                    $query->orHaving($column, 'LIKE', '%'.$search.'%');
+                }
+            })
+            ->paginate($perPage = $request->pageSize ?? 100, $columns = ['*'], $pageName = 'issues', $request->page ?? 1);
+
         return Inertia::render('Oficinas/honorJusticia', ['issues' => $issues]);
     }
 

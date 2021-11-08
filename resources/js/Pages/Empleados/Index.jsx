@@ -12,8 +12,6 @@ import Alertas from '../../components/common/Alertas';
 import '/css/usersStyle.css'
 import '/css/users.css'
 
-import { createTheme } from '@mui/material/styles';
-import { createStyles, makeStyles } from '@mui/styles';
 import EditIcon from '@mui/icons-material/Edit';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
