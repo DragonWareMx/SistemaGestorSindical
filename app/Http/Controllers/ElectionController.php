@@ -29,25 +29,25 @@ class ElectionController extends Controller
 
     public function secretariaInteriorElection($id)
     {
-        $vote=DB::table('election_employee')->where('id',$id)->first();
-        $employee=Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')->findOrFail($vote->employee_id);
-        $election=Election::findOrFail($vote->election_id);
-        $employees=Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')->get();
-        $elections=Election::get();
+        $vote = DB::table('election_employee')->where('id', $id)->first();
+        $employee = Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')->findOrFail($vote->employee_id);
+        $election = Election::findOrFail($vote->election_id);
+        $employees = Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')->get();
+        $elections = Election::get();
 
-        if($vote->fecha_voto){
-            $date= $vote->fecha_voto;
-            $date=Carbon::parse($date)->addDays(1);
+        if ($vote->fecha_voto) {
+            $date = $vote->fecha_voto;
+            $date = Carbon::parse($date)->addDays(1);
             $vote->fecha_voto = $date->toDateString();
         }
-        
+
 
         return Inertia::render('Oficinas/secretariaIEditar', [
-            'vote'=>$vote,
-            'employee'=>$employee,
-            'election'=>$election,
-            'employees'=>$employees,
-            'elections'=>$elections,
+            'vote' => $vote,
+            'employee' => $employee,
+            'election' => $election,
+            'employees' => $employees,
+            'elections' => $elections,
         ]);
     }
 
@@ -162,8 +162,19 @@ class ElectionController extends Controller
      * @param  \App\Models\Election  $election
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Election $election)
+    public function destroy($uuid)
     {
         //
+        DB::beginTransaction();
+        try {
+            $entrada = Election::where('uuid', $uuid)->firstOrFail();
+            $entrada->delete();
+            DB::commit();
+            return redirect()->back()->with('success', 'El registro se eliminó con éxito!');
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+        }
     }
 }
