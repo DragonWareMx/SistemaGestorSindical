@@ -357,7 +357,7 @@ const Create = ({ roles, employees }) => {
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        Ese empleado ya se encuentra seleccionado.
+                        Este empleado ya se encuentra seleccionado.
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
