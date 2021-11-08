@@ -176,9 +176,8 @@ class IssueController extends Controller
             }
 
             DB::commit();
-            return redirect()->back()->with('success', 'El registro se creó con éxito!');
+            return redirect()->back()->with('success', 'El registro se editó con éxito!');
         } catch (\Throwable $th) {
-            dd($th);
             DB::rollBack();
             return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
         }

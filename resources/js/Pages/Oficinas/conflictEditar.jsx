@@ -123,8 +123,8 @@ const Edit = ({ employees, conflict }) => {
                 empleados: emploInfo.empleados
             },
                 {
-                    onError: () => {
-
+                    onSuccess: () => {
+                        window.location.reload(false);
                     }
                 }
             )
@@ -188,11 +188,18 @@ const Edit = ({ employees, conflict }) => {
                     nombre: values.empleado.nombre + ' ' + values.empleado.apellido_p + ' ' + values.empleado.apellido_m,
                     matricula: values.empleado.matricula,
                     id: values.empleado.id,
-                    sancionado: false,
-                    fecha_inicio: '',
-                    fecha_termino: '',
-                    sancion: '',
-                    resolutivo:'',
+                    // castigado: false,
+                    // inicio_sancion: '',
+                    // termino_sancion: '',
+                    // sancion: '',
+                    // resolutivo:'',
+                    pivot:{
+                        castigado:false,
+                        inicio_sancion: '',
+                        termino_sancion: '',
+                        sancion: '',
+                        resolutivo:'',
+                    },
                 });
                 setEmploInfo({ empleados: arr });
                 document.getElementsByClassName('MuiAutocomplete-clearIndicator')[0].click();

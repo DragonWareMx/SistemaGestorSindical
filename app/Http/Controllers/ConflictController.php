@@ -239,9 +239,45 @@ class ConflictController extends Controller
      * @param  \App\Models\Conflict  $conflict
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Conflict $conflict)
+    public function update(Request $request, $conflict)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $conflicto =Conflict::where('num_oficio',$conflict)->first();
+            $conflicto->observaciones = $request->conflict['observaciones'];
+            $conflicto->save();
+
+            $conflicto->employees()->detach();
+            foreach ($request->empleados as $empleado) {
+                # code...
+                if($empleado['pivot']['inicio_sancion'] && $empleado['pivot']['termino_sancion']){
+                    $data = [
+                        'inicio_sancion' => Carbon::parse($empleado['pivot']['fecha_inicio']),
+                        'termino_sancion' => Carbon::parse($empleado['pivot']['fecha_termino']),
+                        'sancion' => $empleado['pivot']['sancion'],
+                        'resolutivo'=>$empleado['pivot']['resolutivo'],
+                        'castigado' => $empleado['pivot']['sancionado']
+                    ];
+                }
+                else{
+                    $data = [
+                        'sancion' => $empleado['pivot']['sancion'],
+                        'resolutivo'=>$empleado['pivot']['resolutivo'],
+                        'castigado' => $empleado['pivot']['sancionado']
+                    ];
+                }
+                
+                $conflicto->employees()->attach($empleado['id'], $data);
+            }
+
+            DB::commit();
+            return redirect()->back()->with('success', 'El registro se editó con éxito!');
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            // dd($th);
+            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+        }
     }
 
     /**
