@@ -88,6 +88,7 @@ const secretariaIEditar = ({ vote, employee, election, employees, elections }) =
         num_oficio: vote.num_oficio || '',
         empleado: employee.id || null,
         eleccion: election.id || null,
+        editar: true,
         fecha: vote.fecha_voto || '',
     })
 
@@ -104,10 +105,10 @@ const secretariaIEditar = ({ vote, employee, election, employees, elections }) =
     //manda el forumulario
     function handleSubmit(e) {
         e.preventDefault()
-        Inertia.post(route('secretariaInterior.store'), values,
+        Inertia.post(route('secretariaInterior.update', vote.num_oficio), values,
             {
-                onError: () => {
-                    // Inertia.reload({ only: ['units'], data: { regime: values.regimen } })
+                onSuccess: () => {
+                    window.location.reload(false);
                 }
             }
         )
@@ -115,7 +116,7 @@ const secretariaIEditar = ({ vote, employee, election, employees, elections }) =
 
     //boton de cancelar
     function cancelEditUser() {
-        Inertia.get(route('users.index'))
+        window.location.reload(false);
     }
 
     function initializeSelects() {
@@ -203,6 +204,17 @@ const secretariaIEditar = ({ vote, employee, election, employees, elections }) =
         )
     }
 
+    function editar() {
+        document.getElementById('btn-editar').style.display = "none";
+        document.getElementById('btns-form').style.display = "flex";
+        document.getElementById('btn-add').style.display = "flex";
+
+        setValues(values => ({
+            ...values,
+            editar: false,
+        }))
+    }
+
     return (
         <div className="row">
             <Container>
@@ -251,14 +263,14 @@ const secretariaIEditar = ({ vote, employee, election, employees, elections }) =
                                                     <TextField {...params} id="votacion" className={classes.textField} required label="Votación" variant="standard" />
                                                 )}
                                                 defaultValue={{ fecha: election.fecha }}
-                                                disabled
+                                                disabled={values.editar}
                                             />
                                             {
                                                 errors.eleccion &&
                                                 <div className="helper-text" data-error={errors.eleccion} style={{ "marginBottom": "10px" }}>{errors.eleccion}</div>
                                             }
-                                            <div style={{ display: 'flex' }}>
-                                                <Button variant="outlined" style={{ marginTop: 10, marginLeft: 'auto', marginRight: 0, display: 'none' }} color='success' onClick={handleClickOpenAlert} endIcon={<AddCircleIcon />}>
+                                            <div style={{ display: 'none' }} id="btn-add">
+                                                <Button variant="outlined" style={{ marginTop: 10, marginLeft: 'auto', marginRight: 0 }} color='success' onClick={handleClickOpenAlert} endIcon={<AddCircleIcon />}>
                                                     Agregar Votación
                                                 </Button>
                                             </div>
@@ -266,7 +278,7 @@ const secretariaIEditar = ({ vote, employee, election, employees, elections }) =
                                         <div className="input-field col s12" style={{ marginTop: '25px' }}>
                                             <LocalizationProvider dateAdapter={DateAdapter} locale={es}>
                                                 <MobileDatePicker
-                                                    disabled
+                                                    disabled={values.editar}
                                                     label="Fecha de voto"
                                                     inputFormat="dd/MM/yyyy"
                                                     clearable
@@ -285,7 +297,7 @@ const secretariaIEditar = ({ vote, employee, election, employees, elections }) =
                                         </div>
                                     </div>
                                 </div>
-                                <div className="row container-buttons" style={{ display: 'none' }}>
+                                <div className="row container-buttons" style={{ display: 'none' }} id="btns-form">
                                     <button type="button" className=" center-align  btn waves-effect waves-light cancelar" style={{ marginRight: "15px" }} onClick={cancelEditUser}>Cancelar</button>
                                     < button type="submit" className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
                                         Guardar
@@ -294,7 +306,7 @@ const secretariaIEditar = ({ vote, employee, election, employees, elections }) =
                                 </div>
                             </form>
                             <div className="row container-buttons">
-                                < button className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
+                                < button id="btn-editar" onClick={editar} className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
                                     Editar
                                     <i className="material-icons right">edit</i>
                                 </button>

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class EmployeeSeeder extends Seeder
 {
@@ -34,6 +35,7 @@ class EmployeeSeeder extends Seeder
             'user_id'=>'1',
             'category_id'=>'1',
             'unit_id'=>'1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('employees')->insert([
             'uuid'=>'1548765819',
@@ -55,6 +57,7 @@ class EmployeeSeeder extends Seeder
             'user_id'=>'2',
             'category_id'=>'2',
             'unit_id'=>'2',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
 
         DB::table('employees')->insert([
@@ -77,7 +80,8 @@ class EmployeeSeeder extends Seeder
             'category_id'=>'1',
             'unit_id'=>'2',
             'estatus'=>'Aceptado',
-            'user_id'=>'3'
+            'user_id'=>'3',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
 
         DB::table('employees')->insert([
@@ -100,6 +104,7 @@ class EmployeeSeeder extends Seeder
             'user_id'=>'4',
             'category_id'=>'1',
             'unit_id'=>'1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
 
         DB::table('employees')->insert([
@@ -122,6 +127,7 @@ class EmployeeSeeder extends Seeder
             'user_id'=>'5',
             'category_id'=>'1',
             'unit_id'=>'1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
 
         DB::table('employees')->insert([
@@ -144,6 +150,7 @@ class EmployeeSeeder extends Seeder
             'user_id'=>'6',
             'category_id'=>'1',
             'unit_id'=>'1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
 
         DB::table('employees')->insert([
@@ -166,6 +173,7 @@ class EmployeeSeeder extends Seeder
             'user_id'=>'7',
             'category_id'=>'1',
             'unit_id'=>'1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
 
         DB::table('employees')->insert([
@@ -188,6 +196,7 @@ class EmployeeSeeder extends Seeder
             'user_id'=>'8',
             'category_id'=>'1',
             'unit_id'=>'1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
 
         DB::table('employees')->insert([
@@ -210,6 +219,7 @@ class EmployeeSeeder extends Seeder
             'user_id'=>'9',
             'category_id'=>'1',
             'unit_id'=>'1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
 
         DB::table('employees')->insert([
@@ -232,6 +242,7 @@ class EmployeeSeeder extends Seeder
             'user_id'=>'10',
             'category_id'=>'1',
             'unit_id'=>'1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
 
         DB::table('employees')->insert([
@@ -254,6 +265,7 @@ class EmployeeSeeder extends Seeder
             'user_id'=>'11',
             'category_id'=>'1',
             'unit_id'=>'1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
 
         DB::table('employees')->insert([
@@ -276,6 +288,7 @@ class EmployeeSeeder extends Seeder
             'user_id'=>'1',
             'category_id'=>'1',
             'unit_id'=>'1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
 
         DB::table('employees')->insert([
@@ -298,6 +311,7 @@ class EmployeeSeeder extends Seeder
             'user_id'=>'13',
             'category_id'=>'1',
             'unit_id'=>'1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
 
         DB::table('employees')->insert([
@@ -320,6 +334,7 @@ class EmployeeSeeder extends Seeder
             'user_id'=>'14',
             'category_id'=>'1',
             'unit_id'=>'1',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         DB::table('employee_relative')->insert([
             'parentesco'=>'hijo',

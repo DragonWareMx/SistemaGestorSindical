@@ -30,14 +30,26 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        $columns = ['users.id', 'users.uuid','email', 'matricula', 'users.created_at', 'employees.deleted_at', 'foto', 'nombre'];
         $users = User::leftJoin('employees', 'users.id', '=', 'employees.user_id')
                     ->select('users.id', 'users.uuid','email', 'matricula', 'users.created_at', 'employees.deleted_at', 'foto')
                     ->selectRaw("CONCAT_WS(' ', nombre , apellido_p , apellido_m) AS nombre")
+                    ->where('email', '!=', 'test@dragonware.com.mx')
                     ->when($request->deleted == "true", function ($query, $deleted) {
                         return $query->onlyTrashed();
                     })
-                    ->where('email', '!=', 'test@dragonware.com.mx')
-                    ->get();
+                    ->when($request->column && $request->operator, function ($query) use ($request) {
+                        return $query->getFilteredRows($request->column, $request->operator, $request->value, 'users');
+                    })
+                    ->when($request->field && $request->sort, function ($query) use ($request) {
+                        return $query->orderBy($request->field, $request->sort);
+                    })
+                    ->when($request->search, function ($query, $search) use ($request, $columns) {
+                        foreach ($columns as $id => $column) {
+                            $query->orHaving($column, 'LIKE', '%'.$search.'%');
+                        }
+                    })
+                    ->paginate($perPage = $request->pageSize ?? 100, $columns = ['*'], $pageName = 'users', $request->page ?? 1);
 
         return Inertia::render('Usuarios/Index', [
             'users' => $users

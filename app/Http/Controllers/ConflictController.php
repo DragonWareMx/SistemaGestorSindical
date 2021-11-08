@@ -131,8 +131,8 @@ class ConflictController extends Controller
             foreach ($request->empleados as $empleado) {
                 # code...
                 $data = [
-                    'inicio_sancion' => Carbon::parse($empleado['fecha_inicio']),
-                    'termino_sancion' => Carbon::parse($empleado['fecha_termino']),
+                    'inicio_sancion' => Carbon::parse($empleado['fecha_inicio'])->subDays(1),
+                    'termino_sancion' => Carbon::parse($empleado['fecha_termino'])->subDays(1),
                     'sancion' => $empleado['sancion'],
                     'resolutivo' => $empleado['resolutivo'],
                     'castigado' => $empleado['sancionado']
@@ -144,6 +144,46 @@ class ConflictController extends Controller
             return redirect()->back()->with('success', 'El registro se creó con éxito!');
         } catch (\Throwable $th) {
             //throw $th;
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+        }
+        //FALTA LOG
+    }
+
+    public function secretariaTrabajoConflictUpdate(Request $request, $conflicto){
+        // dd($request);
+        DB::beginTransaction();
+        try {
+            $conflicto = Conflict::where('num_oficio', $conflicto)->first();
+            $conflicto->observaciones = $request->conflict['observaciones'];
+            $conflicto->save();
+
+            $conflicto->employees()->detach();
+            foreach ($request->empleados as $empleado) {
+                # code...
+                if($empleado['pivot']['inicio_sancion'] && $empleado['pivot']['termino_sancion']){
+                    $data = [
+                        'inicio_sancion' => Carbon::parse($empleado['pivot']['inicio_sancion'])->subDays(1),
+                        'termino_sancion' => Carbon::parse($empleado['pivot']['termino_sancion'])->subDays(1),
+                        'sancion' => $empleado['pivot']['sancion'],
+                        'resolutivo'=>$empleado['pivot']['resolutivo'],
+                        'castigado' => $empleado['pivot']['castigado']
+                    ];
+                }
+                else{
+                    $data = [
+                        'sancion' => $empleado['pivot']['sancion'],
+                        'resolutivo'=>$empleado['pivot']['resolutivo'],
+                        'castigado' => $empleado['pivot']['castigado']
+                    ];
+                }
+                
+                $conflicto->employees()->attach($empleado['id'], $data);
+            }
+
+            DB::commit();
+            return redirect()->back()->with('success', 'El registro se editó con éxito!');
+        } catch (\Throwable $th) {
             DB::rollBack();
             return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
         }
@@ -191,8 +231,8 @@ class ConflictController extends Controller
             foreach ($request->empleados as $empleado) {
                 # code...
                 $data = [
-                    'inicio_sancion' => Carbon::parse($empleado['fecha_inicio']),
-                    'termino_sancion' => Carbon::parse($empleado['fecha_termino']),
+                    'inicio_sancion' => Carbon::parse($empleado['fecha_inicio'])->subDays(1),
+                    'termino_sancion' => Carbon::parse($empleado['fecha_termino'])->subDays(1),
                     'sancion' => $empleado['sancion'],
                     'resolutivo' => $empleado['resolutivo'],
                     'castigado' => $empleado['sancionado']
@@ -240,9 +280,45 @@ class ConflictController extends Controller
      * @param  \App\Models\Conflict  $conflict
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Conflict $conflict)
+    public function update(Request $request, $conflict)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $conflicto =Conflict::where('num_oficio',$conflict)->first();
+            $conflicto->observaciones = $request->conflict['observaciones'];
+            $conflicto->save();
+
+            $conflicto->employees()->detach();
+            foreach ($request->empleados as $empleado) {
+                # code...
+                if($empleado['pivot']['inicio_sancion'] && $empleado['pivot']['termino_sancion']){
+                    $data = [
+                        'inicio_sancion' => Carbon::parse($empleado['pivot']['inicio_sancion'])->subDays(1),
+                        'termino_sancion' => Carbon::parse($empleado['pivot']['termino_sancion'])->subDays(1),
+                        'sancion' => $empleado['pivot']['sancion'],
+                        'resolutivo'=>$empleado['pivot']['resolutivo'],
+                        'castigado' => $empleado['pivot']['castigado']
+                    ];
+                }
+                else{
+                    $data = [
+                        'sancion' => $empleado['pivot']['sancion'],
+                        'resolutivo'=>$empleado['pivot']['resolutivo'],
+                        'castigado' => $empleado['pivot']['castigado']
+                    ];
+                }
+                
+                $conflicto->employees()->attach($empleado['id'], $data);
+            }
+
+            DB::commit();
+            return redirect()->back()->with('success', 'El registro se editó con éxito!');
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            // dd($th);
+            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+        }
     }
 
     /**

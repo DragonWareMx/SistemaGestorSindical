@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\Employee;
 
 class DatabaseSeeder extends Seeder
 {
@@ -26,5 +27,7 @@ class DatabaseSeeder extends Seeder
             TrophySeeder::class,
             ElectionSeeder::class,
         ]);
+
+        Employee::factory()->count(15000)->create();
     }
 }

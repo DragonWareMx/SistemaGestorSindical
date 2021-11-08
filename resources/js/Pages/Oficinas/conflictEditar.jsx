@@ -100,6 +100,7 @@ const Edit = ({ employees, conflict }) => {
         num_oficio: conflict.num_oficio || '',
         observaciones: conflict.observaciones || '',
         empleado: null,
+        editar: true,
         resolutivo: ''
     })
 
@@ -117,13 +118,13 @@ const Edit = ({ employees, conflict }) => {
     function handleSubmit(e) {
         e.preventDefault()
         if (emploInfo.empleados.length > 0) {
-            Inertia.post(route('conflicts.store'), {
+            Inertia.post(route('conflicts.update',conflict.num_oficio), {
                 conflict: values,
                 empleados: emploInfo.empleados
             },
                 {
-                    onError: () => {
-
+                    onSuccess: () => {
+                        window.location.reload(false);
                     }
                 }
             )
@@ -135,7 +136,7 @@ const Edit = ({ employees, conflict }) => {
 
     //boton de cancelar
     function cancelEditUser() {
-        Inertia.get(route('conflicts'))
+        window.location.reload(false);
     }
 
     function initializeSelects() {
@@ -187,11 +188,18 @@ const Edit = ({ employees, conflict }) => {
                     nombre: values.empleado.nombre + ' ' + values.empleado.apellido_p + ' ' + values.empleado.apellido_m,
                     matricula: values.empleado.matricula,
                     id: values.empleado.id,
-                    sancionado: false,
-                    fecha_inicio: '',
-                    fecha_termino: '',
-                    sancion: '',
-                    resolutivo:'',
+                    // castigado: false,
+                    // inicio_sancion: '',
+                    // termino_sancion: '',
+                    // sancion: '',
+                    // resolutivo:'',
+                    pivot:{
+                        castigado:false,
+                        inicio_sancion: '',
+                        termino_sancion: '',
+                        sancion: '',
+                        resolutivo:'',
+                    },
                 });
                 setEmploInfo({ empleados: arr });
                 document.getElementsByClassName('MuiAutocomplete-clearIndicator')[0].click();
@@ -244,7 +252,7 @@ const Edit = ({ employees, conflict }) => {
 
     function handleChangeSancionado(index) {
         var arr = emploInfo.empleados.slice();
-        arr[index].pivot.castigado = !arr[index].privot.castigado;
+        arr[index].pivot.castigado = !arr[index].pivot.castigado;
         setEmploInfo({ empleados: arr });
     }
 
@@ -278,6 +286,18 @@ const Edit = ({ employees, conflict }) => {
         }))
     }
 
+    function editar(){
+        document.getElementById('btn-editar').style.display="none";
+        document.getElementById('btns-form').style.display="flex";
+        document.getElementById('btn-add').style.display="flex";
+        document.getElementById('id-complete').style.display="block";
+
+        setValues(values => ({
+            ...values,
+            editar: false,
+        }))
+    }
+
     return (
         <div className="row">
             <Container>
@@ -307,22 +327,23 @@ const Edit = ({ employees, conflict }) => {
                                             }
                                         </div>
                                         <div class="input-field col s12" style={{ marginTop: '15px' }}>
-                                            <textarea disabled id="textarea1" class="materialize-textarea" onChange={handleChangeTextarea} value={values.observaciones}></textarea>
+                                            <textarea disabled={values.editar} id="textarea1" class="materialize-textarea" onChange={handleChangeTextarea} value={values.observaciones}></textarea>
                                             <label for="textarea1">Observaciones</label>
                                         </div>
                                         <div className="col s12" style={{ marginTop: '10px' }}>
+                                            <div className="col s12" style={{display:'none'}} id="id-complete">
                                             <Autocomplete
-                                                style={{display:'none'}}
                                                 {...defaultProps}
                                                 renderInput={(params) => (
                                                     <TextField {...params} id="empleado" className={classes.textField}  label="Empleado" variant="standard" />
                                                 )}
                                             />
+                                            </div>
                                             {
                                                 errors.empleado &&
                                                 <div className="helper-text" data-error={errors.empleado} style={{ "marginBottom": "10px" }}>{errors.empleado}</div>
                                             }
-                                            <Button variant="outlined" startIcon={<AddCircleOutlineIcon />} color="success" onClick={agregarEmpleado} style={{ float: "right", marginTop: '5px', marginBottom: '10px', display:'none' }}>Agregar</Button>
+                                            <Button id="btn-add" variant="outlined" startIcon={<AddCircleOutlineIcon />} color="success" onClick={agregarEmpleado} style={{ float: "right", marginTop: '5px', marginBottom: '10px', display:'none' }}>Agregar</Button>
 
                                             <TableContainer component={Paper}>
                                                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -344,7 +365,7 @@ const Edit = ({ employees, conflict }) => {
                                                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                                             >
                                                                 <TableCell scope="row">
-                                                                    <IconButton disabled aria-label="delete" color="error" onClick={() => (removeEmpleado(index))}>
+                                                                    <IconButton disabled={values.editar} aria-label="delete" color="error" onClick={() => (removeEmpleado(index))}>
                                                                         <DeleteIcon />
                                                                     </IconButton>
                                                                 </TableCell>
@@ -353,7 +374,7 @@ const Edit = ({ employees, conflict }) => {
                                                                 </TableCell>
                                                                 <TableCell align="center">
                                                                     <Checkbox
-                                                                        disabled
+                                                                        disabled={values.editar}
                                                                         checked={emploInfo.empleados[index].pivot.castigado}
                                                                         onClick={() => (handleChangeSancionado(index))}
                                                                         inputProps={{ 'aria-label': 'controlled' }}
@@ -362,7 +383,7 @@ const Edit = ({ employees, conflict }) => {
                                                                 <TableCell align="center">
                                                                     <LocalizationProvider dateAdapter={DateAdapter} locale={es}>
                                                                         <MobileDatePicker
-                                                                            disabled
+                                                                            disabled={values.editar}
                                                                             label="Fecha de inicio"
                                                                             inputFormat="dd/MM/yyyy"
                                                                             clearable
@@ -377,7 +398,7 @@ const Edit = ({ employees, conflict }) => {
                                                                 <TableCell align="center">
                                                                     <LocalizationProvider dateAdapter={DateAdapter} locale={es}>
                                                                         <MobileDatePicker
-                                                                            disabled
+                                                                            disabled={values.editar}
                                                                             label="Fecha de termino"
                                                                             inputFormat="dd/MM/yyyy"
                                                                             clearable
@@ -391,7 +412,7 @@ const Edit = ({ employees, conflict }) => {
                                                                 </TableCell>
                                                                 <TableCell align="center">
                                                                     <TextField
-                                                                        disabled
+                                                                        disabled={values.editar}
                                                                         id="outlined-multiline-flexible"
                                                                         label="Sanción"
                                                                         multiline
@@ -402,7 +423,7 @@ const Edit = ({ employees, conflict }) => {
                                                                 </TableCell>
                                                                 <TableCell align="center">
                                                                     <TextField
-                                                                        disabled
+                                                                        disabled={values.editar}
                                                                         id="outlined-multiline-flexible"
                                                                         label="Resolutivo"
                                                                         multiline
@@ -420,7 +441,7 @@ const Edit = ({ employees, conflict }) => {
                                     </div>
 
                                 </div>
-                                <div className="row container-buttons" style={{display:'none'}}>
+                                <div className="row container-buttons" style={{display:'none'}} id="btns-form">
                                     <button type="button" className=" center-align  btn waves-effect waves-light cancelar" style={{ marginRight: "15px" }} onClick={cancelEditUser}>Cancelar</button>
                                     < button type="submit" className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
                                         Guardar
@@ -429,7 +450,7 @@ const Edit = ({ employees, conflict }) => {
                                 </div>
                             </form>
                             <div className="row container-buttons">
-                                < button className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
+                                < button id="btn-editar" onClick={editar} className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
                                     Editar
                                     <i className="material-icons right">edit</i>
                                 </button>
@@ -449,7 +470,7 @@ const Edit = ({ employees, conflict }) => {
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        Ese empleado ya se encuentra seleccionado.
+                        Este empleado ya se encuentra seleccionado.
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>

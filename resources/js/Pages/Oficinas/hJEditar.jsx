@@ -101,8 +101,10 @@ const Edit = ({ employees, issue }) => {
     const [values, setValues] = useState({
         num_oficio: issue.num_oficio || '',
         observaciones: issue.observaciones || '',
+        editar: true,
         empleado: null,
     })
+
 
     //actualiza los hooks cada vez que se modifica un input
     function handleChange(e) {
@@ -118,13 +120,13 @@ const Edit = ({ employees, issue }) => {
     function handleSubmit(e) {
         e.preventDefault()
         if (emploInfo.empleados.length > 0) {
-            Inertia.post(route('honor.store'), {
+            Inertia.post(route('honor.update',issue.num_oficio), {
                 issue: values,
                 empleados: emploInfo.empleados
             },
                 {
-                    onError: () => {
-
+                    onSuccess: () => {
+                        window.location.reload(false);
                     }
                 }
             )
@@ -136,7 +138,7 @@ const Edit = ({ employees, issue }) => {
 
     //boton de cancelar
     function cancelEditUser() {
-        Inertia.get(route('honor'))
+        window.location.reload(false);
     }
 
     function initializeSelects() {
@@ -183,10 +185,16 @@ const Edit = ({ employees, issue }) => {
                     nombre: values.empleado.nombre + ' ' + values.empleado.apellido_p + ' ' + values.empleado.apellido_m,
                     matricula: values.empleado.matricula,
                     id: values.empleado.id,
-                    sancionado: false,
-                    fecha_inicio: '',
-                    fecha_termino: '',
-                    sancion: ''
+                    // castigado: false,
+                    // inicio_sancion: '',
+                    // termino_sancion: '',
+                    // sancion: '',
+                    pivot:{
+                        castigado:false,
+                        inicio_sancion: '',
+                        termino_sancion: '',
+                        sancion: '',
+                    },
                 });
                 setEmploInfo({ empleados: arr });
                 document.getElementsByClassName('MuiAutocomplete-clearIndicator')[0].click();
@@ -268,6 +276,18 @@ const Edit = ({ employees, issue }) => {
         }))
     }
 
+    function editar(){
+        document.getElementById('btn-editar').style.display="none";
+        document.getElementById('btns-form').style.display="flex";
+        document.getElementById('btn-add').style.display="flex";
+        document.getElementById('id-complete').style.display="block";
+
+        setValues(values => ({
+            ...values,
+            editar: false,
+        }))
+    }
+
     $(function () {
         M.updateTextFields();
     });
@@ -293,7 +313,7 @@ const Edit = ({ employees, issue }) => {
                                     <div className="col s12 m12 div-division">
 
                                         <div className="input-field col s12" style={{ marginTop: '15px' }}>
-                                            <input id="num_oficio" type="text" className={errors.num_oficio ? "validate form-control invalid" : "validate form-control"} name="num_oficio" value={values.num_oficio} required onChange={handleChange} disabled />
+                                            <input id="num_oficio" type="text" className={errors.num_oficio ? "validate form-control invalid" : "validate form-control"} name="num_oficio" value={values.num_oficio} required onChange={handleChange} disabled/>
                                             <label htmlFor="num_oficio">Número de oficio</label>
                                             {
                                                 errors.num_oficio &&
@@ -301,21 +321,23 @@ const Edit = ({ employees, issue }) => {
                                             }
                                         </div>
                                         <div class="input-field col s12" style={{ marginTop: '15px' }}>
-                                            <textarea id="textarea1" class="materialize-textarea" onChange={handleChangeTextarea} value={values.observaciones} disabled></textarea>
+                                            <textarea id="textarea1" class="materialize-textarea" onChange={handleChangeTextarea} value={values.observaciones} disabled={values.editar}></textarea>
                                             <label for="textarea1">Observaciones</label>
                                         </div>
                                         <div className="col s12" style={{ marginTop: '10px' }}>
-                                            <Autocomplete style={{ display: 'none' }}
+                                            <div className="col s12" style={{display:'none'}} id="id-complete">
+                                            <Autocomplete 
                                                 {...defaultProps}
                                                 renderInput={(params) => (
-                                                    <TextField {...params} id="empleado" className={classes.textField} label="Empleado" variant="standard" />
+                                                    <TextField {...params} id="empleado" className={classes.textField} label="Empleado" variant="standard"  />
                                                 )}
                                             />
+                                            </div>
                                             {
                                                 errors.empleado &&
                                                 <div className="helper-text" data-error={errors.empleado} style={{ "marginBottom": "10px" }}>{errors.empleado}</div>
                                             }
-                                            <Button variant="outlined" startIcon={<AddCircleOutlineIcon />} color="success" onClick={agregarEmpleado} style={{ float: "right", marginTop: '5px', marginBottom: '10px', display: 'none' }}>Agregar</Button>
+                                            <Button id="btn-add" variant="outlined" startIcon={<AddCircleOutlineIcon />} color="success" onClick={agregarEmpleado} style={{ float: "right", marginTop: '5px', marginBottom: '10px', display: 'none' }}>Agregar</Button>
 
                                             <TableContainer component={Paper}>
                                                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -336,7 +358,7 @@ const Edit = ({ employees, issue }) => {
                                                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                                             >
                                                                 <TableCell scope="row">
-                                                                    <IconButton disabled="disabled" aria-label="delete" color="error" onClick={() => (removeEmpleado(index))}>
+                                                                    <IconButton disabled={values.editar} aria-label="delete" color="error" onClick={() => (removeEmpleado(index))}>
                                                                         <DeleteIcon />
                                                                     </IconButton>
                                                                 </TableCell>
@@ -348,7 +370,7 @@ const Edit = ({ employees, issue }) => {
                                                                         checked={emploInfo.empleados[index].pivot.castigado}
                                                                         onClick={() => (handleChangeSancionado(index))}
                                                                         inputProps={{ 'aria-label': 'controlled' }}
-                                                                        disabled="disabled"
+                                                                        disabled={values.editar}
                                                                     />
                                                                 </TableCell>
                                                                 <TableCell align="center">
@@ -363,7 +385,7 @@ const Edit = ({ employees, issue }) => {
                                                                             disableHighlightToday={true}
                                                                             onChange={(date) => (handleChangeDate(date, index))}
                                                                             renderInput={(params) => <TextField {...params} style={{}} />}
-                                                                            disabled="disabled"
+                                                                            disabled={values.editar}
                                                                         />
                                                                     </LocalizationProvider>
                                                                 </TableCell>
@@ -379,7 +401,7 @@ const Edit = ({ employees, issue }) => {
                                                                             disableHighlightToday={true}
                                                                             onChange={(date) => (handleChangeDateTermino(date, index))}
                                                                             renderInput={(params) => <TextField {...params} />}
-                                                                            disabled="disabled"
+                                                                            disabled={values.editar}
                                                                         />
                                                                     </LocalizationProvider>
                                                                 </TableCell>
@@ -391,7 +413,7 @@ const Edit = ({ employees, issue }) => {
                                                                         maxRows={6}
                                                                         value={emploInfo.empleados[index].pivot.sancion}
                                                                         onChange={(event) => (handleChangeText(event, index))}
-                                                                        disabled="disabled"
+                                                                        disabled={values.editar}
                                                                     />
                                                                 </TableCell>
                                                             </TableRow>
@@ -403,7 +425,7 @@ const Edit = ({ employees, issue }) => {
                                     </div>
 
                                 </div>
-                                <div className="row container-buttons" style={{ display: 'none' }}>
+                                <div className="row container-buttons" style={{ display: 'none' }} id="btns-form">
                                     <button type="button" className=" center-align  btn waves-effect waves-light cancelar" style={{ marginRight: "15px" }} onClick={cancelEditUser}>Cancelar</button>
 
                                     < button type="submit" className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
@@ -413,7 +435,7 @@ const Edit = ({ employees, issue }) => {
                                 </div>
                             </form>
                             <div className="row container-buttons">
-                                < button className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
+                                < button id="btn-editar" onClick={editar} className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
                                     Editar
                                     <i className="material-icons right">edit</i>
                                 </button>
@@ -433,7 +455,7 @@ const Edit = ({ employees, issue }) => {
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        Ese empleado ya se encuentra seleccionado.
+                        Este empleado ya se encuentra seleccionado.
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>

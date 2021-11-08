@@ -86,7 +86,7 @@ class ElectionController extends Controller
 
             $eleccion = Election::findOrFail($request->eleccion);
             $data = [
-                'fecha_voto' => Carbon::parse($request->fecha),
+                'fecha_voto' => Carbon::parse($request->fecha)->subDays(1),
                 'num_oficio' => $request->num_oficio,
             ];
             $eleccion->employees()->attach($request->empleado, $data);
@@ -111,7 +111,7 @@ class ElectionController extends Controller
         try {
 
             $eleccion = new Election();
-            $eleccion->fecha = Carbon::parse($request->fecha_votacion);
+            $eleccion->fecha = Carbon::parse($request->fecha_votacion)->subDays(1);
             $eleccion->save();
             DB::commit();
             return redirect()->back()->with('success', 'La votación se creó con éxito!');
@@ -151,9 +151,30 @@ class ElectionController extends Controller
      * @param  \App\Models\Election  $election
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Election $election)
+    public function update(Request $request,$vote)
     {
-        //
+        $validated = $request->validate([
+            'num_oficio' => 'required|max:255',
+            'empleado' => 'required|exists:employees,id',
+            'eleccion' => 'required|exists:elections,id',
+            'fecha' => 'required|date',
+        ]);
+        DB::beginTransaction();
+        try {
+            // dd($request);
+            $voto=DB::table('election_employee')->where('num_oficio',$vote)->update([
+                'fecha_voto' => Carbon::parse($request->fecha)->subDays(1),
+                'election_id' => $request->eleccion,
+            ]);
+
+            DB::commit();
+            return redirect()->back()->with('success', 'El registro se editó con éxito!');
+        } catch (\Throwable $th) {
+            //throw $th;
+            dd($th);
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+        }
     }
 
     /**

@@ -25,7 +25,7 @@ class CreateEmployeesTable extends Migration
             $table->string('apellido_m')->nullable();
 
             $table->date('fecha_nac');
-            $table->enum('sexo', ['h', 'm', 'o']);
+            $table->enum('sexo', ['hombre', 'mujer', 'otro']);
             $table->date('antiguedad');
 
             //direccion
