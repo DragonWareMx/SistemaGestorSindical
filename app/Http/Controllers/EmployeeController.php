@@ -695,7 +695,7 @@ class EmployeeController extends Controller
                 // ->having('employees.id','=','employee_relative.employee.id')
                 // ->limit(1)
                 ->get();
-        dd($test);
+        // dd($test);
 
         // $users = User::where(function ($query) {
         //     $query->select('type')
@@ -707,15 +707,7 @@ class EmployeeController extends Controller
 
         return Inertia::render('Oficinas/admisionCambiosCrear', [
             'roles' => fn () => Role::select('name')->get(),
-            'employees' => fn () => Employee::join('employee_relative','employees.id','employee_relative.employee_id')
-                ->where(function ($query) {
-                    $query->select('ingreso_bolsa')
-                        ->from('employee_relative')
-                        ->whereColumn('employees.id', 'employee_relative.employee_id')
-                        ->orderByDesc('ingreso_bolsa')
-                        ->limit(1);
-                })
-                ->select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'employees.id as id', 'antiguedad')
+            'employees' => fn () => Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'employees.id as id', 'antiguedad')
                 ->get()
         ]);
 
