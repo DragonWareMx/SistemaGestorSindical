@@ -118,13 +118,13 @@ const Edit = ({ employees, conflict }) => {
     function handleSubmit(e) {
         e.preventDefault()
         if (emploInfo.empleados.length > 0) {
-            Inertia.post(route('secretariaTrabajo.store'), {
+            Inertia.post(route('secretariaTrabajo.update', conflict.num_oficio), {
                 conflict: values,
                 empleados: emploInfo.empleados
             },
                 {
-                    onError: () => {
-
+                    onSuccess: () => {
+                        window.location.reload(false);
                     }
                 }
             )
@@ -189,11 +189,13 @@ const Edit = ({ employees, conflict }) => {
                     nombre: neim,
                     matricula: values.empleado.matricula,
                     id: values.empleado.id,
-                    sancionado: false,
-                    fecha_inicio: '',
-                    fecha_termino: '',
-                    sancion: '',
-                    resolutivo:'',
+                    pivot:{
+                        castigado:false,
+                        inicio_sancion: '',
+                        termino_sancion: '',
+                        sancion: '',
+                        resolutivo:'',
+                    },
                 });
                 setEmploInfo({ empleados: arr });
                 document.getElementsByClassName('MuiAutocomplete-clearIndicator')[0].click();
