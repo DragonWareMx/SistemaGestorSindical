@@ -685,11 +685,41 @@ class EmployeeController extends Controller
     public function admisionCambiosCreate()
     {
         //
+
+        $test = Employee::
+                leftJoin('employee_relative','employees.id','employee_relative.employee_id')
+                ->select('nombre','ingreso_bolsa')
+                ->latest('ingreso_bolsa')
+                // ->groupBy('employees.id','employees.nombre','employee_relative.ingreso_bolsa')
+
+                // ->having('employees.id','=','employee_relative.employee.id')
+                // ->limit(1)
+                ->get();
+        dd($test);
+
+        // $users = User::where(function ($query) {
+        //     $query->select('type')
+        //         ->from('membership')
+        //         ->whereColumn('membership.user_id', 'users.id')
+        //         ->orderByDesc('membership.start_date')
+        //         ->limit(1);
+        // }, 'Pro')->get();
+
         return Inertia::render('Oficinas/admisionCambiosCrear', [
             'roles' => fn () => Role::select('name')->get(),
-            'employees' => fn () => Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id', 'antiguedad')
+            'employees' => fn () => Employee::join('employee_relative','employees.id','employee_relative.employee_id')
+                ->where(function ($query) {
+                    $query->select('ingreso_bolsa')
+                        ->from('employee_relative')
+                        ->whereColumn('employees.id', 'employee_relative.employee_id')
+                        ->orderByDesc('ingreso_bolsa')
+                        ->limit(1);
+                })
+                ->select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'employees.id as id', 'antiguedad')
                 ->get()
         ]);
+
+      
     }
 
     public function admisionCambiosStore(Request $request)
@@ -879,7 +909,7 @@ class EmployeeController extends Controller
             return \Redirect::route('admisionCambiosCreate')->with('success','El empleado ha sido registrado con éxito!');
         } catch (\Exception $e) {
             DB::rollBack();
-            
+
             return \Redirect::back()->with('error','Ha ocurrido un error al intentar registrar el empleado, inténtelo más tarde.');
         }
     }
