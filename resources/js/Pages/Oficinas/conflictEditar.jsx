@@ -42,6 +42,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 import { es } from "date-fns/locale";
 
+import Eliminar from '../../components/common/Eliminar'
+
 // import moment from "moment";
 // import "moment/locale/es-mx";
 
@@ -118,7 +120,7 @@ const Edit = ({ employees, conflict }) => {
     function handleSubmit(e) {
         e.preventDefault()
         if (emploInfo.empleados.length > 0) {
-            Inertia.post(route('conflicts.update',conflict.num_oficio), {
+            Inertia.post(route('conflicts.update', conflict.num_oficio), {
                 conflict: values,
                 empleados: emploInfo.empleados
             },
@@ -193,12 +195,12 @@ const Edit = ({ employees, conflict }) => {
                     // termino_sancion: '',
                     // sancion: '',
                     // resolutivo:'',
-                    pivot:{
-                        castigado:false,
+                    pivot: {
+                        castigado: false,
                         inicio_sancion: '',
                         termino_sancion: '',
                         sancion: '',
-                        resolutivo:'',
+                        resolutivo: '',
                     },
                 });
                 setEmploInfo({ empleados: arr });
@@ -286,11 +288,11 @@ const Edit = ({ employees, conflict }) => {
         }))
     }
 
-    function editar(){
-        document.getElementById('btn-editar').style.display="none";
-        document.getElementById('btns-form').style.display="flex";
-        document.getElementById('btn-add').style.display="flex";
-        document.getElementById('id-complete').style.display="block";
+    function editar() {
+        document.getElementById('btn-editar').style.display = "none";
+        document.getElementById('btns-form').style.display = "flex";
+        document.getElementById('btn-add').style.display = "flex";
+        document.getElementById('id-complete').style.display = "block";
 
         setValues(values => ({
             ...values,
@@ -331,19 +333,19 @@ const Edit = ({ employees, conflict }) => {
                                             <label for="textarea1">Observaciones</label>
                                         </div>
                                         <div className="col s12" style={{ marginTop: '10px' }}>
-                                            <div className="col s12" style={{display:'none'}} id="id-complete">
-                                            <Autocomplete
-                                                {...defaultProps}
-                                                renderInput={(params) => (
-                                                    <TextField {...params} id="empleado" className={classes.textField}  label="Empleado" variant="standard" />
-                                                )}
-                                            />
+                                            <div className="col s12" style={{ display: 'none' }} id="id-complete">
+                                                <Autocomplete
+                                                    {...defaultProps}
+                                                    renderInput={(params) => (
+                                                        <TextField {...params} id="empleado" className={classes.textField} label="Empleado" variant="standard" />
+                                                    )}
+                                                />
                                             </div>
                                             {
                                                 errors.empleado &&
                                                 <div className="helper-text" data-error={errors.empleado} style={{ "marginBottom": "10px" }}>{errors.empleado}</div>
                                             }
-                                            <Button id="btn-add" variant="outlined" startIcon={<AddCircleOutlineIcon />} color="success" onClick={agregarEmpleado} style={{ float: "right", marginTop: '5px', marginBottom: '10px', display:'none' }}>Agregar</Button>
+                                            <Button id="btn-add" variant="outlined" startIcon={<AddCircleOutlineIcon />} color="success" onClick={agregarEmpleado} style={{ float: "right", marginTop: '5px', marginBottom: '10px', display: 'none' }}>Agregar</Button>
 
                                             <TableContainer component={Paper}>
                                                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -441,8 +443,9 @@ const Edit = ({ employees, conflict }) => {
                                     </div>
 
                                 </div>
-                                <div className="row container-buttons" style={{display:'none'}} id="btns-form">
+                                <div className="row container-buttons" style={{ display: 'none' }} id="btns-form">
                                     <button type="button" className=" center-align  btn waves-effect waves-light cancelar" style={{ marginRight: "15px" }} onClick={cancelEditUser}>Cancelar</button>
+                                    <Eliminar oficina={'Conflictos'} ruta={'conflicts.delete'} id={conflict.uuid} />
                                     < button type="submit" className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
                                         Guardar
                                         <i className="material-icons right">save</i>
