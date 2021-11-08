@@ -253,59 +253,78 @@ export default function MenuLateral() {
 
         {/* OFICINAS */}
         {/* HONOR Y JUSTICIA */}
+        {auth && auth.roles && auth.roles.length > 0 &&
+        (auth.roles['0'].name == "Administrador" || auth.roles['0'].name == "Secretario General" || auth.roles['0'].name =="Responsable de Oficina de Honor y Justicia" || auth.roles['0'].name =="Asistente de Oficina de Honor y Justicia" ) &&
         <div className="col s12">
           <InertiaLink href={route('honor')} className="icono-menu">
             <i className={isUrl("honor-y-justicia") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Honor y Justicia">military_tech</i>
           </InertiaLink>
         </div>
+        }
         {/* CONFLICTOS */}
+        {auth && auth.roles && auth.roles.length > 0 &&
+        (auth.roles['0'].name == "Administrador" || auth.roles['0'].name == "Secretario General" || auth.roles['0'].name =="Responsable de Oficina de Conflictos " || auth.roles['0'].name =="Asistente de Oficina de Conflictos" ) &&
         <div className="col s12">
           <InertiaLink href={route('conflicts')} className="icono-menu">
             <i className={isUrl("conflictos") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Conflictos">sports_kabaddi</i>
           </InertiaLink>
         </div>
+        }
         {/* SECRETARIA DEL INTERIOR */}
+        {auth && auth.roles && auth.roles.length > 0 &&
+        (auth.roles['0'].name == "Administrador" || auth.roles['0'].name == "Secretario General" || auth.roles['0'].name =="Responsable de Oficina de Secretaría del Interior" || auth.roles['0'].name =="Asistente de Oficina de Secretaría del Interior" ) &&
         <div className="col s12">
           <InertiaLink href={route('secretariaInterior')} className="icono-menu">
             <i className={isUrl("secretaria-del-interior") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Secretaría del Interior">light</i>
           </InertiaLink>
         </div>
+        }
         {/* SECRETARIA DEL TRABAJO */}
+        {auth && auth.roles && auth.roles.length > 0 &&
+        (auth.roles['0'].name == "Administrador" || auth.roles['0'].name == "Secretario General" || auth.roles['0'].name =="Responsable de Oficina de Secretaría del Trabajo" || auth.roles['0'].name =="Asistente de Oficina de Secretaría del Trabajo" ) &&
         <div className="col s12">
           <InertiaLink href={route('secretariaTrabajo')} className="icono-menu">
             <i className={isUrl("secretaria-del-trabajo") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Secretaría del Trabajo">work</i>
           </InertiaLink>
         </div>
+        }
         {/* ACCION FEMENIL */}
+        {auth && auth.roles && auth.roles.length > 0 &&
+        (auth.roles['0'].name == "Administrador" || auth.roles['0'].name == "Secretario General" || auth.roles['0'].name =="Responsable de Oficina Acción Femenil" || auth.roles['0'].name =="Asistente de Oficina Acción Femenil" ) &&
         <div className="col s12">
           <InertiaLink href={route('accionFemenil')} className="icono-menu">
             <i className={isUrl("accion-femenil") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Acción Femenil">woman</i>
           </InertiaLink>
         </div>
+        }
         {/* ADMISION Y CAMBIOS */}
+        {auth && auth.roles && auth.roles.length > 0 &&
+        (auth.roles['0'].name == "Administrador" || auth.roles['0'].name == "Secretario General" || auth.roles['0'].name =="Responsable de Oficina de Admisión y Cambios" || auth.roles['0'].name =="Asistente de Oficina de Admisión y Cambios" ) &&
         <div className="col s12">
           <InertiaLink href={route('admisionCambios')} className="icono-menu">
             <i className={isUrl("admision-y-cambios") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Admisión y Cambios">family_restroom</i>
           </InertiaLink>
         </div>
-
+        }
         {/* ROLES */}
-        {/* {auth && auth.roles && auth.roles.length > 0 && auth.roles[0].name == "Administrador" && */}
+        {auth && auth.roles && auth.roles.length > 0 &&
+        (auth.roles['0'].name == "Administrador" || auth.roles['0'].name == "Secretario General")&&
+
         <div className="col s12">
           <InertiaLink href={'#'} className="icono-menu">
             <i className={isUrl("log") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Roles">manage_accounts</i>
           </InertiaLink>
         </div>
-        {/* } */}
-
+        }
         {/* BITACORA */}
-        {/* {auth && auth.roles && auth.roles.length > 0 && auth.roles[0].name == "Administrador" && */}
+        {auth && auth.roles && auth.roles.length > 0 &&
+        (auth.roles['0'].name == "Administrador" || auth.roles['0'].name == "Secretario General")&&
         <div className="col s12">
           <InertiaLink href={route('logs.index')} className="icono-menu">
             <i className={isUrl("bitacora") ? "material-icons tooltipped icono-menu-compacto current-menu" : "material-icons tooltipped icono-menu-compacto"} data-position="right" data-tooltip="Bitácora">history</i>
           </InertiaLink>
         </div>
-        {/* } */}
+        }
 
         {/* CONFIGURACION */}
         <div className="col s12">
