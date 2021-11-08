@@ -341,4 +341,20 @@ class ConflictController extends Controller
             return redirect()->route('conflicts')->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
         }
     }
+
+    public function destroyTrabajo($uuid)
+    {
+        //
+        DB::beginTransaction();
+        try {
+            $entrada = Conflict::where('uuid', $uuid)->firstOrFail();
+            $entrada->delete();
+            DB::commit();
+            return redirect()->route('secretariaTrabajo')->with('success', 'El registro se eliminó con éxito!');
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            return redirect()->route('secretariaTrabajo')->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+        }
+    }
 }

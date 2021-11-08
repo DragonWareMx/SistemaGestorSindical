@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout';
 import { Inertia } from '@inertiajs/inertia'
 import route from 'ziggy-js';
 import { InertiaLink } from '@inertiajs/inertia-react';
+import Alertas from '../../components/common/Alertas';
 
 // componentes
 import PropTypes from 'prop-types';
@@ -201,9 +202,12 @@ const secretariaTrabajo = ({ conflicts }) => {
       <div className="row contenedor">
         <div className="col contenedor s12">
           <div className="card darken-1 cardUsers">
-          <InertiaLink className="btn-floating btn-large waves-effect waves-light green-sind button-addUser" href={route('secretariaTrabajo.create')}><i className="material-icons">add</i></InertiaLink>
+            <InertiaLink className="btn-floating btn-large waves-effect waves-light green-sind button-addUser" href={route('secretariaTrabajo.create')}><i className="material-icons">add</i></InertiaLink>
             <div className="card-content">
               <span className="card-title">Secretaria del Trabajo</span>
+              <div className="col s12">
+                <Alertas />
+              </div>
               <div style={{ height: '60vh', width: '100%' }}>
                 <ThemeProvider theme={themeEs}>
                   <DataGrid

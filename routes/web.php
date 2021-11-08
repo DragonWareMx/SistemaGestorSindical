@@ -73,7 +73,7 @@ Route::get('/secretaria-del-trabajo', [App\Http\Controllers\ConflictController::
 Route::get('/secretaria-del-trabajo/ver/{id}', [App\Http\Controllers\ConflictController::class, 'secretariaTrabajoConflict'])->name('secretariaTrabajo.conflict')->middleware('st');
 Route::get('/secretaria-del-trabajo/crear', [App\Http\Controllers\ConflictController::class, 'secretariaTrabajoCreate'])->name('secretariaTrabajo.create')->middleware('st');
 Route::post('/secretaria-del-trabajo/crear', [App\Http\Controllers\ConflictController::class, 'secretariaTrabajoStore'])->name('secretariaTrabajo.store')->middleware('st');
-Route::delete('/secretaria-del-trabajo/delete/{uuid}', [App\Http\Controllers\ConflictController::class, 'destroy'])->name('secretariaTrabajo.delete')->middleware('st');
+Route::delete('/secretaria-del-trabajo/delete/{uuid}', [App\Http\Controllers\ConflictController::class, 'destroyTrabajo'])->name('secretariaTrabajo.delete')->middleware('st');
 // Secreteria del interior
 Route::get('/secretaria-del-interior', [App\Http\Controllers\ElectionController::class, 'index'])->name('secretariaInterior')->middleware('si');
 Route::get('/secretaria-del-interior/ver/{id}', [App\Http\Controllers\ElectionController::class, 'secretariaInteriorElection'])->name('secretariaInterior.election')->middleware('si');
