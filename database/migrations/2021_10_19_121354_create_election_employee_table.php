@@ -16,7 +16,7 @@ class CreateElectionEmployeeTable extends Migration
         Schema::create('election_employee', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('num_oficio')->nullable();
+            $table->string('num_oficio')->unique();
             $table->date('fecha_voto')->nullable();
 
             $table->unsignedBigInteger('employee_id');

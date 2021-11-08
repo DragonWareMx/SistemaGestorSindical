@@ -151,7 +151,7 @@ class ElectionController extends Controller
      * @param  \App\Models\Election  $election
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,$vote)
+    public function update(Request $request, $vote)
     {
         $validated = $request->validate([
             'num_oficio' => 'required|max:255',
@@ -162,7 +162,7 @@ class ElectionController extends Controller
         DB::beginTransaction();
         try {
             // dd($request);
-            $voto=DB::table('election_employee')->where('num_oficio',$vote)->update([
+            $voto = DB::table('election_employee')->where('num_oficio', $vote)->update([
                 'fecha_voto' => Carbon::parse($request->fecha)->subDays(1),
                 'election_id' => $request->eleccion,
             ]);
@@ -183,19 +183,20 @@ class ElectionController extends Controller
      * @param  \App\Models\Election  $election
      * @return \Illuminate\Http\Response
      */
-    public function destroy($uuid)
+    public function destroy($uuid, Request $request)
     {
         //
         DB::beginTransaction();
         try {
-            $entrada = Election::where('uuid', $uuid)->firstOrFail();
-            $entrada->delete();
+            $empleado = Employee::where('matricula', $uuid)->firstOrFail();
+            $eleccion = Election::findOrFail($request->votacion);
+            $eleccion->employees()->detach($empleado);
             DB::commit();
-            return redirect()->back()->with('success', 'El registro se eliminó con éxito!');
+            return redirect()->route('secretariaInterior')->with('success', 'El registro se eliminó con éxito!');
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+            return redirect()->route('secretariaInterior')->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
         }
     }
 }

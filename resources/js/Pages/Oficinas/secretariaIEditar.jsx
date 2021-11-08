@@ -32,6 +32,8 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 import { es } from "date-fns/locale";
 
+import Eliminar from '../../components/common/Eliminar'
+
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
     (theme) =>
@@ -299,6 +301,8 @@ const secretariaIEditar = ({ vote, employee, election, employees, elections }) =
                                 </div>
                                 <div className="row container-buttons" style={{ display: 'none' }} id="btns-form">
                                     <button type="button" className=" center-align  btn waves-effect waves-light cancelar" style={{ marginRight: "15px" }} onClick={cancelEditUser}>Cancelar</button>
+                                    {console.log(employee)}
+                                    <Eliminar oficina={'Secretaría del Interior'} ruta={'secretariaInterior.delete'} id={employee.matricula} data={{ votacion: election.id }} />
                                     < button type="submit" className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
                                         Guardar
                                         <i className="material-icons right">save</i>
