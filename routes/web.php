@@ -84,6 +84,8 @@ Route::get('/admision-y-cambios', [App\Http\Controllers\EmployeeController::clas
 Route::get('/admision-y-cambios/ver/{id}', [App\Http\Controllers\EmployeeController::class, 'admisionCambiosRelative'])->name('admisionCambiosRelative');
 Route::get('/admision-y-cambios/crear', [App\Http\Controllers\EmployeeController::class, 'admisionCambiosCreate'])->name('admisionCambiosCreate');
 Route::post('/admision-y-cambios/crear', [App\Http\Controllers\EmployeeController::class, 'admisionCambiosStore'])->name('admisionCambiosStore');
+Route::get('/admision-y-cambios/crear-familiar', [App\Http\Controllers\EmployeeController::class, 'admisionCambiosNewFamiliar'])->name('admisionCambiosNewFamiliar');
+Route::post('/admision-y-cambios/crear-familiar', [App\Http\Controllers\EmployeeController::class, 'admisionCambiosStoreFamiliar'])->name('admisionCambiosStoreFamiliar');
 
 //Acción Femenil
 Route::get('/accion-femenil', [App\Http\Controllers\TrophyController::class, 'index'])->name('accionFemenil');

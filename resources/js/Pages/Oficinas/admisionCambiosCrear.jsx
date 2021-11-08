@@ -189,7 +189,7 @@ const Create = ({ roles, employees }) => {
         familiar: []
     });
 
-    function agregarEmpleado() {
+    const agregarEmpleado = () => {
         // if (values.empleado) {
             var arr = emploInfo.empleados.slice();
             var bandera = true;
@@ -218,7 +218,7 @@ const Create = ({ roles, employees }) => {
 
     }
 
-    function agregarFamiliar() {
+    const agregarFamiliar = () => {
         // if (values.familiar) {
             var arr = famInfo.familiar.slice();
             var bandera = true;
@@ -315,7 +315,7 @@ const Create = ({ roles, employees }) => {
                                         </div>
 
                                         <div className="col s12" style={{ marginTop: '10px' }}>
-                                            Último ingreso a bolsa: {values.ingresoBolsa === "" ? "Seleccione un empleado" : values.ingresoBolsa}
+                                            Último ingreso a bolsa: {values.empleado === null ? "Seleccione un empleado" : values.empleado.ingresoBolsa}
                                         </div>
 
                                         <div className="col s12" style={{ marginTop: '10px' }}>
@@ -329,6 +329,8 @@ const Create = ({ roles, employees }) => {
                                                 errors.familiar &&
                                                 <div className="helper-text" data-error={errors.familiar} style={{ "marginBottom": "10px" }}>{errors.familiar}</div>
                                             }
+
+                                            <InertiaLink href={route('admisionCambiosNewFamiliar')}><Button variant="outlined" startIcon={<AddCircleOutlineIcon />} color="success"  style={{ float: "right", marginTop: '5px' }}>Nuevo</Button></InertiaLink>
                                         </div>
 
                                         <div class="input-field col s12" style={{ marginTop: '15px' }}>
