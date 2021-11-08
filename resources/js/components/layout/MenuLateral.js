@@ -196,8 +196,8 @@ export default function MenuLateral() {
             <div className="col s5 center-align">
               <img src="/img/imagenes/LogoNacional2.png" alt="logo" />
             </div>
-            <div className="col s7 valign-wrapper" style={{ height: '64px' }}>
-              Escuela Sindical
+            <div className="col s7 valign-wrapper" style={{ height: '64px', fontSize:'12px' }}>
+              Sistema Gestor de Datos
             </div>
           </div>
         </ul>
