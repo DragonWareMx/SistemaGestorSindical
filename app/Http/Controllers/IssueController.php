@@ -32,28 +32,28 @@ class IssueController extends Controller
 
     public function issue($numOficio)
     {
-        $issue = Issue::where('num_oficio',$numOficio)
+        $issue = Issue::where('num_oficio', $numOficio)
             ->with('employees:nombre,matricula,apellido_p,apellido_m,id')
             ->first();
 
 
         foreach ($issue['employees'] as $employee) {
-            if($employee->pivot['inicio_sancion']){
-                $date= $employee->pivot['inicio_sancion'];
-                $date=Carbon::parse($date)->addDays(1);
+            if ($employee->pivot['inicio_sancion']) {
+                $date = $employee->pivot['inicio_sancion'];
+                $date = Carbon::parse($date)->addDays(1);
                 $employee->pivot['inicio_sancion'] = $date->toDateString();
             }
-            if($employee->pivot['termino_sancion']){
-                $date= $employee->pivot['termino_sancion'];
-                $date=Carbon::parse($date)->addDays(1);
-                $employee->pivot['termino_sancion'] = $date->toDateString(); 
+            if ($employee->pivot['termino_sancion']) {
+                $date = $employee->pivot['termino_sancion'];
+                $date = Carbon::parse($date)->addDays(1);
+                $employee->pivot['termino_sancion'] = $date->toDateString();
             }
         }
 
         $employees = Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')
             ->get();
 
-        // dd($issue);    
+        // dd($issue);
 
         return Inertia::render('Oficinas/hJEditar', ['issue' => $issue, 'employees' => $employees]);
     }
@@ -160,8 +160,19 @@ class IssueController extends Controller
      * @param  \App\Models\Issue  $issue
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Issue $issue)
+    public function destroy($uuid)
     {
         //
+        DB::beginTransaction();
+        try {
+            $entrada = Issue::where('uuid', $uuid)->firstOrFail();
+            $entrada->delete();
+            DB::commit();
+            return redirect()->back()->with('success', 'El registro se eliminó con éxito!');
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+        }
     }
 }

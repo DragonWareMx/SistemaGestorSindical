@@ -24,36 +24,37 @@ class ConflictController extends Controller
      */
     public function index()
     {
-        $conflicts = Conflict::
-            where('tipo','conflictos')
-            ->leftJoin('conflict_employee','conflicts.id','conflict_employee.conflict_id')
-            ->leftJoin('employees','conflict_employee.employee_id','employees.id')
-            ->select('num_oficio','employees.nombre','inicio_sancion','termino_sancion','matricula','apellido_p','conflict_employee.id as id','conflicts.uuid as uuid')
+        $conflicts = Conflict::where('tipo', 'conflictos')
+            ->leftJoin('conflict_employee', 'conflicts.id', 'conflict_employee.conflict_id')
+            ->leftJoin('employees', 'conflict_employee.employee_id', 'employees.id')
+            ->select('num_oficio', 'employees.nombre', 'inicio_sancion', 'termino_sancion', 'matricula', 'apellido_p', 'conflict_employee.id as id', 'conflicts.uuid as uuid')
             ->get();
-        return Inertia::render('Oficinas/conflictos',['conflicts' => $conflicts]);
+        return Inertia::render('Oficinas/conflictos', ['conflicts' => $conflicts]);
     }
 
-    public function conflict($uuid){
-        $conflict = Conflict::where('uuid',$uuid)
+    public function conflict($uuid)
+    {
+        $conflict = Conflict::where('uuid', $uuid)
             ->with('employees:nombre,matricula,apellido_p,apellido_m,id')
             ->first();
 
 
         foreach ($conflict['employees'] as $employee) {
-            if($employee->pivot['inicio_sancion']){
-                $date= $employee->pivot['inicio_sancion'];
-                $date=Carbon::parse($date)->addDays(1);
+            if ($employee->pivot['inicio_sancion']) {
+                $date = $employee->pivot['inicio_sancion'];
+                $date = Carbon::parse($date)->addDays(1);
                 $employee->pivot['inicio_sancion'] = $date->toDateString();
             }
-            if($employee->pivot['termino_sancion']){
-                $date= $employee->pivot['termino_sancion'];
-                $date=Carbon::parse($date)->addDays(1);
-                $employee->pivot['termino_sancion'] = $date->toDateString(); 
+            if ($employee->pivot['termino_sancion']) {
+                $date = $employee->pivot['termino_sancion'];
+                $date = Carbon::parse($date)->addDays(1);
+                $employee->pivot['termino_sancion'] = $date->toDateString();
             }
         }
 
 
-        return Inertia::render('Oficinas/conflictEditar', [ 'conflict' => $conflict,
+        return Inertia::render('Oficinas/conflictEditar', [
+            'conflict' => $conflict,
             'employees' => fn () => Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')
                 ->get()
         ]);
@@ -61,37 +62,37 @@ class ConflictController extends Controller
 
     public function secretariaTrabajo()
     {
-        $conflicts = Conflict::
-            where('tipo','secretaria')
-            ->leftJoin('conflict_employee','conflicts.id','conflict_employee.conflict_id')
-            ->leftJoin('employees','conflict_employee.employee_id','employees.id')
-            ->select('num_oficio','employees.nombre','inicio_sancion','termino_sancion','matricula','apellido_p','conflict_employee.id as id','conflicts.uuid as uuid')
+        $conflicts = Conflict::where('tipo', 'secretaria')
+            ->leftJoin('conflict_employee', 'conflicts.id', 'conflict_employee.conflict_id')
+            ->leftJoin('employees', 'conflict_employee.employee_id', 'employees.id')
+            ->select('num_oficio', 'employees.nombre', 'inicio_sancion', 'termino_sancion', 'matricula', 'apellido_p', 'conflict_employee.id as id', 'conflicts.uuid as uuid')
             ->get();
-        return Inertia::render('Oficinas/secretariaTrabajo',['conflicts' => $conflicts]);
+        return Inertia::render('Oficinas/secretariaTrabajo', ['conflicts' => $conflicts]);
     }
 
-    public function secretariaTrabajoConflict($uuid){
-        $conflict = Conflict::where('uuid',$uuid)
+    public function secretariaTrabajoConflict($uuid)
+    {
+        $conflict = Conflict::where('uuid', $uuid)
             ->with('employees:nombre,matricula,apellido_p,apellido_m,id')
             ->first();
 
 
         foreach ($conflict['employees'] as $employee) {
-            if($employee->pivot['inicio_sancion']){
-                $date= $employee->pivot['inicio_sancion'];
-                $date=Carbon::parse($date)->addDays(1);
+            if ($employee->pivot['inicio_sancion']) {
+                $date = $employee->pivot['inicio_sancion'];
+                $date = Carbon::parse($date)->addDays(1);
                 $employee->pivot['inicio_sancion'] = $date->toDateString();
             }
-            if($employee->pivot['termino_sancion']){
-                $date= $employee->pivot['termino_sancion'];
-                $date=Carbon::parse($date)->addDays(1);
-                $employee->pivot['termino_sancion'] = $date->toDateString(); 
+            if ($employee->pivot['termino_sancion']) {
+                $date = $employee->pivot['termino_sancion'];
+                $date = Carbon::parse($date)->addDays(1);
+                $employee->pivot['termino_sancion'] = $date->toDateString();
             }
         }
         // dd($conflict);
 
-        return Inertia::render('Oficinas/secretariaTrabajoEditar',['conflict' => $conflict, 'employees' => fn () => Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')
-        ->get()]);
+        return Inertia::render('Oficinas/secretariaTrabajoEditar', ['conflict' => $conflict, 'employees' => fn () => Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')
+            ->get()]);
     }
 
 
@@ -133,7 +134,7 @@ class ConflictController extends Controller
                     'inicio_sancion' => Carbon::parse($empleado['fecha_inicio']),
                     'termino_sancion' => Carbon::parse($empleado['fecha_termino']),
                     'sancion' => $empleado['sancion'],
-                    'resolutivo'=>$empleado['resolutivo'],
+                    'resolutivo' => $empleado['resolutivo'],
                     'castigado' => $empleado['sancionado']
                 ];
                 $conflicto->employees()->attach($empleado['id'], $data);
@@ -193,7 +194,7 @@ class ConflictController extends Controller
                     'inicio_sancion' => Carbon::parse($empleado['fecha_inicio']),
                     'termino_sancion' => Carbon::parse($empleado['fecha_termino']),
                     'sancion' => $empleado['sancion'],
-                    'resolutivo'=>$empleado['resolutivo'],
+                    'resolutivo' => $empleado['resolutivo'],
                     'castigado' => $empleado['sancionado']
                 ];
                 $conflicto->employees()->attach($empleado['id'], $data);
@@ -250,8 +251,19 @@ class ConflictController extends Controller
      * @param  \App\Models\Conflict  $conflict
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Conflict $conflict)
+    public function destroy($uuid)
     {
         //
+        DB::beginTransaction();
+        try {
+            $entrada = Conflict::where('uuid', $uuid)->firstOrFail();
+            $entrada->delete();
+            DB::commit();
+            return redirect()->back()->with('success', 'El registro se eliminó con éxito!');
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+        }
     }
 }

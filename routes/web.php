@@ -61,29 +61,33 @@ Route::get('/honor-y-justicia', [App\Http\Controllers\IssueController::class, 'i
 Route::get('/honor-y-justicia/ver/{id}', [App\Http\Controllers\IssueController::class, 'issue'])->name('honor.issue');
 Route::get('/honor-y-justicia/crear', [App\Http\Controllers\IssueController::class, 'create'])->name('honor.create');
 Route::post('/honor-y-justicia/crear', [App\Http\Controllers\IssueController::class, 'store'])->name('honor.store');
+Route::delete('/honor-y-justicia/delete/{uuid}', [App\Http\Controllers\IssueController::class, 'destroy'])->name('honor.delete');
 //Conflictos
 Route::get('/conflictos', [App\Http\Controllers\ConflictController::class, 'index'])->name('conflicts');
 Route::get('/conflictos/ver/{id}', [App\Http\Controllers\ConflictController::class, 'conflict'])->name('conflicts.conflict');
 Route::get('/conflictos/crear', [App\Http\Controllers\ConflictController::class, 'create'])->name('conflicts.create');
 Route::post('/conflictos/store', [App\Http\Controllers\ConflictController::class, 'store'])->name('conflicts.store');
+Route::delete('/conflictos/delete/{uuid}', [App\Http\Controllers\ConflictController::class, 'destroy'])->name('conflicts.delete');
 //Secretaria del trabajo
 Route::get('/secretaria-del-trabajo', [App\Http\Controllers\ConflictController::class, 'secretariaTrabajo'])->name('secretariaTrabajo');
 Route::get('/secretaria-del-trabajo/ver/{id}', [App\Http\Controllers\ConflictController::class, 'secretariaTrabajoConflict'])->name('secretariaTrabajo.conflict');
 Route::get('/secretaria-del-trabajo/crear', [App\Http\Controllers\ConflictController::class, 'secretariaTrabajoCreate'])->name('secretariaTrabajo.create');
 Route::post('/secretaria-del-trabajo/crear', [App\Http\Controllers\ConflictController::class, 'secretariaTrabajoStore'])->name('secretariaTrabajo.store');
+Route::delete('/secretaria-del-trabajo/delete/{uuid}', [App\Http\Controllers\ConflictController::class, 'destroy'])->name('secretariaTrabajo.delete');
 // Secreteria del interior
 Route::get('/secretaria-del-interior', [App\Http\Controllers\ElectionController::class, 'index'])->name('secretariaInterior');
 Route::get('/secretaria-del-interior/ver/{id}', [App\Http\Controllers\ElectionController::class, 'secretariaInteriorElection'])->name('secretariaInterior.election');
 Route::get('/secretaria-del-interior/crear', [App\Http\Controllers\ElectionController::class, 'create'])->name('secretariaInterior.create');
 Route::post('/secretaria-del-interior/crear', [App\Http\Controllers\ElectionController::class, 'store'])->name('secretariaInterior.store');
 Route::post('/secretaria-del-interior/votacion/crear', [App\Http\Controllers\ElectionController::class, 'votacion'])->name('secretariaInterior.votacion');
-
+Route::delete('/secretaria-del-interior/delete/{uuid}', [App\Http\Controllers\ElectionController::class, 'destroy'])->name('secretariaInterior.delete');
 
 //Admisión y cambios
 Route::get('/admision-y-cambios', [App\Http\Controllers\EmployeeController::class, 'admisionCambios'])->name('admisionCambios');
 Route::get('/admision-y-cambios/ver/{id}', [App\Http\Controllers\EmployeeController::class, 'admisionCambiosRelative'])->name('admisionCambiosRelative');
 Route::get('/admision-y-cambios/crear', [App\Http\Controllers\EmployeeController::class, 'admisionCambiosCreate'])->name('admisionCambiosCreate');
 Route::post('/admision-y-cambios/crear', [App\Http\Controllers\EmployeeController::class, 'admisionCambiosStore'])->name('admisionCambiosStore');
+Route::delete('/admision-y-cambios/delete', [App\Http\Controllers\EmployeeController::class, 'admisionCambiosDestroy'])->name('admisionCambiosDestroy');
 
 //Acción Femenil
 Route::get('/accion-femenil', [App\Http\Controllers\TrophyController::class, 'index'])->name('accionFemenil');
@@ -91,7 +95,7 @@ Route::get('/accion-femenil/ver/{id}', [App\Http\Controllers\TrophyController::c
 Route::get('/accion-femenil/crear', [App\Http\Controllers\TrophyController::class, 'create'])->name('accionFemenil.create');
 Route::post('/accion-femenil/trophie/crear', [App\Http\Controllers\TrophyController::class, 'trophie'])->name('trophie.create');
 Route::post('/accion-femenil/store', [App\Http\Controllers\TrophyController::class, 'store'])->name('accionFemenil.store');
-
+Route::post('/accion-femenil/delete', [App\Http\Controllers\TrophyController::class, 'destroy'])->name('accionFemenil.destroy');
 
 
 Auth::routes(['register' => false]);

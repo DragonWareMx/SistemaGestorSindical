@@ -75,11 +75,13 @@ const useStyles = makeStyles(
 );
 
 
-const secretariaIEditar = ({vote, employee, election, employees, elections }) => {
+const secretariaIEditar = ({ vote, employee, election, employees, elections }) => {
     //errores de la validacion de laravel
     const { errors } = usePage().props
 
     const classes = useStyles();
+
+    console.log(elections)
 
     //valores para formulario
     const [values, setValues] = useState({
@@ -234,7 +236,7 @@ const secretariaIEditar = ({vote, employee, election, employees, elections }) =>
                                                 renderInput={(params) => (
                                                     <TextField {...params} id="empleado" className={classes.textField} required label="Empleado" variant="standard" />
                                                 )}
-                                                defaultValue={{matricula:employee.matricula,nombre:employee.nombre,apellido_p:employee.apellido_p,apellido_m:employee.apellido_m}}
+                                                defaultValue={{ matricula: employee.matricula, nombre: employee.nombre, apellido_p: employee.apellido_p, apellido_m: employee.apellido_m }}
                                                 disabled
                                             />
                                             {
@@ -248,7 +250,7 @@ const secretariaIEditar = ({vote, employee, election, employees, elections }) =>
                                                 renderInput={(params) => (
                                                     <TextField {...params} id="votacion" className={classes.textField} required label="Votación" variant="standard" />
                                                 )}
-                                                defaultValue={{fecha:election.fecha}}
+                                                defaultValue={{ fecha: election.fecha }}
                                                 disabled
                                             />
                                             {
@@ -256,7 +258,7 @@ const secretariaIEditar = ({vote, employee, election, employees, elections }) =>
                                                 <div className="helper-text" data-error={errors.eleccion} style={{ "marginBottom": "10px" }}>{errors.eleccion}</div>
                                             }
                                             <div style={{ display: 'flex' }}>
-                                                <Button variant="outlined" style={{ marginTop: 10, marginLeft: 'auto', marginRight: 0 , display:'none'}} color='success' onClick={handleClickOpenAlert} endIcon={<AddCircleIcon />}>
+                                                <Button variant="outlined" style={{ marginTop: 10, marginLeft: 'auto', marginRight: 0, display: 'none' }} color='success' onClick={handleClickOpenAlert} endIcon={<AddCircleIcon />}>
                                                     Agregar Votación
                                                 </Button>
                                             </div>
@@ -283,7 +285,7 @@ const secretariaIEditar = ({vote, employee, election, employees, elections }) =>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="row container-buttons" style={{display:'none'}}>
+                                <div className="row container-buttons" style={{ display: 'none' }}>
                                     <button type="button" className=" center-align  btn waves-effect waves-light cancelar" style={{ marginRight: "15px" }} onClick={cancelEditUser}>Cancelar</button>
                                     < button type="submit" className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
                                         Guardar

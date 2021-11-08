@@ -9,7 +9,7 @@ import { InertiaLink } from '@inertiajs/inertia-react';
 import route from 'ziggy-js';
 
 
-export default function Eliminar({ oficina, ruta }) {
+export default function Eliminar({ oficina, ruta, id }) {
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -42,7 +42,7 @@ export default function Eliminar({ oficina, ruta }) {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} style={{ color: 'black' }}>Cancelar</Button>
-                    <InertiaLink href={route(ruta)} method="delete" as="button" type="button" style={{ color: 'white', backgroundColor: 'red', fontFamily: '"Roboto","Helvetica","Arial",sans-serif', border: 'none', borderRadius: '4px', padding: '10 7', letterSpacing: ' 0.02857em', fontSize: '13.5px', cursor: 'pointer' }}>
+                    <InertiaLink href={route(ruta, id)} method="delete" as="button" type="button" style={{ color: 'white', backgroundColor: 'red', fontFamily: '"Roboto","Helvetica","Arial",sans-serif', border: 'none', borderRadius: '4px', padding: '10 7', letterSpacing: ' 0.02857em', fontSize: '13.5px', cursor: 'pointer' }}>
                         ACEPTAR
                     </InertiaLink>
                 </DialogActions>

@@ -6,7 +6,7 @@ const Ejemplo = ({ }) => {
 
     return (
         <>
-            <Eliminar oficina={'Honor y justicia'} ruta={'honor'} />
+            <Eliminar oficina={'Honor y justicia'} ruta={'honor.delete'} id={'ee2e1ee5-8d06-43de-834e-3409c73b7dc3'} />
             Hola, éste es un inicio de prueba
         </>
     )
