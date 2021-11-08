@@ -18,7 +18,6 @@ const Ejemplo = ({ }) => {
                             {/* <InertiaLink className="btn-floating btn-large waves-effect waves-light green-sind button-addUser" href={route('logs.create')}><i className="material-icons">add</i></InertiaLink> */}
                             <div className="card-content">
                                 <span className="card-title">¡BIENVENIDO DE NUEVO!</span>
-                                <Eliminar oficina={'Honor y justicia'} ruta={'honor.delete'} id={'ee2e1ee5-8d06-43de-834e-3409c73b7dc3'} />
                                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                                     <img src="/img/imagenes/Hello.gif" alt="https://storyset.com/people" style={{ marginRight: 'auto', marginLeft: 'auto', width: '40%' }}></img>
                                 </div>

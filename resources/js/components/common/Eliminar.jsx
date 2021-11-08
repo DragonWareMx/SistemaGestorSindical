@@ -22,7 +22,13 @@ export default function Eliminar({ oficina, ruta, id }) {
 
     return (
         <div>
-            < button type="button" className=" center-align btn waves-effect waves-light red guardar" style={{ marginRight: "3%", marginLeft: "0" }} onClick={handleClickOpen}>
+            < button type="button" className=" center-align btn waves-effect waves-light red"
+                ref={(node) => {
+                    if (node) {
+                        node.style.setProperty("width", "120px", "important");
+                    }
+                }}
+                style={{ marginRight: "15px", marginLeft: "0" }} onClick={handleClickOpen}>
                 Eliminar
                 <i className="material-icons right">delete</i>
             </button>

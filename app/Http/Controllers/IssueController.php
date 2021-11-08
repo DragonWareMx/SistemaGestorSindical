@@ -196,11 +196,11 @@ class IssueController extends Controller
             $entrada = Issue::where('uuid', $uuid)->firstOrFail();
             $entrada->delete();
             DB::commit();
-            return redirect()->back()->with('success', 'El registro se eliminó con éxito!');
+            return redirect()->route('honor')->with('success', 'El registro se eliminó con éxito!');
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+            return redirect()->route('honor')->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
         }
     }
 }

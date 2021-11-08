@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout';
 import { Inertia } from '@inertiajs/inertia'
 import route from 'ziggy-js';
 import { InertiaLink } from '@inertiajs/inertia-react';
+import Alertas from '../../components/common/Alertas';
 
 // componentes
 import PropTypes from 'prop-types';
@@ -204,6 +205,9 @@ const honorJusticia = ({ issues }) => {
             <InertiaLink className="btn-floating btn-large waves-effect waves-light green-sind button-addUser" href={route('honor.create')}><i className="material-icons">add</i></InertiaLink>
             <div className="card-content">
               <span className="card-title">Honor y Justicia</span>
+              <div className="col s12">
+                <Alertas />
+              </div>
               <div style={{ height: '60vh', width: '100%' }}>
                 <ThemeProvider theme={themeEs}>
                   <DataGrid
