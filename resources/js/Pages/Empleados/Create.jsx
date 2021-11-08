@@ -238,9 +238,9 @@ const Create = ({ categories, regimes, units, roles }) => {
                                     <div className="input-field col s6 input-50-re">
                                         <select id="sexo" name="sexo" autoComplete="sexo" value={values.sexo} onChange={handleChange} className={errors.sexo ? "input-field invalid" : "input-field"}>
                                             <option value="" disabled>Selecciona una opción</option>
-                                            <option value="m">Femenino</option>
-                                            <option value="h">Masculino</option>
-                                            <option value="o">Otro</option>
+                                            <option value="mujer">Femenino</option>
+                                            <option value="hombre">Masculino</option>
+                                            <option value="otro">Otro</option>
                                         </select>
                                         <label>Sexo</label>
                                         {

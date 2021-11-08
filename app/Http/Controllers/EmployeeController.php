@@ -29,18 +29,44 @@ class EmployeeController extends Controller
      */
     public function index(Request $request)
     {
-        $employees = Employee::with('category:nombre,id', 'unit:nombre,id,regime_id', 'unit.regime:nombre,id', 'user:id')
-        ->when($request->deleted == "true", function ($query, $deleted) {
-            return $query->onlyTrashed();
-        })
-        ->when($request->user == "true", function ($query, $user) {
-            return $query->whereHas('user');
-        })
-        ->get(['id', 'uuid', 'nombre', 'apellido_p', 'apellido_m', 'fecha_nac', 'sexo', 'antiguedad', 'estado', 'ciudad', 'colonia', 'calle', 'cp', 'num_ext', 'num_int', 'tel', 'matricula', 'category_id', 'unit_id', 'user_id']);
+        // $employees = Employee::with('category:nombre,id', 'unit:nombre,id,regime_id', 'unit.regime:nombre,id', 'user:id')
+        // ->when($request->deleted == "true", function ($query, $deleted) {
+        //     return $query->onlyTrashed();
+        // })
+        // ->when($request->user == "true", function ($query, $user) {
+        //     return $query->whereHas('user');
+        // })
+        // ->get(['id', 'uuid', 'nombre', 'apellido_p', 'apellido_m', 'fecha_nac', 'sexo', 'antiguedad', 'estado', 'ciudad', 'colonia', 'calle', 'cp', 'num_ext', 'num_int', 'tel', 'matricula', 'category_id', 'unit_id', 'user_id']);
+        $columns = ['employees.user_id', 'employees.id', 'employees.uuid', 'nombre', 'fecha_nac', 'sexo', 'antiguedad','direccion', 'tel', 'matricula', 'category_id', 'unit_id', 'user_id', 'categoria', 'unidad', 'regime'];
+        $employees = Employee::select('employees.id', 'employees.uuid', 'fecha_nac', 'sexo', 'antiguedad', 'tel', 'matricula', 'category_id', 'unit_id', 'user_id', 'categories.nombre AS categoria', 'units.nombre AS unidad', 'regimes.nombre AS regime')
+                            ->selectRaw("CONCAT_WS(' ', employees.nombre , apellido_p , apellido_m) AS nombre, CONCAT_WS(' ', calle , CONCAT('#', num_ext) , num_int, CONCAT(colonia, ', '),ciudad, estado, cp) AS direccion, TIMESTAMPDIFF(YEAR, fecha_nac, CURDATE()) AS edad")
+                            ->leftJoin('users', 'users.id', '=', 'employees.user_id')
+                            ->leftJoin('categories', 'categories.id', '=', 'employees.category_id')
+                            ->leftJoin('units', 'units.id', '=', 'employees.unit_id')
+                            ->leftJoin('regimes', 'regimes.id', '=', 'units.regime_id')
+                            ->when($request->column && $request->operator, function ($query) use ($request) {
+                                return $query->getFilteredRows($request->column, $request->operator, $request->value, 'employees');
+                            })
+                            ->when($request->field && $request->sort, function ($query) use ($request) {
+                                if($request->field == 'usuario')
+                                    return $query->orderBy('user_id', $request->sort);
+                                return $query->orderBy($request->field, $request->sort);
+                            })
+                            ->when($request->search, function ($query, $search) use ($request, $columns) {
+                                foreach ($columns as $id => $column) {
+                                    $query->orHaving($column, 'LIKE', '%'.$search.'%');
+                                }
+                            })
+                            ->when($request->deleted == "true", function ($query, $deleted) {
+                                return $query->onlyTrashed();
+                            })
+                            ->when($request->user == "true", function ($query, $user) {
+                                return $query->whereHas('user');
+                            })
+                            ->paginate($perPage = $request->pageSize ?? 100, $columns = $columns, $pageName = 'employees', $request->page ?? 1);
 
         return Inertia::render('Empleados/Index', [
-            'employees' => Inertia::lazy(fn () => $employees),
-            'exists' => Employee::exists()
+            'employees' => fn () => $employees,
         ]);
     }
 
@@ -87,7 +113,7 @@ class EmployeeController extends Controller
             'apellido_paterno' => ['required','max:255','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
             'apellido_materno' => ['nullable','max:255','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
             'fecha_de_nacimiento' => 'required|date|before:17 years ago',
-            'sexo' => 'required|in:h,m,o',
+            'sexo' => 'required|in:hombre,mujer,otro',
             'antiguedad' => 'nullable|date|before:tomorrow',
 
             //---informacion institucional---
@@ -391,7 +417,7 @@ class EmployeeController extends Controller
             'apellido_paterno' => ['required','max:255','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
             'apellido_materno' => ['nullable','max:255','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
             'fecha_de_nacimiento' => 'required|date|before:17 years ago',
-            'sexo' => 'required|in:h,m,o',
+            'sexo' => 'required|in:hombre,mujer,otro',
             'antiguedad' => 'nullable|date|before:tomorrow',
 
             //---informacion institucional---
