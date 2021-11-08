@@ -190,8 +190,8 @@ class ConflictController extends Controller
             foreach ($request->empleados as $empleado) {
                 # code...
                 $data = [
-                    'inicio_sancion' => Carbon::parse($empleado['fecha_inicio']),
-                    'termino_sancion' => Carbon::parse($empleado['fecha_termino']),
+                    'inicio_sancion' => Carbon::parse($empleado['fecha_inicio'])->subDays(1),
+                    'termino_sancion' => Carbon::parse($empleado['fecha_termino'])->subDays(1),
                     'sancion' => $empleado['sancion'],
                     'resolutivo'=>$empleado['resolutivo'],
                     'castigado' => $empleado['sancionado']
@@ -252,18 +252,18 @@ class ConflictController extends Controller
                 # code...
                 if($empleado['pivot']['inicio_sancion'] && $empleado['pivot']['termino_sancion']){
                     $data = [
-                        'inicio_sancion' => Carbon::parse($empleado['pivot']['fecha_inicio']),
-                        'termino_sancion' => Carbon::parse($empleado['pivot']['fecha_termino']),
+                        'inicio_sancion' => Carbon::parse($empleado['pivot']['inicio_sancion'])->subDays(1),
+                        'termino_sancion' => Carbon::parse($empleado['pivot']['termino_sancion'])->subDays(1),
                         'sancion' => $empleado['pivot']['sancion'],
                         'resolutivo'=>$empleado['pivot']['resolutivo'],
-                        'castigado' => $empleado['pivot']['sancionado']
+                        'castigado' => $empleado['pivot']['castigado']
                     ];
                 }
                 else{
                     $data = [
                         'sancion' => $empleado['pivot']['sancion'],
                         'resolutivo'=>$empleado['pivot']['resolutivo'],
-                        'castigado' => $empleado['pivot']['sancionado']
+                        'castigado' => $empleado['pivot']['castigado']
                     ];
                 }
                 

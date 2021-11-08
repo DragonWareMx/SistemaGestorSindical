@@ -252,7 +252,7 @@ const Edit = ({ employees, conflict }) => {
 
     function handleChangeSancionado(index) {
         var arr = emploInfo.empleados.slice();
-        arr[index].pivot.castigado = !arr[index].privot.castigado;
+        arr[index].pivot.castigado = !arr[index].pivot.castigado;
         setEmploInfo({ empleados: arr });
     }
 
@@ -319,7 +319,7 @@ const Edit = ({ employees, conflict }) => {
                                     <div className="col s12 m12 div-division">
 
                                         <div className="input-field col s12" style={{ marginTop: '15px' }}>
-                                            <input disabled={values.editar} id="num_oficio" type="text" className={errors.num_oficio ? "validate form-control invalid" : "validate form-control"} name="num_oficio" value={values.num_oficio} required onChange={handleChange} readOnly onFocus={(e) => { e.target.removeAttribute("readonly") }} />
+                                            <input disabled id="num_oficio" type="text" className={errors.num_oficio ? "validate form-control invalid" : "validate form-control"} name="num_oficio" value={values.num_oficio} required onChange={handleChange} readOnly onFocus={(e) => { e.target.removeAttribute("readonly") }} />
                                             <label htmlFor="num_oficio">Numero de oficio</label>
                                             {
                                                 errors.num_oficio &&
