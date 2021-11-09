@@ -93,6 +93,8 @@ const useStyles = makeStyles(
 
 const Edit = ({ employees, conflict }) => {
     //errores de la validacion de laravel
+    const { auth } = usePage().props;
+
     const { errors } = usePage().props
 
     const classes = useStyles();
@@ -445,7 +447,11 @@ const Edit = ({ employees, conflict }) => {
                                 </div>
                                 <div className="row container-buttons" style={{ display: 'none' }} id="btns-form">
                                     <button type="button" className=" center-align  btn waves-effect waves-light cancelar" style={{ marginRight: "15px" }} onClick={cancelEditUser}>Cancelar</button>
-                                    <Eliminar oficina={'Conflictos'} ruta={'conflicts.delete'} id={conflict.uuid} />
+                                    {(() => {
+                                        if (auth.user.roles['0'].slug == 'admin' || auth.user.roles['0'].name == 'secGen' || auth.user.roles['0'].name == 'respConflict') {
+                                            return <Eliminar oficina={'Conflictos'} ruta={'conflicts.delete'} id={conflict.uuid} />
+                                        }
+                                    })()}
                                     < button type="submit" className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
                                         Guardar
                                         <i className="material-icons right">save</i>
