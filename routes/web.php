@@ -25,13 +25,13 @@ Route::get('/inertia', function () {
 
 //Usuarios
 Route::name('users.')->middleware('auth')->group(function () {
-    Route::get('/usuarios', [App\Http\Controllers\UserController::class, 'index'])->name('index');
-    Route::get('/usuarios/crear', [App\Http\Controllers\UserController::class, 'create'])->name('create');
-    Route::post('/usuarios', [App\Http\Controllers\UserController::class, 'store'])->name('store');
-    Route::get('/usuarios/{id}/editar', [App\Http\Controllers\UserController::class, 'edit'])->name('edit');
-    Route::patch('/usuarios/{id}', [App\Http\Controllers\UserController::class, 'update'])->name('update');
-    Route::delete('usuarios/{id}',  [App\Http\Controllers\UserController::class, 'destroy'])->name('delete');
-    Route::put('usuarios/{id}/restore',  [App\Http\Controllers\UserController::class, 'restore'])->name('restore');
+    Route::get('/comite', [App\Http\Controllers\UserController::class, 'index'])->name('index');
+    Route::get('/comite/crear', [App\Http\Controllers\UserController::class, 'create'])->name('create');
+    Route::post('/comite', [App\Http\Controllers\UserController::class, 'store'])->name('store');
+    Route::get('/comite/{id}/editar', [App\Http\Controllers\UserController::class, 'edit'])->name('edit');
+    Route::patch('/comite/{id}', [App\Http\Controllers\UserController::class, 'update'])->name('update');
+    Route::delete('comite/{id}',  [App\Http\Controllers\UserController::class, 'destroy'])->name('delete');
+    Route::put('comite/{id}/restore',  [App\Http\Controllers\UserController::class, 'restore'])->name('restore');
 });
 
 //Empleados
