@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use App\Models\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Builder;
 
 use Image;
 use Illuminate\Support\Facades\Storage;
@@ -30,26 +31,179 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+
         $columns = ['users.id', 'users.uuid','email', 'matricula', 'users.created_at', 'employees.deleted_at', 'foto', 'nombre'];
-        $users = User::leftJoin('employees', 'users.id', '=', 'employees.user_id')
-                    ->select('users.id', 'users.uuid','email', 'matricula', 'users.created_at', 'employees.deleted_at', 'foto')
-                    ->selectRaw("CONCAT_WS(' ', nombre , apellido_p , apellido_m) AS nombre")
-                    ->where('email', '!=', 'test@dragonware.com.mx')
-                    ->when($request->deleted == "true", function ($query, $deleted) {
-                        return $query->onlyTrashed();
-                    })
-                    ->when($request->column && $request->operator, function ($query) use ($request) {
-                        return $query->getFilteredRows($request->column, $request->operator, $request->value, 'users');
-                    })
-                    ->when($request->field && $request->sort, function ($query) use ($request) {
-                        return $query->orderBy($request->field, $request->sort);
-                    })
-                    ->when($request->search, function ($query, $search) use ($request, $columns) {
-                        foreach ($columns as $id => $column) {
-                            $query->orHaving($column, 'LIKE', '%'.$search.'%');
-                        }
-                    })
-                    ->paginate($perPage = $request->pageSize ?? 100, $columns = ['*'], $pageName = 'users', $request->page ?? 1);
+
+        if (Auth::user()->roles[0]->slug == 'admin' || Auth::user()->roles[0]->slug == 'secGen' ){
+            $users = User::leftJoin('employees', 'users.id', '=', 'employees.user_id')
+            ->select('users.id', 'users.uuid','email', 'matricula', 'users.created_at', 'employees.deleted_at', 'foto')
+            ->selectRaw("CONCAT_WS(' ', nombre , apellido_p , apellido_m) AS nombre")
+            ->where('email', '!=', 'test@dragonware.com.mx')
+            ->when($request->deleted == "true", function ($query, $deleted) {
+                return $query->onlyTrashed();
+            })
+            ->when($request->column && $request->operator, function ($query) use ($request) {
+                return $query->getFilteredRows($request->column, $request->operator, $request->value, 'users');
+            })
+            ->when($request->field && $request->sort, function ($query) use ($request) {
+                return $query->orderBy($request->field, $request->sort);
+            })
+            ->when($request->search, function ($query, $search) use ($request, $columns) {
+                foreach ($columns as $id => $column) {
+                    $query->orHaving($column, 'LIKE', '%'.$search.'%');
+                }
+            })
+            ->paginate($perPage = $request->pageSize ?? 100, $columns = ['*'], $pageName = 'users', $request->page ?? 1);
+
+        }
+        else {
+            if(Auth::user()->roles[0]->slug == 'asistHJ' || Auth::user()->roles[0]->slug == 'respHJ') {
+                $users = User::leftJoin('employees', 'users.id', '=', 'employees.user_id')
+            ->select('users.id', 'users.uuid','email', 'matricula', 'users.created_at', 'employees.deleted_at', 'foto')
+            ->selectRaw("CONCAT_WS(' ', nombre , apellido_p , apellido_m) AS nombre")
+            ->where('email', '!=', 'test@dragonware.com.mx')
+            ->whereHas('roles', function (Builder $query) {
+                $query->where('slug', '=', 'asistHJ')->orWhere('slug', '=', 'respHJ');
+            })
+            ->when($request->deleted == "true", function ($query, $deleted) {
+                return $query->onlyTrashed();
+            })
+            ->when($request->column && $request->operator, function ($query) use ($request) {
+                return $query->getFilteredRows($request->column, $request->operator, $request->value, 'users');
+            })
+            ->when($request->field && $request->sort, function ($query) use ($request) {
+                return $query->orderBy($request->field, $request->sort);
+            })
+            ->when($request->search, function ($query, $search) use ($request, $columns) {
+                foreach ($columns as $id => $column) {
+                    $query->orHaving($column, 'LIKE', '%'.$search.'%');
+                }
+            })
+            ->paginate($perPage = $request->pageSize ?? 100, $columns = ['*'], $pageName = 'users', $request->page ?? 1);
+
+            }
+            if(Auth::user()->roles[0]->slug == 'asistConflict' || Auth::user()->roles[0]->slug == 'respConflict') {
+                $users = User::leftJoin('employees', 'users.id', '=', 'employees.user_id')
+                ->select('users.id', 'users.uuid','email', 'matricula', 'users.created_at', 'employees.deleted_at', 'foto')
+                ->selectRaw("CONCAT_WS(' ', nombre , apellido_p , apellido_m) AS nombre")
+                ->where('email', '!=', 'test@dragonware.com.mx')
+                ->whereHas('roles', function (Builder $query) {
+                    $query->where('slug', '=', 'asistConflict')->orWhere('slug', '=', 'respConflict');
+                })
+                ->when($request->deleted == "true", function ($query, $deleted) {
+                    return $query->onlyTrashed();
+                })
+                ->when($request->column && $request->operator, function ($query) use ($request) {
+                    return $query->getFilteredRows($request->column, $request->operator, $request->value, 'users');
+                })
+                ->when($request->field && $request->sort, function ($query) use ($request) {
+                    return $query->orderBy($request->field, $request->sort);
+                })
+                ->when($request->search, function ($query, $search) use ($request, $columns) {
+                    foreach ($columns as $id => $column) {
+                        $query->orHaving($column, 'LIKE', '%'.$search.'%');
+                    }
+                })
+                ->paginate($perPage = $request->pageSize ?? 100, $columns = ['*'], $pageName = 'users', $request->page ?? 1);
+            }
+            if(Auth::user()->roles[0]->slug == 'asistST' || Auth::user()->roles[0]->slug == 'respST') {
+                $users = User::leftJoin('employees', 'users.id', '=', 'employees.user_id')
+                ->select('users.id', 'users.uuid','email', 'matricula', 'users.created_at', 'employees.deleted_at', 'foto')
+                ->selectRaw("CONCAT_WS(' ', nombre , apellido_p , apellido_m) AS nombre")
+                ->where('email', '!=', 'test@dragonware.com.mx')
+                ->whereHas('roles', function (Builder $query) {
+                    $query->where('slug', '=', 'asistST')->orWhere('slug', '=', 'respST');
+                })
+                ->when($request->deleted == "true", function ($query, $deleted) {
+                    return $query->onlyTrashed();
+                })
+                ->when($request->column && $request->operator, function ($query) use ($request) {
+                    return $query->getFilteredRows($request->column, $request->operator, $request->value, 'users');
+                })
+                ->when($request->field && $request->sort, function ($query) use ($request) {
+                    return $query->orderBy($request->field, $request->sort);
+                })
+                ->when($request->search, function ($query, $search) use ($request, $columns) {
+                    foreach ($columns as $id => $column) {
+                        $query->orHaving($column, 'LIKE', '%'.$search.'%');
+                    }
+                })
+                ->paginate($perPage = $request->pageSize ?? 100, $columns = ['*'], $pageName = 'users', $request->page ?? 1);
+            }
+            if(Auth::user()->roles[0]->slug == 'asistSI' || Auth::user()->roles[0]->slug == 'respSI') {
+                $users = User::leftJoin('employees', 'users.id', '=', 'employees.user_id')
+                ->select('users.id', 'users.uuid','email', 'matricula', 'users.created_at', 'employees.deleted_at', 'foto')
+                ->selectRaw("CONCAT_WS(' ', nombre , apellido_p , apellido_m) AS nombre")
+                ->where('email', '!=', 'test@dragonware.com.mx')
+                ->whereHas('roles', function (Builder $query) {
+                    $query->where('slug', '=', 'asistSI')->orWhere('slug', '=', 'respSI');
+                })
+                ->when($request->deleted == "true", function ($query, $deleted) {
+                    return $query->onlyTrashed();
+                })
+                ->when($request->column && $request->operator, function ($query) use ($request) {
+                    return $query->getFilteredRows($request->column, $request->operator, $request->value, 'users');
+                })
+                ->when($request->field && $request->sort, function ($query) use ($request) {
+                    return $query->orderBy($request->field, $request->sort);
+                })
+                ->when($request->search, function ($query, $search) use ($request, $columns) {
+                    foreach ($columns as $id => $column) {
+                        $query->orHaving($column, 'LIKE', '%'.$search.'%');
+                    }
+                })
+                ->paginate($perPage = $request->pageSize ?? 100, $columns = ['*'], $pageName = 'users', $request->page ?? 1);
+            }
+            if(Auth::user()->roles[0]->slug == 'asistAF' || Auth::user()->roles[0]->slug == 'respAF') {
+                $users = User::leftJoin('employees', 'users.id', '=', 'employees.user_id')
+                ->select('users.id', 'users.uuid','email', 'matricula', 'users.created_at', 'employees.deleted_at', 'foto')
+                ->selectRaw("CONCAT_WS(' ', nombre , apellido_p , apellido_m) AS nombre")
+                ->where('email', '!=', 'test@dragonware.com.mx')
+                ->whereHas('roles', function (Builder $query) {
+                    $query->where('slug', '=', 'asistAF')->orWhere('slug', '=', 'respAF');
+                })
+                ->when($request->deleted == "true", function ($query, $deleted) {
+                    return $query->onlyTrashed();
+                })
+                ->when($request->column && $request->operator, function ($query) use ($request) {
+                    return $query->getFilteredRows($request->column, $request->operator, $request->value, 'users');
+                })
+                ->when($request->field && $request->sort, function ($query) use ($request) {
+                    return $query->orderBy($request->field, $request->sort);
+                })
+                ->when($request->search, function ($query, $search) use ($request, $columns) {
+                    foreach ($columns as $id => $column) {
+                        $query->orHaving($column, 'LIKE', '%'.$search.'%');
+                    }
+                })
+                ->paginate($perPage = $request->pageSize ?? 100, $columns = ['*'], $pageName = 'users', $request->page ?? 1);
+            }
+            if(Auth::user()->roles[0]->slug == 'asistAC' || Auth::user()->roles[0]->slug == 'respAC') {
+                $users = User::leftJoin('employees', 'users.id', '=', 'employees.user_id')
+                ->select('users.id', 'users.uuid','email', 'matricula', 'users.created_at', 'employees.deleted_at', 'foto')
+                ->selectRaw("CONCAT_WS(' ', nombre , apellido_p , apellido_m) AS nombre")
+                ->where('email', '!=', 'test@dragonware.com.mx')
+                ->whereHas('roles', function (Builder $query) {
+                    $query->where('slug', '=', 'asistAC')->orWhere('slug', '=', 'respAC');
+                })
+                ->when($request->deleted == "true", function ($query, $deleted) {
+                    return $query->onlyTrashed();
+                })
+                ->when($request->column && $request->operator, function ($query) use ($request) {
+                    return $query->getFilteredRows($request->column, $request->operator, $request->value, 'users');
+                })
+                ->when($request->field && $request->sort, function ($query) use ($request) {
+                    return $query->orderBy($request->field, $request->sort);
+                })
+                ->when($request->search, function ($query, $search) use ($request, $columns) {
+                    foreach ($columns as $id => $column) {
+                        $query->orHaving($column, 'LIKE', '%'.$search.'%');
+                    }
+                })
+                ->paginate($perPage = $request->pageSize ?? 100, $columns = ['*'], $pageName = 'users', $request->page ?? 1);
+            }
+
+        }
 
         return Inertia::render('Usuarios/Index', [
             'users' => $users
@@ -149,7 +303,7 @@ class UserController extends Controller
             // se asigna el rol
             $newUser->roles()->saveMany($rol);
 
-            
+
             if(!$newUser)
             {
                 DB::rollBack();
@@ -169,7 +323,7 @@ class UserController extends Controller
             $newLog = new Log;
 
             $newLog->uuid = Str::uuid();
-            
+
             $newLog->categoria = 'create';
             $newLog->user_id = Auth::id();
             $newLog->accion =
@@ -182,7 +336,7 @@ class UserController extends Controller
             }';
 
             $newLog->descripcion = 'El usuario '.Auth::user()->email.' ha registrado un nuevo usuario con el correo: '. $newUser->email;
-                
+
             //SE GUARDA EL LOG
             $newLog->save();
 
@@ -199,12 +353,12 @@ class UserController extends Controller
 
             //SE HACE COMMIT
             DB::commit();
-            
+
             //REDIRECCIONA A LA VISTA DE USUARIOS
             return \Redirect::route('users.index')->with('success','El usuario ha sido registrado con éxito!');
         } catch (\Exception $e) {
             DB::rollBack();
-            
+
             //si hay foto se elimina del servidor
             if($foto)
             {
@@ -339,7 +493,7 @@ class UserController extends Controller
 
                 Storage::put($foto, (string) $image->encode('jpg', 30));
             }
-            
+
             //---cuenta---
             $user->email = $request->email;
 
@@ -349,7 +503,7 @@ class UserController extends Controller
 
             //SE GUARDA EL NUEVO USUARIO
             $user->save();
-            
+
             //se asigna el rol
             $user->roles()->sync([$rol[0]->id]);
 
@@ -368,11 +522,11 @@ class UserController extends Controller
             }';
 
             $newLog->descripcion = 'El usuario '.Auth::user()->email.' ha actualizado los datos del usuario: '. $user->email;
-                
+
             //SE GUARDA EL LOG
             $newLog->save();
-            
-            
+
+
             if(!$user)
             {
                 DB::rollBack();
@@ -396,7 +550,7 @@ class UserController extends Controller
 
             //SE HACE COMMIT
             DB::commit();
-            
+
             //REDIRECCIONA A LA VISTA DE USUARIOS
             return \Redirect::back()->with('success','El usuario ha sido editado con éxito!');
         } catch (\Exception $e) {
@@ -469,7 +623,7 @@ class UserController extends Controller
 
             DB::commit();
             return \Redirect::back()->with('success','¡Usuario eliminado con éxito!');
-            
+
         } catch (\Exception $e) {
             DB::rollBack();
             return \Redirect::back()->with('error','Ha ocurrido un error al intentar eliminar el usuario, inténtelo más tarde.');
@@ -521,7 +675,7 @@ class UserController extends Controller
 
             DB::commit();
             return \Redirect::back()->with('success','¡Usuario restaurado con éxito!');
-            
+
         } catch (\Exception $e) {
             DB::rollBack();
             return \Redirect::back()->with('error','Ha ocurrido un error al intentar restaurar el usuario, inténtelo más tarde.');
