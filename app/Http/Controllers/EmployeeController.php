@@ -16,6 +16,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
 use Image;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -686,29 +687,16 @@ class EmployeeController extends Controller
     {
         //
 
-        $test = Employee::
-                leftJoin('employee_relative','employees.id','employee_relative.employee_id')
-                ->select('nombre','ingreso_bolsa')
-                ->latest('ingreso_bolsa')
-                // ->groupBy('employees.id','employees.nombre','employee_relative.ingreso_bolsa')
-
-                // ->having('employees.id','=','employee_relative.employee.id')
-                // ->limit(1)
+        $employees = Employee::
+                select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'employees.id as id', 'antiguedad')
+                ->selectRaw('(select ingreso_bolsa from employee_relative where employee_id = employees.id order by ingreso_bolsa desc limit 1) as ingreso_bolsa')
+                ->leftJoin('employee_relative','employees.id','employee_relative.employee_id')
+                ->groupBy('employees.id', 'matricula', 'nombre', 'apellido_p', 'apellido_m', 'antiguedad')
                 ->get();
-        // dd($test);
-
-        // $users = User::where(function ($query) {
-        //     $query->select('type')
-        //         ->from('membership')
-        //         ->whereColumn('membership.user_id', 'users.id')
-        //         ->orderByDesc('membership.start_date')
-        //         ->limit(1);
-        // }, 'Pro')->get();
 
         return Inertia::render('Oficinas/admisionCambiosCrear', [
             'roles' => fn () => Role::select('name')->get(),
-            'employees' => fn () => Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'employees.id as id', 'antiguedad')
-                ->get()
+            'employees' => $employees
         ]);
 
       
@@ -717,7 +705,21 @@ class EmployeeController extends Controller
     public function admisionCambiosStore(Request $request)
     {
         // dd("ENTRE AQUI");
-        dd($request);
+        // dd($request);
+
+        // dd($request->familiar['id']);
+
+        $employee = Employee::find($request->empleado['id']);
+        $familiar = Employee::find($request->familiar['id']);
+
+        $data = [
+            'parentesco' => $request['parentesco'],
+            'ingreso_bolsa' => Carbon::now()->format('Y-m-d')
+        ];
+
+        $employee->relatives()->attach($familiar['id'], $data);
+
+        // dd($employee);
 
         return redirect()->back()->with('success', 'El registro se creó con éxito!');
         // return \Redirect::route('admisionCambios')->with('success','El registro se creo con éxito!');

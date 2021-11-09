@@ -99,10 +99,7 @@ const Create = ({ roles, employees }) => {
     const [values, setValues] = useState({
         empleado: null,
         familiar: null,
-        antiguedad: '',
-        ingresoBolsa: '',
         parentesco: '',
-        zona: ''
     })
 
     //actualiza los hooks cada vez que se modifica un input
@@ -115,21 +112,36 @@ const Create = ({ roles, employees }) => {
         }))
     }
 
-    //manda el forumulario
+    //manda el formulario
     function handleSubmit(e) {
         e.preventDefault()
-        // console.log(values);
-        if(values.empleado !== values.familiar){
-            Inertia.post(route('admisionCambiosStore'), values,
-                {
-                    onError: () => {
-                        
-                    }
+        
+        //  se debe validar que la ultima fecha de ingreso no sea menor a 10 anos
+        var fecha = new Date();
+        fecha.setMonth(fecha.getMonth() - 120);
+
+        if(values.empleado !== null && values.familiar !== null)
+        {
+            if(values.empleado !== values.familiar){
+                if(values.empleado.ingreso_bolsa < fecha){
+                    Inertia.post(route('admisionCambiosStore'), values,
+                        {
+                            onError: () => {
+                                
+                            }
+                        }
+                    )
                 }
-            )
+                else {
+                    handleClickOpenAlert3();
+                }
+            }
+            else {
+                handleClickOpenAlert();
+            }
         }
         else {
-            handleClickOpenAlert();
+            handleClickOpenAlert2();
         }
     }
 
@@ -267,6 +279,16 @@ const Create = ({ roles, employees }) => {
         setOpenAlert2(false);
     };
 
+    const [openAlert3, setOpenAlert3] = React.useState(false);
+
+    const handleClickOpenAlert3 = () => {
+        setOpenAlert3(true);
+    };
+
+    const handleCloseAlert3 = () => {
+        setOpenAlert3(false);
+    };
+
     const handleChangeTextarea = (event) => {
         setValues(values => ({
             ...values,
@@ -315,7 +337,7 @@ const Create = ({ roles, employees }) => {
                                         </div>
 
                                         <div className="col s12" style={{ marginTop: '10px' }}>
-                                            Último ingreso a bolsa: {values.empleado === null ? "Seleccione un empleado" : values.empleado.ingresoBolsa}
+                                            Último ingreso a bolsa: {values.empleado === null ? "Seleccione un empleado" : (values.empleado.ingreso_bolsa === null ? 'No tiene' : values.empleado.ingreso_bolsa)}
                                         </div>
 
                                         <div className="col s12" style={{ marginTop: '10px' }}>
@@ -338,10 +360,10 @@ const Create = ({ roles, employees }) => {
                                             <label for="textarea1">Parentesco</label>
                                         </div>
 
-                                        <div class="input-field col s12" style={{ marginTop: '15px' }}>
+                                        {/* <div class="input-field col s12" style={{ marginTop: '15px' }}>
                                             <textarea id="textarea2" class="materialize-textarea" onChange={handleChangeTextarea2} values={values.zona}></textarea>
                                             <label for="textarea2">Zona</label>
-                                        </div>
+                                        </div> */}
                                     </div>
 
                                 </div>
@@ -368,7 +390,7 @@ const Create = ({ roles, employees }) => {
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        El empleado y el familiar no pueden ser el mismo.
+                        El empleado y el familiar no pueden ser el mismo
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -389,11 +411,32 @@ const Create = ({ roles, employees }) => {
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        Primero selecciona un empleado para poder continuar
+                        Primero selecciona un empleado y un familiar para poder continuar
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseAlert2}>
+                        Aceptar
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog
+                open={openAlert3}
+                onClose={handleCloseAlert3}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {"Error"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        El último ingreso a bolsa no puede ser menor a 10 años
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseAlert3}>
                         Aceptar
                     </Button>
                 </DialogActions>
