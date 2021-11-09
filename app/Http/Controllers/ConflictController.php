@@ -22,13 +22,27 @@ class ConflictController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $columns = ['num_oficio', 'nombre', 'inicio_sancion', 'termino_sancion', 'matricula', 'conflict_employee.id', 'conflicts.uuid', 'castigado', 'sancion'];
         $conflicts = Conflict::where('tipo', 'conflictos')
-            ->leftJoin('conflict_employee', 'conflicts.id', 'conflict_employee.conflict_id')
+            ->join('conflict_employee', 'conflicts.id', 'conflict_employee.conflict_id')
             ->leftJoin('employees', 'conflict_employee.employee_id', 'employees.id')
-            ->select('num_oficio', 'employees.nombre', 'inicio_sancion', 'termino_sancion', 'matricula', 'apellido_p', 'conflict_employee.id as id', 'conflicts.uuid as uuid')
-            ->get();
+            ->select('num_oficio', 'inicio_sancion', 'termino_sancion', 'matricula', 'conflict_employee.id as id', 'conflicts.uuid as uuid', 'castigado', 'sancion', 'resolutivo')
+            ->selectRaw("CONCAT_WS(' ', employees.nombre , apellido_p , apellido_m) AS nombre")
+            ->when($request->column && $request->operator, function ($query) use ($request) {
+                return $query->getFilteredRows($request->column, $request->operator, $request->value, 'conflict_employee');
+            })
+            ->when($request->field && $request->sort, function ($query) use ($request) {
+                return $query->orderBy($request->field, $request->sort);
+            })
+            ->when($request->search, function ($query, $search) use ($request, $columns) {
+                foreach ($columns as $id => $column) {
+                    $query->orHaving($column, 'LIKE', '%'.$search.'%');
+                }
+            })
+            ->paginate($perPage = $request->pageSize ?? 100, $columns = ['*'], $pageName = 'nombre_de_la_tabla', $request->page ?? 1);
+
         return Inertia::render('Oficinas/conflictos', ['conflicts' => $conflicts]);
     }
 

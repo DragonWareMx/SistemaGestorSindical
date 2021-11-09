@@ -18,45 +18,6 @@ const honorJusticia = ({ issues }) => {
 
   const columns = [
     {
-      field: 'id',
-      headerName: 'NO.',
-      flex: 0.1,
-      minWidth: 100,
-    },
-    {
-      field: 'num_oficio',
-      headerName: 'OFICIO',
-      flex: 0.3,
-      minWidth: 100,
-    },
-    {
-      field: 'matricula',
-      headerName: 'MATRICULA',
-      flex: 0.4,
-      minWidth: 100,
-    },
-    {
-      field: 'nombre',
-      headerName: 'NOMBRE',
-      flex: 0.4,
-      minWidth: 150,
-      renderCell: RenderCellExpand,
-    },
-    {
-      field: 'inicio_sancion',
-      headerName: 'INICIO DE SANCION',
-      flex: 0.4,
-      minWidth: 150,
-      type: 'date',
-    },
-    {
-      field: 'termino_sancion',
-      headerName: 'TÉRMINO DE SANCION',
-      flex: 0.4,
-      minWidth: 150,
-      type: 'date',
-    },
-    {
       field: "",
       headerName: "VER",
       renderCell: (params) => (
@@ -67,7 +28,80 @@ const honorJusticia = ({ issues }) => {
       sortable: false,
       filterable: false,
       disableExport: true
-    }
+    },
+    {
+      field: 'id',
+      headerName: 'NO.',
+      flex: 0.1,
+      minWidth: 80,
+    },
+    {
+      field: 'num_oficio',
+      headerName: 'OFICIO',
+      flex: 0.3,
+      minWidth: 100,
+      renderCell: RenderCellExpand,
+    },
+    {
+      field: 'matricula',
+      headerName: 'MATRICULA',
+      flex: 0.4,
+      minWidth: 100,
+      renderCell: RenderCellExpand,
+      valueFormatter: (params) => {
+        return params.value ?? 'vacío'
+      }
+    },
+    {
+      field: 'nombre',
+      headerName: 'NOMBRE',
+      flex: 0.4,
+      minWidth: 150,
+      renderCell: RenderCellExpand,
+      valueFormatter: (params) => {
+        return params.value ?? 'vacío'
+      }
+    },
+    {
+      field: 'castigado',
+      headerName: 'CASTIGADO',
+      flex: 0.4,
+      minWidth: 150,
+      type: 'boolean',
+      valueFormatter: (params) => {
+        return params.value ?? 'vacío'
+      }
+    },
+    {
+      field: 'inicio_sancion',
+      headerName: 'INICIO DE SANCION',
+      flex: 0.4,
+      minWidth: 150,
+      type: 'date',
+      valueFormatter: (params) => {
+        return params.value ?? 'vacío'
+      }
+    },
+    {
+      field: 'termino_sancion',
+      headerName: 'TÉRMINO DE SANCION',
+      flex: 0.4,
+      minWidth: 150,
+      type: 'date',
+      valueFormatter: (params) => {
+        return params.value ?? 'vacío'
+      }
+    },
+    {
+      field: 'sancion',
+      headerName: 'SANCIÓN',
+      flex: 0.4,
+      minWidth: 150,
+      renderCell: RenderCellExpand,
+      valueFormatter: (params) => {
+        return params.value ?? 'vacío'
+      }
+    },
   ]
 
   return (

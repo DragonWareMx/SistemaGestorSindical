@@ -63,7 +63,7 @@ const Edit = ({ employee, categories, regimes, units }) => {
         }))
 
         if (key == "regimen") {
-            Inertia.reload({ only: ['units'], data: { regime: value } })
+            Inertia.reload({ only: ['units'], data: { regime: value }, replace: true })
             setValues(values => ({
                 ...values,
                 unidad: "",
@@ -77,7 +77,7 @@ const Edit = ({ employee, categories, regimes, units }) => {
         Inertia.post(route('employees.update', employee.id), values,
             {
                 onError: () => {
-                    Inertia.reload({ only: ['units'], data: { regime: values.regimen } })
+                    Inertia.reload({ only: ['units'], data: { regime: values.regimen }, replace: true })
                 },
                 onSuccess: () => {
                     setValues(values => ({
@@ -177,7 +177,7 @@ const Edit = ({ employee, categories, regimes, units }) => {
     useEffect(() => {
         initializeSelects();
         if (values.regimen)
-            Inertia.reload({ only: ['units'], data: { regime: values.regimen } })
+            Inertia.reload({ only: ['units'], data: { regime: values.regimen }, replace: true })
     }, [])
 
     function desvincular(){

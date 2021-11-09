@@ -22,10 +22,10 @@ class IssueController extends Controller
      */
     public function index(Request $request)
     {
-        $columns = ['num_oficio', 'nombre', 'inicio_sancion', 'termino_sancion', 'matricula', 'employee_issue.id', 'issues.uuid'];
+        $columns = ['num_oficio', 'nombre', 'inicio_sancion', 'termino_sancion', 'matricula', 'employee_issue.id', 'issues.uuid', 'sancion', 'castigado'];
         $issues = Issue::join('employee_issue', 'issues.id', 'employee_issue.issue_id')
             ->leftJoin('employees', 'employee_issue.employee_id', 'employees.id')
-            ->select('num_oficio', 'inicio_sancion', 'termino_sancion', 'matricula', 'employee_issue.id as id', 'issues.uuid as uuid')
+            ->select('num_oficio', 'inicio_sancion', 'termino_sancion', 'matricula', 'employee_issue.id as id', 'issues.uuid as uuid', 'sancion', 'castigado')
             ->selectRaw("CONCAT_WS(' ', employees.nombre , apellido_p , apellido_m) AS nombre")
             ->when($request->column && $request->operator, function ($query) use ($request) {
                 return $query->getFilteredRows($request->column, $request->operator, $request->value, 'employee_issue');
