@@ -1,134 +1,41 @@
 import React, { useEffect, useState } from 'react';
 import Layout from '../../layouts/Layout';
-import { Inertia } from '@inertiajs/inertia'
 import route from 'ziggy-js';
 import { InertiaLink } from '@inertiajs/inertia-react';
 
-// componentes
-import PropTypes from 'prop-types';
-import IconButton from '@mui/material/IconButton';
-import TextField from '@mui/material/TextField';
-import {
-  DataGrid,
-  GridToolbarDensitySelector,
-  GridToolbarFilterButton,
-  esES
-} from '@mui/x-data-grid';
-import ClearIcon from '@mui/icons-material/Clear';
-import SearchIcon from '@mui/icons-material/Search';
-import { createTheme } from '@mui/material/styles';
-import { createStyles, makeStyles } from '@mui/styles';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 
 // Hojas de estilos
 import '/css/usersStyle.css'
 import '/css/users.css'
 
-import { ThemeProvider } from '@mui/material/styles';
-
-const themeEs = createTheme(
-  {
-    palette: {
-      primary: { main: '#134E39' },
-    },
-  },
-  esES,
-);
-
-function escapeRegExp(value) {
-  return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
-}
-
-const defaultTheme = createTheme();
-const useStyles = makeStyles(
-  (theme) =>
-    createStyles({
-      root: {
-        padding: theme.spacing(0.5, 0.5, 0),
-        justifyContent: 'space-between',
-        display: 'flex',
-        alignItems: 'flex-start',
-        flexWrap: 'wrap',
-      },
-      textField: {
-        [theme.breakpoints.down('xs')]: {
-          width: '100%',
-        },
-        margin: theme.spacing(1, 0.5, 1.5),
-        '& .MuiSvgIcon-root': {
-          marginRight: theme.spacing(0.5),
-        },
-        '& .MuiInput-underline:before': {
-          borderBottom: `none`,
-        },
-        '& .MuiInput-underline:after': {
-          borderBottom: `none`,
-        },
-        '& .MuiInput-underline:focus': {
-          borderBottom: `none`,
-        },
-        '& .MuiInputBase-root-MuiInput-root:hover:not(.Mui-disabled):before': {
-          borderBottom: `0px solid white`,
-        },
-        '& .css-1480iag-MuiInputBase-root-MuiInput-root:hover:not(.Mui-disabled):before': {
-          borderBottom: `0px solid white`,
-        },
-      },
-
-    }),
-  { defaultTheme },
-);
-
-function QuickSearchToolbar(props) {
-  const classes = useStyles();
-
-  return (
-    <div className={classes.root}>
-      <div>
-        <GridToolbarFilterButton />
-        <GridToolbarDensitySelector />
-      </div>
-      <TextField
-        variant="standard"
-        value={props.value}
-        onChange={props.onChange}
-        placeholder="Buscar…"
-        className={classes.textField}
-        InputProps={{
-          startAdornment: <SearchIcon fontSize="small" />,
-          endAdornment: (
-            <IconButton
-              title="Clear"
-              aria-label="Clear"
-              size="small"
-              style={{ visibility: props.value ? 'visible' : 'hidden' }}
-              onClick={props.clearSearch}
-            >
-              <ClearIcon fontSize="small" />
-            </IconButton>
-          ),
-        }}
-      />
-    </div>
-  );
-}
-
-
-QuickSearchToolbar.propTypes = {
-  clearSearch: PropTypes.func.isRequired,
-  onChange: PropTypes.func.isRequired,
-  value: PropTypes.string.isRequired,
-};
+import RenderCellExpand from '../../components/Common/RenderCellExpand'
+import DataGridPlus from '../../components/common/DataGridPlus';
+import { Container } from '@mui/material';
+import Alertas from '../../components/common/Alertas';
 
 const secretariaTrabajo = ({ conflicts }) => {
 
   const columns = [
+    {
+      field: "",
+      headerName: "VER",
+      flex: 0.2,
+      minWidth: 80,
+      renderCell: (params) => (
+        <InertiaLink href={route('conflicts.conflict', params.row.uuid)} style={{ textDecoration: 'none', color: 'gray' }}><VisibilityIcon /></InertiaLink>
+      ),
+      sortable: false,
+      editable: false,
+      filterable: false,
+    },
     {
       field: 'id',
       headerName: 'NO.',
       editable: false,
       disableColumnSelector: false,
       flex: 0.1,
+      minWidth: 80,
     },
     {
       field: 'num_oficio',
@@ -136,94 +43,105 @@ const secretariaTrabajo = ({ conflicts }) => {
       editable: false,
       disableColumnSelector: false,
       flex: 0.3,
+      minWidth: 150,
+      renderCell: RenderCellExpand,
     },
     {
       field: 'matricula',
       headerName: 'MATRICULA',
       editable: false,
       flex: 0.4,
+      minWidth: 150,
+      renderCell: RenderCellExpand,
+      valueFormatter: (params) => {
+        return params.value ?? 'vacío'
+      }
     },
     {
       field: 'nombre',
       headerName: 'NOMBRE',
       editable: false,
       flex: 0.4,
+      minWidth: 200,
+      renderCell: RenderCellExpand,
+      valueFormatter: (params) => {
+        return params.value ?? 'vacío'
+      }
     },
     {
-      field: 'apellido_p',
-      headerName: 'APELLIDO',
-      editable: false,
+      field: 'castigado',
+      headerName: 'CASTIGADO',
       flex: 0.4,
+      minWidth: 150,
+      type: 'boolean',
+      valueFormatter: (params) => {
+        return params.value ?? 'vacío'
+      }
     },
     {
       field: 'inicio_sancion',
       headerName: 'INICIO DE SANCION',
       editable: false,
       flex: 0.4,
+      minWidth: 100,
+      valueFormatter: (params) => {
+        return params.value ?? 'vacío'
+      },
+      type: 'date'
     },
     {
       field: 'termino_sancion',
       headerName: 'TÉRMINO DE SANCION',
       editable: false,
       flex: 0.4,
+      minWidth: 100,
+      valueFormatter: (params) => {
+        return params.value ?? 'vacío'
+      },
+      type: 'date'
     },
     {
-      field: "",
-      headerName: "VER",
-      flex: 0.2,
-      renderCell: (params) => (
-        <InertiaLink href={route('secretariaTrabajo.conflict', params.row.uuid)} style={{ textDecoration: 'none', color: 'gray' }}><VisibilityIcon /></InertiaLink>
-      ),
-      sortable: false,
-      editable: false,
-    }
+      field: 'sancion',
+      headerName: 'SANCIÓN',
+      flex: 0.4,
+      minWidth: 150,
+      renderCell: RenderCellExpand,
+      valueFormatter: (params) => {
+        return params.value ?? 'vacío'
+      }
+    },
+    {
+      field: 'resolutivo',
+      headerName: 'RESOLUTIVO',
+      flex: 0.4,
+      minWidth: 150,
+      renderCell: RenderCellExpand,
+      valueFormatter: (params) => {
+        return params.value ?? 'vacío'
+      }
+    },
   ]
 
-  const [searchText, setSearchText] = React.useState('');
-  const [rows, setRows] = React.useState(conflicts);
-
-  const requestSearch = (searchValue) => {
-    setSearchText(searchValue);
-    const searchRegex = new RegExp(escapeRegExp(searchValue), 'i');
-    const filteredRows = conflicts.filter((row) => {
-      return Object.keys(row).some((field) => {
-        return searchRegex.test(row[field] ? row[field].toString() : "");
-      });
-    });
-    setRows(filteredRows);
-  };
-
-  React.useEffect(() => {
-    setRows(conflicts);
-  }, [conflicts]);
   return (
     <>
       <div className="row contenedor">
-        <div className="col contenedor s12">
-          <div className="card darken-1 cardUsers">
-          <InertiaLink className="btn-floating btn-large waves-effect waves-light green-sind button-addUser" href={route('secretariaTrabajo.create')}><i className="material-icons">add</i></InertiaLink>
-            <div className="card-content">
-              <span className="card-title">Secretaria del Trabajo</span>
-              <div style={{ height: '60vh', width: '100%' }}>
-                <ThemeProvider theme={themeEs}>
-                  <DataGrid
-                    components={{ Toolbar: QuickSearchToolbar }}
-                    rows={rows}
+        <Container>
+          <div className="col contenedor s12">
+            <div className="card darken-1 cardUsers">
+            <InertiaLink className="btn-floating btn-large waves-effect waves-light green-sind button-addUser" href={route('secretariaTrabajo.create')}><i className="material-icons">add</i></InertiaLink>
+              <div className="card-content">
+                <span className="card-title">Secretaria del Trabajo</span>
+                <Alertas />
+                <DataGridPlus 
+                    rowsJson={conflicts}
                     columns={columns}
-                    componentsProps={{
-                      toolbar: {
-                        value: searchText,
-                        onChange: (event) => requestSearch(event.target.value),
-                        clearSearch: () => requestSearch(''),
-                      },
-                    }}
-                  />
-                </ThemeProvider>
-
+                    tableName={'conflicts'}
+                    mode='server'
+                />
               </div>
             </div>
           </div>
-        </div>
+        </Container>
       </div>
     </>)
 }

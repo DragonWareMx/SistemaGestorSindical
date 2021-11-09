@@ -12,6 +12,7 @@ import '/css/users.css'
 import { Container } from '@mui/material';
 import RenderCellExpand from '../../components/Common/RenderCellExpand'
 import DataGridPlus from '../../components/common/DataGridPlus';
+import Alertas from '../../components/common/Alertas';
 
 const conflictos = ({ conflicts }) => {
 
@@ -130,6 +131,7 @@ const conflictos = ({ conflicts }) => {
               <InertiaLink className="btn-floating btn-large waves-effect waves-light green-sind button-addUser" href={route('conflicts.create')}><i className="material-icons">add</i></InertiaLink>
               <div className="card-content">
                 <span className="card-title">Conflictos</span>
+                <Alertas />
                 <DataGridPlus 
                     rowsJson={conflicts}
                     columns={columns}
