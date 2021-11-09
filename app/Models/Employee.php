@@ -27,11 +27,11 @@ class Employee extends Model
 
     public function employees()
     {
-        return $this->belongsToMany(Employee::class, 'employee_relative', 'employee_id', 'relative_id');
+        return $this->belongsToMany(Employee::class, 'employee_relative', 'relative_id', 'employee_id');
     }
-
+    
     public function relatives()
     {
-        return $this->belongsToMany(Employee::class, 'employee_relative', 'relative_id', 'employee_id');
+        return $this->belongsToMany(Employee::class, 'employee_relative', 'employee_id', 'relative_id');
     }
 }

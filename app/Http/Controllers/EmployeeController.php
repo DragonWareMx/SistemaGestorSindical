@@ -704,24 +704,76 @@ class EmployeeController extends Controller
 
     public function admisionCambiosStore(Request $request)
     {
-        // dd("ENTRE AQUI");
-        // dd($request);
 
-        // dd($request->familiar['id']);
+        //COMIENZA LA TRANSACCION
+        DB::beginTransaction();
 
-        $employee = Employee::find($request->empleado['id']);
-        $familiar = Employee::find($request->familiar['id']);
+        try{
+            $employee = Employee::find($request->empleado['id']);
+            $familiar = Employee::find($request->familiar['id']);
 
-        $data = [
-            'parentesco' => $request['parentesco'],
-            'ingreso_bolsa' => Carbon::now()->format('Y-m-d')
-        ];
+            $data = [
+                'parentesco' => $request['parentesco'],
+                'ingreso_bolsa' => Carbon::now()->format('Y-m-d')
+            ];
 
-        $employee->relatives()->attach($familiar['id'], $data);
+            $employee->relatives()->attach($familiar['id'], $data);
+
+            //SE CREA EL LOG
+            $newLog = new Log;
+
+            $newLog->uuid = Str::uuid();
+
+            $newLog->categoria = 'create';
+            $newLog->user_id = Auth::id();
+            $newLog->accion =
+            '{
+                employee_relative: {
+                    parentesco: ' . $request->parentesco . ',\n'.
+                '}
+            }';
+
+            $newLog->descripcion = 'El usuario '.Auth::user()->email.' ha registrado un nuevo familiar con la matricula: '. $familiar->matricula;
+
+            //SE GUARDA EL LOG
+            $newLog->save();
+
+            if(!$employee)
+            {
+                DB::rollBack();
+
+                return \Redirect::back()->with('error','Ha ocurrido un error al intentar registrar el familiar, inténtelo más tarde.');
+            }
+
+            if(!$familiar)
+            {
+                DB::rollBack();
+
+                return \Redirect::back()->with('error','Ha ocurrido un error al intentar registrar el familiar, inténtelo más tarde.');
+            }
+
+            if(!$newLog)
+            {
+                DB::rollBack();
+
+                return \Redirect::back()->with('error','Ha ocurrido un error al intentar registrar el familiar, inténtelo más tarde.');
+            }
+
+            //SE HACE COMMIT
+            DB::commit();
+
+            //SE REDIRIGE A LA OFICINA DE ADMISION Y CAMBIOS
+            return \Redirect::route('admisionCambios')->with('success','El familiar ha sido registrado con éxito!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return \Redirect::back()->with('error','Ha ocurrido un error al intentar registrar el familiar, inténtelo más tarde.');
+        }
 
         // dd($employee);
 
-        return redirect()->back()->with('success', 'El registro se creó con éxito!');
+        // return redirect()->back()->with('success', 'El registro se creó con éxito!');
         // return \Redirect::route('admisionCambios')->with('success','El registro se creo con éxito!');
     }
 
