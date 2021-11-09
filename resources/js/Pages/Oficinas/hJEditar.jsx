@@ -485,6 +485,6 @@ const Edit = ({ employees, issue }) => {
     )
 }
 
-Edit.layout = page => <Layout children={page} title="Escuela Sindical - Honor y Justicia" pageTitle="HONOR Y JUSTICIA" />
+Edit.layout = page => <Layout children={page} title="Escuela Sindical - Honor y Justicia" pageTitle="Honor y Justicia" />
 
 export default Edit

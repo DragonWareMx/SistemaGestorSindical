@@ -673,14 +673,48 @@ class EmployeeController extends Controller
         $employees = Employee::join('employee_relative','employees.id','employee_relative.employee_id')
         ->join('employees as relatives','employee_relative.relative_id','relatives.id')
         ->join('categories','relatives.category_id','categories.id')
-        ->select('relatives.id','relatives.uuid','relatives.nombre as nombreRelative','relatives.tel','employees.nombre as nombreEmployee','relatives.estatus','categories.nombre as categoria','employee_relative.parentesco')
+        ->select('relatives.id','relatives.uuid','relatives.nombre as nombreRelative','relatives.tel','employees.nombre as nombreEmployee','relatives.estatus','categories.nombre as categoria','employee_relative.parentesco','employee_relative.id as er_id')
         ->get();
 
         return Inertia::render('Oficinas/admisionCambios',['employees' => $employees]);
     }
 
-    public function admisionCambiosRelative($uuid){
-        dd('Welcome to the relative and employee information view', $uuid);
+    public function admisionCambiosRelative($er_id){
+        // dd('Welcome to the relative and employee information view', $uuid);
+
+        $employees = Employee::
+            select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'employees.id as id', 'antiguedad')
+            ->selectRaw('(select ingreso_bolsa from employee_relative where employee_id = employees.id order by ingreso_bolsa desc limit 1) as ingreso_bolsa')
+            ->leftJoin('employee_relative','employees.id','employee_relative.employee_id')
+            ->groupBy('employees.id', 'matricula', 'nombre', 'apellido_p', 'apellido_m', 'antiguedad')
+            ->get();
+
+        $registro = Employee::
+            select('employee_id', 'relative_id', 'parentesco', 'ingreso_bolsa')
+            ->join('employee_relative','employees.id','employee_relative.employee_id')
+            ->where('employee_relative.id','=',$er_id)
+            ->first();
+
+        $fecha = Employee::
+            select('ingreso_bolsa')
+            ->join('employee_relative','employees.id','employee_relative.employee_id')
+            ->where('employee_relative.id','=',$er_id)
+            ->first();
+
+        // dd($registro);
+
+        $empleado = Employee::
+            select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'employees.id as id', 'antiguedad')
+            ->selectRaw('(select ingreso_bolsa from employee_relative where employee_id = employees.id order by ingreso_bolsa desc limit 1) as ingreso_bolsa')
+            ->find($registro->employee_id);
+        $familiar = Employee::
+            select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'employees.id as id', 'antiguedad')
+            ->selectRaw('(select ingreso_bolsa from employee_relative where employee_id = employees.id order by ingreso_bolsa desc limit 1) as ingreso_bolsa')
+            ->find($registro->relative_id);
+
+        // dd(Auth::user()->roles());
+
+        return Inertia::render('Oficinas/admisionCambiosEditar', ['employees' => $employees, 'register' => $registro, 'employee' => $empleado, 'relative' => $familiar, 'add_date' => $fecha]);
     }
 
     public function admisionCambiosCreate()
@@ -688,11 +722,11 @@ class EmployeeController extends Controller
         //
 
         $employees = Employee::
-                select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'employees.id as id', 'antiguedad')
-                ->selectRaw('(select ingreso_bolsa from employee_relative where employee_id = employees.id order by ingreso_bolsa desc limit 1) as ingreso_bolsa')
-                ->leftJoin('employee_relative','employees.id','employee_relative.employee_id')
-                ->groupBy('employees.id', 'matricula', 'nombre', 'apellido_p', 'apellido_m', 'antiguedad')
-                ->get();
+            select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'employees.id as id', 'antiguedad')
+            ->selectRaw('(select ingreso_bolsa from employee_relative where employee_id = employees.id order by ingreso_bolsa desc limit 1) as ingreso_bolsa')
+            ->leftJoin('employee_relative','employees.id','employee_relative.employee_id')
+            ->groupBy('employees.id', 'matricula', 'nombre', 'apellido_p', 'apellido_m', 'antiguedad')
+            ->get();
 
         return Inertia::render('Oficinas/admisionCambiosCrear', [
             'roles' => fn () => Role::select('name')->get(),
@@ -770,11 +804,6 @@ class EmployeeController extends Controller
 
             return \Redirect::back()->with('error','Ha ocurrido un error al intentar registrar el familiar, inténtelo más tarde.');
         }
-
-        // dd($employee);
-
-        // return redirect()->back()->with('success', 'El registro se creó con éxito!');
-        // return \Redirect::route('admisionCambios')->with('success','El registro se creo con éxito!');
     }
 
     public function admisionCambiosNewFamiliar(Request $request){

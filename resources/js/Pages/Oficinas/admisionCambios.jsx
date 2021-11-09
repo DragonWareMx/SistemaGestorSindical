@@ -172,7 +172,7 @@ const admisionCambios = ({ employees }) => {
       headerName: "VER",
       flex: 0.2,
       renderCell: (params) => (
-        <InertiaLink href={route('admisionCambiosRelative', params.row.uuid)} style={{ textDecoration: 'none', color: 'gray' }}><VisibilityIcon /></InertiaLink>
+        <InertiaLink href={route('admisionCambiosRelative', params.row.er_id)} style={{ textDecoration: 'none', color: 'gray' }}><VisibilityIcon /></InertiaLink>
       ),
       sortable: false,
       editable: false,
