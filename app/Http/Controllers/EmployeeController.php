@@ -16,6 +16,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
 use Image;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -711,17 +712,225 @@ class EmployeeController extends Controller
     public function admisionCambiosCreate()
     {
         //
+
+        $employees = Employee::
+                select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'employees.id as id', 'antiguedad')
+                ->selectRaw('(select ingreso_bolsa from employee_relative where employee_id = employees.id order by ingreso_bolsa desc limit 1) as ingreso_bolsa')
+                ->leftJoin('employee_relative','employees.id','employee_relative.employee_id')
+                ->groupBy('employees.id', 'matricula', 'nombre', 'apellido_p', 'apellido_m', 'antiguedad')
+                ->get();
+
         return Inertia::render('Oficinas/admisionCambiosCrear', [
             'roles' => fn () => Role::select('name')->get(),
-            'employees' => fn () => Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')
-                ->get()
+            'employees' => $employees
+        ]);
+
+      
+    }
+
+    public function admisionCambiosStore(Request $request)
+    {
+        // dd("ENTRE AQUI");
+        // dd($request);
+
+        // dd($request->familiar['id']);
+
+        $employee = Employee::find($request->empleado['id']);
+        $familiar = Employee::find($request->familiar['id']);
+
+        $data = [
+            'parentesco' => $request['parentesco'],
+            'ingreso_bolsa' => Carbon::now()->format('Y-m-d')
+        ];
+
+        $employee->relatives()->attach($familiar['id'], $data);
+
+        // dd($employee);
+
+        return redirect()->back()->with('success', 'El registro se creó con éxito!');
+        // return \Redirect::route('admisionCambios')->with('success','El registro se creo con éxito!');
+    }
+
+    public function admisionCambiosNewFamiliar(Request $request){
+        return Inertia::render('Oficinas/admisionCambiosCrearFamiliar', [
+            'categories'=> fn () => Category::select('nombre')->get(),
+            'regimes'=> fn () => Regime::select('nombre')->get(),
+            'roles'=> fn () => Role::select('name')->get(),
+            'units'=>  Inertia::lazy(
+                fn () => Unit::select('units.id','units.nombre')
+                            ->leftJoin('regimes', 'regimes.id', '=', 'units.regime_id')
+                            ->when($request->regime, function ($query, $regime) {
+                                $query->where('regimes.nombre',$regime);
+                            })
+                            ->get()
+            )
         ]);
     }
 
-    public function admisionCambiosStore()
-    {
-        // dd("ENTRE AQUI");
-        return redirect()->back()->with('success', 'El registro se creó con éxito!');
-        // return \Redirect::route('admisionCambios')->with('success','El registro se creo con éxito!');
+    public function admisionCambiosStoreFamiliar(Request $request){
+        //valida el rol del usuario
+        // \Gate::authorize('haveaccess', 'admin.perm');
+
+        $validated = $request->validate([
+            //---informacion personal---
+            'nombre' => ['required','max:255','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
+            'apellido_paterno' => ['required','max:255','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
+            'apellido_materno' => ['nullable','max:255','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
+            'fecha_de_nacimiento' => 'required|date|before:17 years ago',
+            'sexo' => 'required|in:h,m,o',
+            'antiguedad' => 'nullable|date|before:tomorrow',
+
+            //---informacion institucional---
+            'matricula' => 'required|digits_between:7,10|numeric|unique:employees,matricula',
+            'regimen' => 'required|exists:regimes,nombre',
+            'unidad' => 'required|exists:units,nombre',
+            'categoria' => 'required|exists:categories,nombre',
+        ]);
+
+        //si se introdujo algun dato para la direccion se validan los campos
+        if($request->estado || $request->ciudad || $request->colonia || $request->calle || $request->numero_exterior || $request->numero_interior || $request->codigo_postal || $request->telefono){
+            $validated = $request->validate([
+                //direccion
+                'estado' => ['required','max:50','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
+                'ciudad' => ['required','max:60','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
+                'colonia' => ['required','max:100','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
+                'calle' => ['required','max:100','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
+                'numero_exterior' => ['required','max:10','regex:/^(((#|[nN][oO]|[a-zA-Z1-9À-ÖØ-öø-ÿ]*\.?) ?)?\d{1,4}(( ?[a-zA-Z0-9\-]+)+)?)$/i'],
+                'numero_interior' => ['nullable','max:10','regex:/^(((#|[nN][oO]|[a-zA-Z1-9À-ÖØ-öø-ÿ]*\.?) ?)?\d{1,4}(( ?[a-zA-Z0-9\-]+)+)?)$/i'],
+                'codigo_postal' => ['required','max:9','regex:/^\d{5}$/i'],
+                'telefono' => ['nullable','max:25','regex:/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.0-9]*$/i'],
+            ]);
+        }
+        // El nuevo empleado es valido...
+
+        //nos sirve para saber si se esta creando un nuevo usuario
+        $user = false;
+        $newUser = null;
+
+        //COMIENZA LA TRANSACCION
+        DB::beginTransaction();
+
+        try {
+            $regimen = Regime::where("nombre", $request->regimen)->get();
+
+            if($regimen->isEmpty())
+            {
+                DB::rollBack();
+                return \Redirect::back()->with('error','Ha ocurrido un error al intentar registrar el empleado, inténtelo más tarde.');
+            }
+
+            $unidad = Unit::where("nombre", $request->unidad)->get();
+
+            if($unidad->isEmpty())
+            {
+                DB::rollBack();
+                return \Redirect::back()->with('error','Ha ocurrido un error al intentar registrar el empleado, inténtelo más tarde.');
+            }
+
+            $categoria = Category::where("nombre", $request->categoria)->get();
+
+            if($categoria->isEmpty())
+            {
+                DB::rollBack();
+                return \Redirect::back()->with('error','Ha ocurrido un error al intentar registrar el empleado, inténtelo más tarde.');
+            }
+
+            //verifica que la unidad y el regimen esten relacionados
+            if($unidad[0]->regime->id != $regimen[0]->id)
+            {
+                DB::rollBack();
+                return \Redirect::back()->with('error','Ha ocurrido un error al intentar registrar el empleado, inténtelo más tarde.');
+            }
+
+
+            //SE CREA EL NUEVO EMPLEADO
+            $newEmployee = new Employee;
+
+            $newEmployee->uuid = Str::uuid();
+
+            //---informacion personal---
+            $newEmployee->nombre = $request->nombre;
+            $newEmployee->apellido_p = $request->apellido_paterno;
+            $newEmployee->apellido_m = $request->apellido_materno;
+            $newEmployee->fecha_nac = $request->fecha_de_nacimiento;
+            $newEmployee->sexo = $request->sexo;
+            $newEmployee->antiguedad = $request->antiguedad;
+
+            //---informacion institucional---
+            $newEmployee->matricula = $request->matricula;
+            $newEmployee->unit_id = $unidad[0]->id;
+            $newEmployee->category_id = $categoria[0]->id;
+
+            //---direccion---
+            $newEmployee->estado = $request->estado;
+            $newEmployee->ciudad = $request->ciudad;
+            $newEmployee->colonia = $request->colonia;
+            $newEmployee->calle = $request->calle;
+            $newEmployee->num_ext = $request->numero_exterior;
+            $newEmployee->num_int = $request->numero_interior;
+            $newEmployee->cp = $request->codigo_postal;
+            $newEmployee->tel = $request->telefono;
+
+            //SE GUARDA EL NUEVO USUARIO
+            $newEmployee->save();
+
+            //SE CREA EL LOG
+            $newLog = new Log;
+
+            $newLog->uuid = Str::uuid();
+
+            $newLog->categoria = 'create';
+            $newLog->user_id = Auth::id();
+            $newLog->accion =
+            '{
+                users: {
+                    nombre: ' . $request->nombre . ',\n
+                    apellido_p: ' . $request->apellido_paterno . ',\n
+                    apellido_m: ' . $request->apellido_materno . ',\n
+                    fecha_nac: ' . $request->fecha_de_nacimiento . ',\n
+                    sexo: '. $request->sexo. ',\n
+                    antiguedad: ' . $request->antiguedad . ',\n
+                    matricula: ' . $request->matricula . ',\n
+                    unit_id: '.$unidad[0]->id. ',\n
+                    category_id: ' . $categoria[0]->id . ',\n
+                    estado: ' . $request->estado . ',\n
+                    ciudad: ' . $request->ciudad . ',\n
+                    colonia: ' . $request->colonia . ',\n
+                    calle: ' . $request->calle . ',\n
+                    num_ext: ' . $request->numero_exterior . ',\n
+                    num_int: ' . $request->numero_interior . ',\n
+                    cp: ' . $request->codigo_postal . ',\n'.
+                '}
+            }';
+
+            $newLog->descripcion = 'El usuario '.Auth::user()->email.' ha registrado un nuevo empleado con la matricula: '. $newEmployee->matricula;
+
+            //SE GUARDA EL LOG
+            $newLog->save();
+
+            if(!$newEmployee)
+            {
+                DB::rollBack();
+
+                return \Redirect::back()->with('error','Ha ocurrido un error al intentar registrar el empleado, inténtelo más tarde.');
+            }
+
+            if(!$newLog)
+            {
+                DB::rollBack();
+
+                return \Redirect::back()->with('error','Ha ocurrido un error al intentar registrar el empleado, inténtelo más tarde.');
+            }
+
+            //SE HACE COMMIT
+            DB::commit();
+
+            //REDIRECCIONA A LA VISTA DE AGREGAR NUEVO REGISTRO EN ADMISION Y CAMBIOS
+            return \Redirect::route('admisionCambiosCreate')->with('success','El empleado ha sido registrado con éxito!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return \Redirect::back()->with('error','Ha ocurrido un error al intentar registrar el empleado, inténtelo más tarde.');
+        }
     }
 }

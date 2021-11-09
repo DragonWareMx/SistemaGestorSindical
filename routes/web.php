@@ -90,6 +90,8 @@ Route::get('/admision-y-cambios', [App\Http\Controllers\EmployeeController::clas
 Route::get('/admision-y-cambios/ver/{id}', [App\Http\Controllers\EmployeeController::class, 'admisionCambiosRelative'])->name('admisionCambiosRelative')->middleware('ac');
 Route::get('/admision-y-cambios/crear', [App\Http\Controllers\EmployeeController::class, 'admisionCambiosCreate'])->name('admisionCambiosCreate')->middleware('ac');
 Route::post('/admision-y-cambios/crear', [App\Http\Controllers\EmployeeController::class, 'admisionCambiosStore'])->name('admisionCambiosStore')->middleware('ac');
+Route::get('/admision-y-cambios/crear-familiar', [App\Http\Controllers\EmployeeController::class, 'admisionCambiosNewFamiliar'])->name('admisionCambiosNewFamiliar')->middleware('ac');
+Route::post('/admision-y-cambios/crear-familiar', [App\Http\Controllers\EmployeeController::class, 'admisionCambiosStoreFamiliar'])->name('admisionCambiosStoreFamiliar')->middleware('ac');
 Route::delete('/admision-y-cambios/delete', [App\Http\Controllers\EmployeeController::class, 'admisionCambiosDestroy'])->name('admisionCambiosDestroy')->middleware('ac');
 
 //Acción Femenil

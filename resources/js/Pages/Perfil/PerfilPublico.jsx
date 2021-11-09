@@ -74,7 +74,6 @@ const PerfilPublico = ({ user, cursos, participantes }) => {
                     </div>
                 </div>
             </div>
-            <FlotanteAyuda />
         </>
     )
 }
