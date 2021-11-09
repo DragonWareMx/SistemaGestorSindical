@@ -59,12 +59,14 @@ Route::name('logs.')->middleware('admin')->group(function () {
 // RUTAS OFICINAS
 Route::get('/honor-y-justicia', [App\Http\Controllers\IssueController::class, 'index'])->name('honor')->middleware('hyj');
 Route::get('/honor-y-justicia/ver/{id}', [App\Http\Controllers\IssueController::class, 'issue'])->name('honor.issue')->middleware('hyj');;
+Route::post('/honor-y-justicia/ver/{id}', [App\Http\Controllers\IssueController::class, 'update'])->name('honor.update')->middleware('hyj');
 Route::get('/honor-y-justicia/crear', [App\Http\Controllers\IssueController::class, 'create'])->name('honor.create')->middleware('hyj');;
 Route::post('/honor-y-justicia/crear', [App\Http\Controllers\IssueController::class, 'store'])->name('honor.store')->middleware('hyj');;
 Route::delete('/honor-y-justicia/delete/{uuid}', [App\Http\Controllers\IssueController::class, 'destroy'])->name('honor.delete')->middleware('hyj');;
 //Conflictos
 Route::get('/conflictos', [App\Http\Controllers\ConflictController::class, 'index'])->name('conflicts')->middleware('conflict');
 Route::get('/conflictos/ver/{id}', [App\Http\Controllers\ConflictController::class, 'conflict'])->name('conflicts.conflict')->middleware('conflict');
+Route::post('/conflictos/ver/{id}', [App\Http\Controllers\ConflictController::class, 'update'])->name('conflicts.update')->middleware('conflict');
 Route::get('/conflictos/crear', [App\Http\Controllers\ConflictController::class, 'create'])->name('conflicts.create')->middleware('conflict');
 Route::post('/conflictos/store', [App\Http\Controllers\ConflictController::class, 'store'])->name('conflicts.store')->middleware('conflict');
 Route::delete('/conflictos/delete/{uuid}', [App\Http\Controllers\ConflictController::class, 'destroy'])->name('conflicts.delete')->middleware('conflict');
@@ -77,6 +79,7 @@ Route::delete('/secretaria-del-trabajo/delete/{uuid}', [App\Http\Controllers\Con
 // Secreteria del interior
 Route::get('/secretaria-del-interior', [App\Http\Controllers\ElectionController::class, 'index'])->name('secretariaInterior')->middleware('si');
 Route::get('/secretaria-del-interior/ver/{id}', [App\Http\Controllers\ElectionController::class, 'secretariaInteriorElection'])->name('secretariaInterior.election')->middleware('si');
+Route::post('/secretaria-del-interior/ver/{id}', [App\Http\Controllers\ElectionController::class, 'update'])->name('secretariaInterior.update')->middleware('si');
 Route::get('/secretaria-del-interior/crear', [App\Http\Controllers\ElectionController::class, 'create'])->name('secretariaInterior.create')->middleware('si');
 Route::post('/secretaria-del-interior/crear', [App\Http\Controllers\ElectionController::class, 'store'])->name('secretariaInterior.store')->middleware('si');
 Route::post('/secretaria-del-interior/votacion/crear', [App\Http\Controllers\ElectionController::class, 'votacion'])->name('secretariaInterior.votacion')->middleware('si');
@@ -92,6 +95,7 @@ Route::delete('/admision-y-cambios/delete', [App\Http\Controllers\EmployeeContro
 //Acción Femenil
 Route::get('/accion-femenil', [App\Http\Controllers\TrophyController::class, 'index'])->name('accionFemenil')->middleware('af');
 Route::get('/accion-femenil/ver/{id}', [App\Http\Controllers\TrophyController::class, 'trophy'])->name('accionFemenil.trophy')->middleware('af');
+Route::post('/accion-femenil/ver/{id}', [App\Http\Controllers\TrophyController::class, 'update'])->name('accionFemenil.update')->middleware('af');
 Route::get('/accion-femenil/crear', [App\Http\Controllers\TrophyController::class, 'create'])->name('accionFemenil.create')->middleware('af');
 Route::post('/accion-femenil/trophie/crear', [App\Http\Controllers\TrophyController::class, 'trophie'])->name('trophie.create')->middleware('af');
 Route::post('/accion-femenil/store', [App\Http\Controllers\TrophyController::class, 'store'])->name('accionFemenil.store')->middleware('af');
