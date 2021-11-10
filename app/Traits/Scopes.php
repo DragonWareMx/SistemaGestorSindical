@@ -143,7 +143,7 @@ trait Scopes
         if($request->modo && $request->modo == 'client')
             return $query->take($rows)->get();
         
-        return $query->when($request->column && $request->operator, function ($queryF) use ($request) {
+        return $query->when($request->column && $request->operator, function ($queryF) use ($request, $tableName) {
             return $queryF->getFilteredRows($request->column, $request->operator, $request->value, $tableName);
         })
         ->when($request->field && $request->sort, function ($queryF) use ($request) {
