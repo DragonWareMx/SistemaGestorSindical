@@ -67,7 +67,7 @@ class PerfilController extends Controller
             ->where('users.id', Auth::id())
             ->first();
 
-        return Inertia::render('Perfil/Configuracion',['user'=>$usuario]);
+        return Inertia::render('Perfil/Configuracion', ['user' => $usuario]);
     }
 
     // public function update(Request $request)
@@ -236,13 +236,13 @@ class PerfilController extends Controller
         //valida el rol del usuario
         // \Gate::authorize('haveaccess', 'admin.perm');
 
-        $validated = $request->validate([ 
+        $validated = $request->validate([
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:51200',
 
             //---informacion personal---
-            'nombre' => ['required','max:255','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
-            'apellido_paterno' => ['required','max:255','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
-            'apellido_materno' => ['nullable','max:255','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
+            'nombre' => ['required', 'max:255', 'regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
+            'apellido_paterno' => ['required', 'max:255', 'regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
+            'apellido_materno' => ['nullable', 'max:255', 'regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
             'fecha_de_nacimiento' => 'required|date|before:17 years ago',
             'sexo' => 'required|in:h,m,o',
 
@@ -259,26 +259,26 @@ class PerfilController extends Controller
             'confirmar_contrasena' => 'required_with:contrasena|same:contrasena',
         ]);
         //si se introdujo algun dato para la direccion se validan los campos
-        if($request->estado || $request->ciudad || $request->colonia || $request->calle || $request->numero_exterior || $request->numero_interior || $request->codigo_postal || $request->telefono){
-            $validated = $request->validate([ 
+        if ($request->estado || $request->ciudad || $request->colonia || $request->calle || $request->numero_exterior || $request->numero_interior || $request->codigo_postal || $request->telefono) {
+            $validated = $request->validate([
                 //direccion
-                'estado' => ['required','max:50','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
-                'ciudad' => ['required','max:60','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
-                'colonia' => ['required','max:100','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
-                'calle' => ['required','max:100','regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
-                'numero_exterior' => ['required','max:10','regex:/^(((#|[nN][oO]|[a-zA-Z1-9À-ÖØ-öø-ÿ]*\.?) ?)?\d{1,4}(( ?[a-zA-Z0-9\-]+)+)?)$/i'],
-                'numero_interior' => ['nullable','max:10','regex:/^(((#|[nN][oO]|[a-zA-Z1-9À-ÖØ-öø-ÿ]*\.?) ?)?\d{1,4}(( ?[a-zA-Z0-9\-]+)+)?)$/i'],
-                'codigo_postal' => ['required','max:9','regex:/^\d{5}$/i'],
-                'telefono' => ['nullable','max:25','regex:/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.0-9]*$/i'],
+                'estado' => ['required', 'max:50', 'regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
+                'ciudad' => ['required', 'max:60', 'regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
+                'colonia' => ['required', 'max:100', 'regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
+                'calle' => ['required', 'max:100', 'regex:/^[A-Za-z0-9À-ÖØ-öø-ÿ_! \"#$%&\'()*+,\-.\\:\/;=?@^_]+$/'],
+                'numero_exterior' => ['required', 'max:10', 'regex:/^(((#|[nN][oO]|[a-zA-Z1-9À-ÖØ-öø-ÿ]*\.?) ?)?\d{1,4}(( ?[a-zA-Z0-9\-]+)+)?)$/i'],
+                'numero_interior' => ['nullable', 'max:10', 'regex:/^(((#|[nN][oO]|[a-zA-Z1-9À-ÖØ-öø-ÿ]*\.?) ?)?\d{1,4}(( ?[a-zA-Z0-9\-]+)+)?)$/i'],
+                'codigo_postal' => ['required', 'max:9', 'regex:/^\d{5}$/i'],
+                'telefono' => ['nullable', 'max:25', 'regex:/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.0-9]*$/i'],
             ]);
         }
         // El nuevo empleado es valido...
 
         //si hay cambio de contraseña valida que no sea nula
-        if($request->cambiar_contrasena){
-            if(is_null($request->contrasena)){
+        if ($request->cambiar_contrasena) {
+            if (is_null($request->contrasena)) {
                 DB::rollBack();
-                return \Redirect::back()->with('error','La nueva contraseña no ha sido introducida.');
+                return \Redirect::back()->with('error', 'La nueva contraseña no ha sido introducida.');
             }
         }
 
@@ -290,19 +290,19 @@ class PerfilController extends Controller
 
         try {
             //SE CREA EL NUEVO EMPLEADO
-            $employee = Employee::where('user_id',Auth::id())->first();
-            
+            $employee = Employee::where('user_id', Auth::id())->first();
+
             //SE CREA EL NUEVO USUARIO
             $user = User::find(Auth::User()->id);
             // $user = User::findOrFail($id);
-            
+
             //---informacion personal---
             $employee->nombre = $request->nombre;
             $employee->apellido_p = $request->apellido_paterno;
             $employee->apellido_m = $request->apellido_materno;
             $employee->fecha_nac = $request->fecha_de_nacimiento;
             $employee->sexo = $request->sexo;
-            
+
             //---direccion---
             $employee->estado = $request->estado;
             $employee->ciudad = $request->ciudad;
@@ -312,11 +312,11 @@ class PerfilController extends Controller
             $employee->num_int = $request->numero_interior;
             $employee->cp = $request->codigo_postal;
             $employee->tel = $request->telefono;
-            
+
             //guarda la foto
-            if(!is_null($request->file('foto'))){
-                if($user->foto){
-                    \Storage::delete('public/fotos_perfil/'.$user->foto);
+            if (!is_null($request->file('foto'))) {
+                if ($user->foto) {
+                    \Storage::delete('public/fotos_perfil/' . $user->foto);
                 }
                 $foto = $request->file('foto')->store('public/fotos_perfil');
                 $user->foto = $request->file('foto')->hashName();
@@ -325,20 +325,20 @@ class PerfilController extends Controller
             //---cuenta---
             $user->email = $request->email;
 
-            if($request->cambiar_contrasena){
+            if ($request->cambiar_contrasena) {
                 $user->password = \Hash::make($request->contrasena);
             }
 
             //SE GUARDA EL NUEVO USUARIO
             $user->save();
-            
+
             //SE GUARDA EL NUEVO EMPLEADO
             $employee->save();
 
             //guarda la foto
-            if(!is_null($request->file('foto'))){
-                if($user->foto){
-                    \Storage::delete('public/fotos_perfil/'.$user->foto);
+            if (!is_null($request->file('foto'))) {
+                if ($user->foto) {
+                    \Storage::delete('public/fotos_perfil/' . $user->foto);
                 }
                 $foto = $request->file('foto')->store('public/fotos_perfil');
                 $user->foto = $request->file('foto')->hashName();
@@ -346,19 +346,19 @@ class PerfilController extends Controller
 
             //SE CREA EL LOG
             $newLog = new Log;
-            
+
             $newLog->uuid = Str::uuid();
 
             $newLog->categoria = 'update';
             $newLog->user_id = Auth::id();
             $newLog->accion =
-            '{
+                '{
                 employees: {
                     nombre: ' . $request->nombre . ',\n
                     apellido_p: ' . $request->apellido_paterno . ',\n
                     apellido_m: ' . $request->apellido_materno . ',\n
                     fecha_nac: ' . $request->fecha_de_nacimiento . ',\n
-                    sexo: '. $request->sexo. ',\n
+                    sexo: ' . $request->sexo . ',\n
                     antiguedad: ' . $request->antiguedad . ',\n
                     estado: ' . $request->estado . ',\n
                     ciudad: ' . $request->ciudad . ',\n
@@ -366,55 +366,49 @@ class PerfilController extends Controller
                     calle: ' . $request->calle . ',\n
                     num_ext: ' . $request->numero_exterior . ',\n
                     num_int: ' . $request->numero_interior . ',\n
-                    cp: ' . $request->codigo_postal . ',\n'.
+                    cp: ' . $request->codigo_postal . ',\n' .
                 '}
             }';
 
-            $newLog->descripcion = 'El usuario '.Auth::user()->email.' ha editado su perfil';
-                
+            $newLog->descripcion = 'El usuario ' . Auth::user()->email . ' ha editado su perfil';
+
             //SE GUARDA EL LOG
             $newLog->save();
-            
-            if(!$employee)
-            {
+
+            if (!$employee) {
                 DB::rollBack();
                 //si hay foto se elimina del servidor
-                if($foto)
-                {
+                if ($foto) {
                     \Storage::delete($foto);
                 }
 
-                return \Redirect::back()->with('error','Ha ocurrido un error al intentar editar el perfil, inténtelo más tarde.');
+                return \Redirect::back()->with('error', 'Ha ocurrido un error al intentar editar el perfil, inténtelo más tarde.');
             }
 
-            if(!$newLog)
-            {
+            if (!$newLog) {
                 DB::rollBack();
                 //si hay foto se elimina del servidor
-                if($foto)
-                {
+                if ($foto) {
                     \Storage::delete($foto);
                 }
-                return \Redirect::back()->with('error','Ha ocurrido un error al intentar editar el perfil, inténtelo más tarde.');
+                return \Redirect::back()->with('error', 'Ha ocurrido un error al intentar editar el perfil, inténtelo más tarde.');
             }
 
             //SE HACE COMMIT
             DB::commit();
-            
+
             //REDIRECCIONA A LA VISTA DEL EMPLEADO
-            return \Redirect::back()->with('success','El perfil ha sido editado con éxito!');
+            return \Redirect::back()->with('success', 'El perfil ha sido editado con éxito!');
         } catch (\Exception $e) {
             DB::rollBack();
-            
+
             //si hay foto se elimina del servidor
-            if($foto)
-            {
+            if ($foto) {
                 \Storage::delete($foto);
             }
 
             dd($e);
-            return \Redirect::back()->with('error','Ha ocurrido un error al intentar editar el perfil, inténtelo más tarde.');
+            return \Redirect::back()->with('error', "Ocurrió un error inesperado al intentar editar el perfil: " . $e->getMessage());;
         }
     }
-
 }
