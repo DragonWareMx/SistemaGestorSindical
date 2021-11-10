@@ -289,6 +289,9 @@ class UserController extends Controller
     {
         //valida el rol del usuario
         //\Gate::authorize('haveaccess', 'admin.perm');
+        if(Auth::user()->roles[0]->slug != 'admin' && Auth::user()->roles[0]->slug != 'secGen'){
+            return \Redirect::back()->with('error','No tienes los permisos necesarios');
+        }
 
         return Inertia::render('Usuarios/Edit', [
             'user' => User::withTrashed()->with([
