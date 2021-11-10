@@ -25,6 +25,8 @@ import '/css/usersStyle.css'
 import '/css/users.css'
 
 import { ThemeProvider } from '@mui/material/styles';
+import Alertas from '../../components/common/Alertas';
+import DataGridPlus from '../../components/common/DataGridPlus';
 
 const themeEs = createTheme(
   {
@@ -204,23 +206,13 @@ const admisionCambios = ({ employees }) => {
             <InertiaLink className="btn-floating btn-large waves-effect waves-light green-sind button-addUser" href={route('admisionCambiosCreate')}><i className="material-icons">add</i></InertiaLink>
             <div className="card-content">
               <span className="card-title">Admisión y Cambios</span>
-              <div style={{ height: '60vh', width: '100%' }}>
-                <ThemeProvider theme={themeEs}>
-                  <DataGrid
-                    components={{ Toolbar: QuickSearchToolbar }}
-                    rows={rows}
-                    columns={columns}
-                    componentsProps={{
-                      toolbar: {
-                        value: searchText,
-                        onChange: (event) => requestSearch(event.target.value),
-                        clearSearch: () => requestSearch(''),
-                      },
-                    }}
-                  />
-                </ThemeProvider>
-
-              </div>
+              <Alertas />
+              <DataGridPlus
+                rowsJson={conflicts}
+                columns={columns}
+                tableName={'conflicts'}
+                mode='server'
+              />
             </div>
           </div>
         </div>
