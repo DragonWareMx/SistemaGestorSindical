@@ -40,6 +40,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
+import Eliminar from '../../components/common/Eliminar'
+
 import { es } from "date-fns/locale";
 
 // import moment from "moment";
@@ -92,6 +94,7 @@ const useStyles = makeStyles(
 const Edit = ({ register, employees, employee, relative, add_date}) => {
     //errores de la validacion de laravel
     const { errors } = usePage().props
+    const { auth } = usePage().props;
 
     const classes = useStyles();
 
@@ -102,31 +105,8 @@ const Edit = ({ register, employees, employee, relative, add_date}) => {
         parentesco: register.parentesco || '',
     })
 
-    useEffect(() => {
-        // setValues({
-        //     empleado: employee,
-        //     familiar: relative,
-        //     parentesco: register.parentesco
-        // })
-        console.log("REGISTER: ",register);
-        console.log("EMPLOYEE: ",employee);
-        console.log("RELATIVE: ",relative);
-
-        var arr = emploInfo.empleados.slice();
-
-        arr.push({
-            nombre: employee.nombre + ' ' + employee.apellido_p + ' ' + employee.apellido_m,
-            matricula: employee.matricula,
-            id: employee.id,
-        });
-        setEmploInfo({ empleados: arr });
-
-        console.log(values);
-    }, [])
-
-    // console.log("REGISTER: ",register);
-    // console.log("EMPLOYEE: ",employee);
-    // console.log("RELATIVE: ",relative);
+    //variable para permitir editar
+    const [editar, setEditar] = useState(true);
 
     //actualiza los hooks cada vez que se modifica un input
     function handleChange(e) {
@@ -141,7 +121,7 @@ const Edit = ({ register, employees, employee, relative, add_date}) => {
     //manda el formulario
     function handleSubmit(e) {
         e.preventDefault()
-        console.log(values);
+        // console.log(values);
         //  se debe validar que la ultima fecha de ingreso no sea menor a 10 anos
         var fecha = new Date();
         fecha.setMonth(fecha.getMonth() - 120);
@@ -149,18 +129,18 @@ const Edit = ({ register, employees, employee, relative, add_date}) => {
         if(values.empleado !== null && values.familiar !== null)
         {
             if(values.empleado !== values.familiar){
-                if(values.empleado.ingreso_bolsa < fecha){
-                    Inertia.post(route('admisionCambiosStore'), values,
+                // if(values.empleado.ingreso_bolsa < fecha){
+                    Inertia.post(route('admisionCambiosRelativeStore', register.er_id), values,
                         {
                             onError: () => {
                                 
                             }
                         }
                     )
-                }
-                else {
-                    handleClickOpenAlert3();
-                }
+                // }
+                // else {
+                //     handleClickOpenAlert3();
+                // }
             }
             else {
                 handleClickOpenAlert();
@@ -329,6 +309,16 @@ const Edit = ({ register, employees, employee, relative, add_date}) => {
         }))
     }
 
+    const permitirEditar= () => {
+        setEditar(false);
+
+        document.getElementById('btn-editar').style.display = "none";
+        document.getElementById('bolsa2').style.display = "none";
+        document.getElementById('btns-form').style.display = "flex";
+        document.getElementById('btn-add').style.display = "flex";
+        document.getElementById('bolsa1').style.display = "flex";
+    }    
+
     return (
         <div className="row">
             <Container>
@@ -349,52 +339,49 @@ const Edit = ({ register, employees, employee, relative, add_date}) => {
                                 <div className="row div-form-register" style={{ "padding": "3%" }}>
                                     <div className="col s12 m12 div-division">
 
-                                        <div className="col s12" style={{ marginTop: '10px', display: 'none' }}>
+                                        <div className="col s12" style={{ marginTop: '10px' }}>
                                             <Autocomplete
+
                                                 {...defaultProps}
                                                 renderInput={(params) => (
                                                     <TextField {...params} id="empleado" className={classes.textField} label="Empleado" variant="standard" onChange={agregarEmpleado} />
                                                 )}
+                                                defaultValue={{ matricula: employee.matricula, nombre: employee.nombre, apellido_p: employee.apellido_p, apellido_m: employee.apellido_m }}
+                                                disabled
                                             />
                                             {
                                                 errors.empleado &&
                                                 <div className="helper-text" data-error={errors.empleado} style={{ "marginBottom": "10px" }}>{errors.empleado}</div>
                                             }
                                         </div>
-                                        <div class="input-field col s12" style={{ marginTop: '15px' }}>
-                                            <textarea id="textarea3" class="materialize-textarea" onChange={handleChangeTextarea} value={employee.apellido_m === null ? (employee.matricula + ' ' + employee.nombre + ' ' + employee.apellido_p) : (employee.matricula + ' ' + employee.nombre + ' ' + employee.apellido_p + ' ' + employee.apellido_m)} disabled></textarea>
-                                            <label for="textarea1">Empleado</label>
-                                        </div>
 
-                                        <div className="col s12" style={{ marginTop: '10px', display: 'none' }}>
+                                        <div id="bolsa1" className="col s12" style={{ marginTop: '10px', display: 'none' }}>
                                             Último ingreso a bolsa: {values.empleado === null ? "Seleccione un empleado" : (values.empleado.ingreso_bolsa === null ? 'No tiene' : values.empleado.ingreso_bolsa)}
                                         </div>
 
-                                        <div className="col s12" style={{ marginTop: '10px' }}>
+                                        <div id="bolsa2" className="col s12" style={{ marginTop: '10px' }}>
                                             Ingreso a bolsa: {add_date.ingreso_bolsa}
                                         </div>
 
-                                        <div className="col s12" style={{ marginTop: '10px', display: 'none' }}>
+                                        <div className="col s12" style={{ marginTop: '10px' }}>
                                             <Autocomplete
                                                 {...defaultProps2}
                                                 renderInput={(params) => (
                                                     <TextField {...params} id="familiar" className={classes.textField} label="Familiar" variant="standard" onChange={agregarFamiliar} />
                                                 )}
+                                                defaultValue={{ matricula: relative.matricula, nombre: relative.nombre, apellido_p: relative.apellido_p, apellido_m: relative.apellido_m }}
+                                                disabled={editar}
                                             />
                                             {
                                                 errors.familiar &&
                                                 <div className="helper-text" data-error={errors.familiar} style={{ "marginBottom": "10px" }}>{errors.familiar}</div>
                                             }
 
-                                            {/* <InertiaLink href={route('admisionCambiosNewFamiliar')}><Button variant="outlined" startIcon={<AddCircleOutlineIcon />} color="success"  style={{ float: "right", marginTop: '5px' }}>Nuevo</Button></InertiaLink> */}
-                                        </div>
-                                        <div class="input-field col s12" style={{ marginTop: '25px' }}>
-                                            <textarea id="textarea3" class="materialize-textarea" onChange={handleChangeTextarea} value={relative.apellido_m === null ? (relative.matricula + ' ' + relative.nombre + ' ' + relative.apellido_p) : (relative.matricula + ' ' + relative.nombre + ' ' + relative.apellido_p + ' ' + relative.apellido_m)} disabled></textarea>
-                                            <label for="textarea1">Familiar</label>
+                                            <InertiaLink href={route('admisionCambiosNewFamiliar')}><Button id="btn-add" variant="outlined" startIcon={<AddCircleOutlineIcon />} color="success"  style={{ float: "right", marginTop: '5px', display: "none" }}>Nuevo</Button></InertiaLink>
                                         </div>
 
                                         <div class="input-field col s12" style={{ marginTop: '15px' }}>
-                                            <textarea id="textarea1" class="materialize-textarea" onChange={handleChangeTextarea} value={values.parentesco} disabled></textarea>
+                                            <textarea id="textarea1" class="materialize-textarea" onChange={handleChangeTextarea} value={values.parentesco} disabled={editar}></textarea>
                                             <label for="textarea1">Parentesco</label>
                                         </div>
 
@@ -405,16 +392,21 @@ const Edit = ({ register, employees, employee, relative, add_date}) => {
                                     </div>
 
                                 </div>
-                                <div className="row container-buttons" style={{display:'none'}}>
+                                <div id="btns-form" className="row container-buttons" style={{display:'none'}}>
                                     <button type="button" className=" center-align  btn waves-effect waves-light cancelar" style={{ marginRight: "15px" }} onClick={cancelEditUser}>Cancelar</button>
-                                    < button type="submit" className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
+                                    {(() => {
+                                        if (auth.user.roles['0'].slug == 'admin' || auth.user.roles['0'].name == 'secGen' || auth.user.roles['0'].name == 'respAC') {
+                                            return <Eliminar oficina={'Admision y Cambios'} ruta={'admisionCambiosDestroy'} id={register.er_id} />
+                                        }
+                                    })()}
+                                    <button type="submit" className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
                                         Guardar
                                         <i className="material-icons right">save</i>
                                     </button>
                                 </div>
                             </form>
-                            <div className="row container-buttons">
-                                <button className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
+                            <div className="row container-buttons" id="btn-editar">
+                                <button  className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }} onClick={permitirEditar}>
                                     Editar
                                     <i className="material-icons right">edit</i>
                                 </button>

@@ -728,7 +728,7 @@ class EmployeeController extends Controller
             ->get();
 
         $registro = Employee::
-            select('employee_id', 'relative_id', 'parentesco', 'ingreso_bolsa')
+            select('employee_id', 'relative_id', 'parentesco', 'ingreso_bolsa', 'employee_relative.id as er_id')
             ->join('employee_relative','employees.id','employee_relative.employee_id')
             ->where('employee_relative.id','=',$er_id)
             ->first();
@@ -753,6 +753,99 @@ class EmployeeController extends Controller
         // dd(Auth::user()->roles());
 
         return Inertia::render('Oficinas/admisionCambiosEditar', ['employees' => $employees, 'register' => $registro, 'employee' => $empleado, 'relative' => $familiar, 'add_date' => $fecha]);
+    }
+
+    public function admisionCambiosRelativeStore(Request $request,$id){
+        // dd($id);
+        //COMIENZA LA TRANSACCION
+        DB::beginTransaction();
+
+        try{
+
+            $registro = DB::table('employee_relative')->where('id','=',$id)
+                ->update([
+                    'relative_id' => $request->familiar['id'],
+                    'parentesco' => $request['parentesco'],
+                ]);
+
+            // $employee->relatives()->sync($familiar['id'], $data);
+
+            //SE CREA EL LOG
+            $newLog = new Log;
+
+            $newLog->uuid = Str::uuid();
+
+            $newLog->categoria = 'create';
+            $newLog->user_id = Auth::id();
+            $newLog->accion =
+            '{
+                employee_relative: {
+                    parentesco: ' . $request->parentesco . ',\n'.
+                '}
+            }';
+
+            $newLog->descripcion = 'El usuario '.Auth::user()->email.' ha actualizado un registro en la oficina de accion y cambios';
+
+            //SE GUARDA EL LOG
+            $newLog->save();
+
+            if(!$registro)
+            {
+                DB::rollBack();
+
+                return \Redirect::back()->with('error','Ha ocurrido un error al intentar actualizar el registro, inténtelo más tarde.');
+            }
+
+            if(!$newLog)
+            {
+                DB::rollBack();
+
+                return \Redirect::back()->with('error','Ha ocurrido un error al intentar actualizar el registro, inténtelo más tarde.');
+            }
+
+            //SE HACE COMMIT
+            DB::commit();
+
+            //SE REDIRIGE A LA OFICINA DE ADMISION Y CAMBIOS
+            return \Redirect::route('admisionCambios')->with('success','El registro se ha actualizado con éxito!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return \Redirect::back()->with('error','Ha ocurrido un error al intentar actualizar el registro, inténtelo más tarde.');
+        }
+    }
+
+    public function admisionCambiosDestroy($id){
+        // dd($id);
+        DB::beginTransaction();
+        try{
+            $registro = DB::table('employee_relative')->where('id','=',$id)->delete();
+
+            //SE CREA EL LOG
+            $newLog = new Log;
+            $newLog->uuid = Str::uuid();
+
+            $newLog->categoria = 'delete';
+            $newLog->user_id = Auth::id();
+            $newLog->accion =
+            '{
+                employee_relative: {
+                    id: ' . $id .
+                '}
+            }';
+
+            $newLog->descripcion = 'El usuario '.Auth::user()->email.' ha eliminado un registro en Admision y Cambios.';
+
+            $newLog->save();
+
+            DB::commit();
+            return \Redirect::Route('admisionCambios')->with('success','¡Registro eliminado con éxito!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return \Redirect::back()->with('error','Ha ocurrido un error al intentar eliminar el registro, inténtelo más tarde.');
+        }
     }
 
     public function admisionCambiosCreate()

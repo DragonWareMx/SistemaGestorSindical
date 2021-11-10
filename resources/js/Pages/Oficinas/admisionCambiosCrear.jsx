@@ -92,6 +92,7 @@ const useStyles = makeStyles(
 const Create = ({ roles, employees }) => {
     //errores de la validacion de laravel
     const { errors } = usePage().props
+    const { auth } = usePage().props;
 
     const classes = useStyles();
 
@@ -122,7 +123,8 @@ const Create = ({ roles, employees }) => {
 
         if (values.empleado !== null && values.familiar !== null) {
             if (values.empleado !== values.familiar) {
-                if (values.empleado.ingreso_bolsa < fecha) {
+                //se verifica el rol para ver si pregunta por la restriccion de los 10 años o no
+                if (auth.user.roles['0'].slug == 'admin') {
                     Inertia.post(route('admisionCambiosStore'), values,
                         {
                             onError: () => {
@@ -131,8 +133,20 @@ const Create = ({ roles, employees }) => {
                         }
                     )
                 }
-                else {
-                    handleClickOpenAlert3();
+                else{
+                    //si no es admin se valida que el ultimo ingreso a bolsa sea menor a 10 años
+                    if (values.empleado.ingreso_bolsa < fecha) {
+                        Inertia.post(route('admisionCambiosStore'), values,
+                            {
+                                onError: () => {
+    
+                                }
+                            }
+                        )
+                    }
+                    else {
+                        handleClickOpenAlert3();
+                    }
                 }
             }
             else {
