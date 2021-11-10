@@ -17,12 +17,25 @@ class ElectionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $columns = ['election_employee.id', 'nombre', 'matricula', 'election_employee.num_oficio', 'elections.fecha', 'fecha_voto'];
         $elections = Election::join('election_employee', 'elections.id', 'election_employee.election_id')
             ->leftJoin('employees', 'election_employee.employee_id', 'employees.id')
-            ->select('election_employee.id', 'employees.nombre', 'matricula', 'apellido_p', 'election_employee.num_oficio', 'elections.fecha', 'fecha_voto')
-            ->get();
+            ->select('election_employee.id', 'matricula', 'election_employee.num_oficio', 'elections.fecha', 'fecha_voto')
+            ->selectRaw("CONCAT_WS(' ', employees.nombre , apellido_p , apellido_m) AS nombre")
+            ->when($request->column && $request->operator, function ($query) use ($request) {
+                return $query->getFilteredRows($request->column, $request->operator, $request->value, 'election_employee');
+            })
+            ->when($request->field && $request->sort, function ($query) use ($request) {
+                return $query->orderBy($request->field, $request->sort);
+            })
+            ->when($request->search, function ($query, $search) use ($request, $columns) {
+                foreach ($columns as $id => $column) {
+                    $query->orHaving($column, 'LIKE', '%' . $search . '%');
+                }
+            })
+            ->paginate($perPage = $request->pageSize ?? 100, $columns = ['*'], $pageName = 'elections', $request->page ?? 1);
 
         return Inertia::render('Oficinas/secretariaInterior', ['elections' => $elections]);
     }
@@ -97,7 +110,7 @@ class ElectionController extends Controller
             //throw $th;
             DB::rollBack();
             dd($th);
-            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+            return redirect()->back()->with('error', "Ocurrió un error inesperado: " . $th->getMessage());
         }
     }
 
@@ -118,7 +131,7 @@ class ElectionController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+            return redirect()->back()->with('error', "Ocurrió un error inesperado: " . $th->getMessage());
         }
     }
 
@@ -173,7 +186,7 @@ class ElectionController extends Controller
             //throw $th;
             dd($th);
             DB::rollBack();
-            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+            return redirect()->back()->with('error', "Ocurrió un error inesperado: " . $th->getMessage());
         }
     }
 
@@ -196,7 +209,7 @@ class ElectionController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            return redirect()->route('secretariaInterior')->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+            return redirect()->route('secretariaInterior')->with('error', "Ocurrió un error inesperado: " . $th->getMessage());
         }
     }
 }

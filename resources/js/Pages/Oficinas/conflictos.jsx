@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Layout from '../../layouts/Layout';
 import route from 'ziggy-js';
 import { InertiaLink } from '@inertiajs/inertia-react';
-import Alertas from '../../components/common/Alertas';
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
 
@@ -13,6 +12,7 @@ import '/css/users.css'
 import { Container } from '@mui/material';
 import RenderCellExpand from '../../components/Common/RenderCellExpand'
 import DataGridPlus from '../../components/common/DataGridPlus';
+import Alertas from '../../components/common/Alertas';
 
 const conflictos = ({ conflicts }) => {
 
@@ -132,7 +132,7 @@ const conflictos = ({ conflicts }) => {
               <div className="card-content">
                 <span className="card-title">Conflictos</span>
                 <Alertas />
-                <DataGridPlus
+                <DataGridPlus 
                   rowsJson={conflicts}
                   columns={columns}
                   tableName={'conflicts'}

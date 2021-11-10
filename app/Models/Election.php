@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\Scopes;
 
 class Election extends Model
 {
-    use HasFactory;
+    use HasFactory, Scopes;
 
     public function employees()
     {

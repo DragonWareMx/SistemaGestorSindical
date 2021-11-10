@@ -35,7 +35,7 @@ class IssueController extends Controller
             })
             ->when($request->search, function ($query, $search) use ($request, $columns) {
                 foreach ($columns as $id => $column) {
-                    $query->orHaving($column, 'LIKE', '%'.$search.'%');
+                    $query->orHaving($column, 'LIKE', '%' . $search . '%');
                 }
             })
             ->paginate($perPage = $request->pageSize ?? 100, $columns = ['*'], $pageName = 'issues', $request->page ?? 1);
@@ -135,7 +135,7 @@ class IssueController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+            return redirect()->back()->with('error', "Ocurrió un error inesperado: " . $th->getMessage());
         }
     }
 
@@ -201,7 +201,7 @@ class IssueController extends Controller
             return redirect()->back()->with('success', 'El registro se editó con éxito!');
         } catch (\Throwable $th) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+            return redirect()->back()->with('error', "Ocurrió un error inesperado: " . $th->getMessage());
         }
     }
 
@@ -223,7 +223,7 @@ class IssueController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            return redirect()->route('honor')->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+            return redirect()->route('honor')->with('error', "Ocurrió un error inesperado: " . $th->getMessage());
         }
     }
 }

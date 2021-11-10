@@ -38,7 +38,7 @@ class ConflictController extends Controller
             })
             ->when($request->search, function ($query, $search) use ($request, $columns) {
                 foreach ($columns as $id => $column) {
-                    $query->orHaving($column, 'LIKE', '%'.$search.'%');
+                    $query->orHaving($column, 'LIKE', '%' . $search . '%');
                 }
             })
             ->paginate($perPage = $request->pageSize ?? 100, $columns = ['*'], $pageName = 'nombre_de_la_tabla', $request->page ?? 1);
@@ -74,13 +74,27 @@ class ConflictController extends Controller
         ]);
     }
 
-    public function secretariaTrabajo()
+    public function secretariaTrabajo(Request $request)
     {
+        $columns = ['num_oficio', 'nombre', 'inicio_sancion', 'termino_sancion', 'matricula', 'conflict_employee.id', 'conflicts.uuid', 'castigado', 'sancion'];
         $conflicts = Conflict::where('tipo', 'secretaria')
-            ->leftJoin('conflict_employee', 'conflicts.id', 'conflict_employee.conflict_id')
+            ->join('conflict_employee', 'conflicts.id', 'conflict_employee.conflict_id')
             ->leftJoin('employees', 'conflict_employee.employee_id', 'employees.id')
-            ->select('num_oficio', 'employees.nombre', 'inicio_sancion', 'termino_sancion', 'matricula', 'apellido_p', 'conflict_employee.id as id', 'conflicts.uuid as uuid')
-            ->get();
+            ->select('num_oficio', 'inicio_sancion', 'termino_sancion', 'matricula', 'conflict_employee.id as id', 'conflicts.uuid as uuid', 'castigado', 'sancion', 'resolutivo')
+            ->selectRaw("CONCAT_WS(' ', employees.nombre , apellido_p , apellido_m) AS nombre")
+            ->when($request->column && $request->operator, function ($query) use ($request) {
+                return $query->getFilteredRows($request->column, $request->operator, $request->value, 'conflict_employee');
+            })
+            ->when($request->field && $request->sort, function ($query) use ($request) {
+                return $query->orderBy($request->field, $request->sort);
+            })
+            ->when($request->search, function ($query, $search) use ($request, $columns) {
+                foreach ($columns as $id => $column) {
+                    $query->orHaving($column, 'LIKE', '%' . $search . '%');
+                }
+            })
+            ->paginate($perPage = $request->pageSize ?? 100, $columns = ['*'], $pageName = 'nombre_de_la_tabla', $request->page ?? 1);
+
         return Inertia::render('Oficinas/secretariaTrabajo', ['conflicts' => $conflicts]);
     }
 
@@ -159,7 +173,7 @@ class ConflictController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+            return redirect()->back()->with('error', "Ocurrió un error inesperado: " . $th->getMessage());
         }
         //FALTA LOG
     }
@@ -241,7 +255,6 @@ class ConflictController extends Controller
             $conflicto->uuid = Str::uuid();
             $conflicto->tipo = 'conflictos';
             $conflicto->save();
-
             foreach ($request->empleados as $empleado) {
                 # code...
                 $data = [
@@ -259,8 +272,7 @@ class ConflictController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            // dd($th);
-            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+            return redirect()->back()->with('error', "Ocurrió un error inesperado: " . $th->getMessage());
         }
         //FALTA LOG
     }
@@ -330,7 +342,7 @@ class ConflictController extends Controller
             //throw $th;
             DB::rollBack();
             // dd($th);
-            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+            return redirect()->back()->with('error', "Ocurrió un error inesperado: " . $th->getMessage());
         }
     }
 
@@ -352,7 +364,7 @@ class ConflictController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            return redirect()->route('conflicts')->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+            return redirect()->route('conflicts')->with('error', "Ocurrió un error inesperado: " . $th->getMessage());
         }
     }
 
@@ -368,7 +380,7 @@ class ConflictController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            return redirect()->route('secretariaTrabajo')->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+            return redirect()->route('secretariaTrabajo')->with('error', "Ocurrió un error inesperado: " . $th->getMessage());
         }
     }
 }

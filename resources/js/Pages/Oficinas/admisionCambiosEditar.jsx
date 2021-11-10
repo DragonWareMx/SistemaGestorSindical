@@ -40,6 +40,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
+import Eliminar from '../../components/common/Eliminar'
+
 import { es } from "date-fns/locale";
 
 // import moment from "moment";
@@ -89,7 +91,7 @@ const useStyles = makeStyles(
 );
 
 
-const Create = ({ roles, employees }) => {
+const Edit = ({ register, employees, employee, relative, add_date}) => {
     //errores de la validacion de laravel
     const { errors } = usePage().props
     const { auth } = usePage().props;
@@ -98,10 +100,13 @@ const Create = ({ roles, employees }) => {
 
     //valores para formulario
     const [values, setValues] = useState({
-        empleado: null,
-        familiar: null,
-        parentesco: '',
+        empleado: employee || null,
+        familiar: relative || null,
+        parentesco: register.parentesco || '',
     })
+
+    //variable para permitir editar
+    const [editar, setEditar] = useState(true);
 
     //actualiza los hooks cada vez que se modifica un input
     function handleChange(e) {
@@ -116,38 +121,26 @@ const Create = ({ roles, employees }) => {
     //manda el formulario
     function handleSubmit(e) {
         e.preventDefault()
-
+        // console.log(values);
         //  se debe validar que la ultima fecha de ingreso no sea menor a 10 anos
         var fecha = new Date();
         fecha.setMonth(fecha.getMonth() - 120);
 
-        if (values.empleado !== null && values.familiar !== null) {
-            if (values.empleado !== values.familiar) {
-                //se verifica el rol para ver si pregunta por la restriccion de los 10 años o no
-                if (auth.user.roles['0'].slug == 'admin') {
-                    Inertia.post(route('admisionCambiosStore'), values,
+        if(values.empleado !== null && values.familiar !== null)
+        {
+            if(values.empleado !== values.familiar){
+                // if(values.empleado.ingreso_bolsa < fecha){
+                    Inertia.post(route('admisionCambiosRelativeStore', register.er_id), values,
                         {
                             onError: () => {
-
+                                
                             }
                         }
                     )
-                }
-                else{
-                    //si no es admin se valida que el ultimo ingreso a bolsa sea menor a 10 años
-                    if (values.empleado.ingreso_bolsa < fecha) {
-                        Inertia.post(route('admisionCambiosStore'), values,
-                            {
-                                onError: () => {
-    
-                                }
-                            }
-                        )
-                    }
-                    else {
-                        handleClickOpenAlert3();
-                    }
-                }
+                // }
+                // else {
+                //     handleClickOpenAlert3();
+                // }
             }
             else {
                 handleClickOpenAlert();
@@ -216,26 +209,26 @@ const Create = ({ roles, employees }) => {
 
     const agregarEmpleado = () => {
         // if (values.empleado) {
-        var arr = emploInfo.empleados.slice();
-        var bandera = true;
-        arr.map(emp => {
-            if (emp.id == values.empleado.id) {
-                bandera = false;
-            }
-        });
-
-        if (bandera) {
-            arr.push({
-                nombre: values.empleado.nombre + ' ' + values.empleado.apellido_p + ' ' + values.empleado.apellido_m,
-                matricula: values.empleado.matricula,
-                id: values.empleado.id,
+            var arr = emploInfo.empleados.slice();
+            var bandera = true;
+            arr.map(emp => {
+                if (emp.id == values.empleado.id) {
+                    bandera = false;
+                }
             });
-            setEmploInfo({ empleados: arr });
-            document.getElementsByClassName('MuiAutocomplete-clearIndicator')[0].click();
-        }
-        else {
-            handleClickOpenAlert();
-        }
+
+            if (bandera) {
+                arr.push({
+                    nombre: values.empleado.nombre + ' ' + values.empleado.apellido_p + ' ' + values.empleado.apellido_m,
+                    matricula: values.empleado.matricula,
+                    id: values.empleado.id,
+                });
+                setEmploInfo({ empleados: arr });
+                document.getElementsByClassName('MuiAutocomplete-clearIndicator')[0].click();
+            }
+            else {
+                handleClickOpenAlert();
+            }
         // }
         // else {
         //     handleClickOpenAlert2();
@@ -245,26 +238,26 @@ const Create = ({ roles, employees }) => {
 
     const agregarFamiliar = () => {
         // if (values.familiar) {
-        var arr = famInfo.familiar.slice();
-        var bandera = true;
-        arr.map(fam => {
-            if (fam.id == values.familiar.id) {
-                bandera = false;
-            }
-        });
-
-        if (bandera) {
-            arr.push({
-                nombre: values.familiar.nombre + ' ' + values.familiar.apellido_p + ' ' + values.familiar.apellido_m,
-                matricula: values.familiar.matricula,
-                id: values.familiar.id,
+            var arr = famInfo.familiar.slice();
+            var bandera = true;
+            arr.map(fam => {
+                if (fam.id == values.familiar.id) {
+                    bandera = false;
+                }
             });
-            setFamInfo({ familiar: arr });
-            document.getElementsByClassName('MuiAutocomplete-clearIndicator')[0].click();
-        }
-        else {
-            handleClickOpenAlert();
-        }
+
+            if (bandera) {
+                arr.push({
+                    nombre: values.familiar.nombre + ' ' + values.familiar.apellido_p + ' ' + values.familiar.apellido_m,
+                    matricula: values.familiar.matricula,
+                    id: values.familiar.id,
+                });
+                setFamInfo({ familiar: arr });
+                document.getElementsByClassName('MuiAutocomplete-clearIndicator')[0].click();
+            }
+            else {
+                handleClickOpenAlert();
+            }
         // }
         // else {
         //     handleClickOpenAlert2();
@@ -316,6 +309,16 @@ const Create = ({ roles, employees }) => {
         }))
     }
 
+    const permitirEditar= () => {
+        setEditar(false);
+
+        document.getElementById('btn-editar').style.display = "none";
+        document.getElementById('bolsa2').style.display = "none";
+        document.getElementById('btns-form').style.display = "flex";
+        document.getElementById('btn-add').style.display = "flex";
+        document.getElementById('bolsa1').style.display = "flex";
+    }    
+
     return (
         <div className="row">
             <Container>
@@ -325,7 +328,7 @@ const Create = ({ roles, employees }) => {
                             <div className="col s12 m9 l10 xl10 titulo-modulo left" style={{ marginTop: "15px" }}>
                                 {/* regresar */}
                                 <InertiaLink href={route('admisionCambios')} className="icon-back-course tooltipped" data-position="left" data-tooltip="Regresar"><i className="material-icons">keyboard_backspace</i></InertiaLink>
-                                AGREGAR REGISTRO
+                                REGISTRO
                             </div>
 
                             <div className="col s12">
@@ -338,10 +341,13 @@ const Create = ({ roles, employees }) => {
 
                                         <div className="col s12" style={{ marginTop: '10px' }}>
                                             <Autocomplete
+
                                                 {...defaultProps}
                                                 renderInput={(params) => (
                                                     <TextField {...params} id="empleado" className={classes.textField} label="Empleado" variant="standard" onChange={agregarEmpleado} />
                                                 )}
+                                                defaultValue={{ matricula: employee.matricula, nombre: employee.nombre, apellido_p: employee.apellido_p, apellido_m: employee.apellido_m }}
+                                                disabled
                                             />
                                             {
                                                 errors.empleado &&
@@ -349,8 +355,12 @@ const Create = ({ roles, employees }) => {
                                             }
                                         </div>
 
-                                        <div className="col s12" style={{ marginTop: '10px' }}>
+                                        <div id="bolsa1" className="col s12" style={{ marginTop: '10px', display: 'none' }}>
                                             Último ingreso a bolsa: {values.empleado === null ? "Seleccione un empleado" : (values.empleado.ingreso_bolsa === null ? 'No tiene' : values.empleado.ingreso_bolsa)}
+                                        </div>
+
+                                        <div id="bolsa2" className="col s12" style={{ marginTop: '10px' }}>
+                                            Ingreso a bolsa: {add_date.ingreso_bolsa}
                                         </div>
 
                                         <div className="col s12" style={{ marginTop: '10px' }}>
@@ -359,17 +369,19 @@ const Create = ({ roles, employees }) => {
                                                 renderInput={(params) => (
                                                     <TextField {...params} id="familiar" className={classes.textField} label="Familiar" variant="standard" onChange={agregarFamiliar} />
                                                 )}
+                                                defaultValue={{ matricula: relative.matricula, nombre: relative.nombre, apellido_p: relative.apellido_p, apellido_m: relative.apellido_m }}
+                                                disabled={editar}
                                             />
                                             {
                                                 errors.familiar &&
                                                 <div className="helper-text" data-error={errors.familiar} style={{ "marginBottom": "10px" }}>{errors.familiar}</div>
                                             }
 
-                                            <InertiaLink href={route('admisionCambiosNewFamiliar')}><Button variant="outlined" startIcon={<AddCircleOutlineIcon />} color="success" style={{ float: "right", marginTop: '5px' }}>Nuevo</Button></InertiaLink>
+                                            <InertiaLink href={route('admisionCambiosNewFamiliar')}><Button id="btn-add" variant="outlined" startIcon={<AddCircleOutlineIcon />} color="success"  style={{ float: "right", marginTop: '5px', display: "none" }}>Nuevo</Button></InertiaLink>
                                         </div>
 
                                         <div class="input-field col s12" style={{ marginTop: '15px' }}>
-                                            <textarea id="textarea1" class="materialize-textarea" onChange={handleChangeTextarea} values={values.parentesco}></textarea>
+                                            <textarea id="textarea1" class="materialize-textarea" onChange={handleChangeTextarea} value={values.parentesco} disabled={editar}></textarea>
                                             <label for="textarea1">Parentesco</label>
                                         </div>
 
@@ -380,14 +392,25 @@ const Create = ({ roles, employees }) => {
                                     </div>
 
                                 </div>
-                                <div className="row container-buttons">
+                                <div id="btns-form" className="row container-buttons" style={{display:'none'}}>
                                     <button type="button" className=" center-align  btn waves-effect waves-light cancelar" style={{ marginRight: "15px" }} onClick={cancelEditUser}>Cancelar</button>
-                                    < button type="submit" className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
+                                    {(() => {
+                                        if (auth.user.roles['0'].slug == 'admin' || auth.user.roles['0'].name == 'secGen' || auth.user.roles['0'].name == 'respAC') {
+                                            return <Eliminar oficina={'Admision y Cambios'} ruta={'admisionCambiosDestroy'} id={register.er_id} />
+                                        }
+                                    })()}
+                                    <button type="submit" className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
                                         Guardar
                                         <i className="material-icons right">save</i>
                                     </button>
                                 </div>
                             </form>
+                            <div className="row container-buttons" id="btn-editar">
+                                <button  className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }} onClick={permitirEditar}>
+                                    Editar
+                                    <i className="material-icons right">edit</i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div >
@@ -458,6 +481,6 @@ const Create = ({ roles, employees }) => {
     )
 }
 
-Create.layout = page => <Layout children={page} title="Escuela Sindical - Admisión y Cambios" pageTitle="Admisión y Cambios" />
+Edit.layout = page => <Layout children={page} title="Escuela Sindical - Admisión y Cambios" pageTitle="Admisión y Cambios" />
 
-export default Create
+export default Edit

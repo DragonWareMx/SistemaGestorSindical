@@ -13,22 +13,24 @@ class LogController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $columns = ['categoria', 'descripcion', 'logs.id', 'users.email', 'users.foto', 'matricula', 'nombre', 'apellido_p', 'apellido_m'];
         $logs = Log::leftJoin('users', 'users.id', '=', 'logs.user_id')
                     ->leftJoin('employees', 'users.id', '=', 'employees.user_id')
                     ->select('categoria', 'descripcion', 'logs.id', 'users.email', 'users.foto', 'matricula', 'nombre', 'apellido_p', 'apellido_m')
-                    ->orderBy('id', 'desc')
-                    ->take(2000)
-                    ->get();
-        // $employees = Employee::with('category:nombre,id', 'unit:nombre,id,regime_id', 'unit.regime:nombre,id', 'user:id')
-        // ->when($request->deleted == "true", function ($query, $deleted) {
-        //     return $query->onlyTrashed();
-        // })
-        // ->when($request->user == "true", function ($query, $user) {
-        //     return $query->whereHas('user');
-        // })
-        // ->get(['id', 'uuid', 'nombre', 'apellido_p', 'apellido_m', 'fecha_nac', 'sexo', 'antiguedad', 'estado', 'ciudad', 'colonia', 'calle', 'cp', 'num_ext', 'num_int', 'tel', 'matricula', 'category_id', 'unit_id', 'user_id']);
+                    ->when($request->column && $request->operator, function ($query) use ($request) {
+                        return $query->getFilteredRows($request->column, $request->operator, $request->value, 'logs');
+                    })
+                    ->when($request->field && $request->sort, function ($query) use ($request) {
+                        return $query->orderBy($request->field, $request->sort);
+                    })
+                    ->when($request->search, function ($query, $search) use ($request, $columns) {
+                        foreach ($columns as $id => $column) {
+                            $query->orHaving($column, 'LIKE', '%'.$search.'%');
+                        }
+                    })
+                    ->paginate($perPage = $request->pageSize ?? 100, $columns = ['*'], $pageName = 'logs', $request->page ?? 1);
 
         return Inertia::render('Logs/Index', [
             'logs' => Inertia::lazy(fn () => $logs),
