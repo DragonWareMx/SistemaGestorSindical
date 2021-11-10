@@ -32,7 +32,7 @@ class ElectionController extends Controller
             })
             ->when($request->search, function ($query, $search) use ($request, $columns) {
                 foreach ($columns as $id => $column) {
-                    $query->orHaving($column, 'LIKE', '%'.$search.'%');
+                    $query->orHaving($column, 'LIKE', '%' . $search . '%');
                 }
             })
             ->paginate($perPage = $request->pageSize ?? 100, $columns = ['*'], $pageName = 'elections', $request->page ?? 1);
@@ -110,7 +110,7 @@ class ElectionController extends Controller
             //throw $th;
             DB::rollBack();
             dd($th);
-            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+            return redirect()->back()->with('error', "Ocurrió un error inesperado: " . $th->getMessage());
         }
     }
 
@@ -131,7 +131,7 @@ class ElectionController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+            return redirect()->back()->with('error', "Ocurrió un error inesperado: " . $th->getMessage());
         }
     }
 
@@ -186,7 +186,7 @@ class ElectionController extends Controller
             //throw $th;
             dd($th);
             DB::rollBack();
-            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+            return redirect()->back()->with('error', "Ocurrió un error inesperado: " . $th->getMessage());
         }
     }
 
@@ -209,7 +209,7 @@ class ElectionController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            return redirect()->route('secretariaInterior')->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+            return redirect()->route('secretariaInterior')->with('error', "Ocurrió un error inesperado: " . $th->getMessage());
         }
     }
 }

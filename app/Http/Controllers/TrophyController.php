@@ -19,10 +19,10 @@ class TrophyController extends Controller
      */
     public function index(Request $request)
     {
-        $columns = ['matricula','employee_trophie.id','premio','observaciones', 'nombre'];
-        $trophies = Trophy::join('employee_trophie','trophies.id','employee_trophie.trophie_id')
-            ->leftJoin('employees','employee_trophie.employee_id','employees.id')
-            ->select('matricula','employee_trophie.id as id','trophies.nombre as premio','trophies.observaciones as observaciones')
+        $columns = ['matricula', 'employee_trophie.id', 'premio', 'observaciones', 'nombre'];
+        $trophies = Trophy::join('employee_trophie', 'trophies.id', 'employee_trophie.trophie_id')
+            ->leftJoin('employees', 'employee_trophie.employee_id', 'employees.id')
+            ->select('matricula', 'employee_trophie.id as id', 'trophies.nombre as premio', 'trophies.observaciones as observaciones')
             ->selectRaw("CONCAT_WS(' ', employees.nombre , apellido_p , apellido_m) AS nombre")
             ->when($request->column && $request->operator, function ($query) use ($request) {
                 return $query->getFilteredRows($request->column, $request->operator, $request->value, 'employee_trophie');
@@ -32,12 +32,12 @@ class TrophyController extends Controller
             })
             ->when($request->search, function ($query, $search) use ($request, $columns) {
                 foreach ($columns as $id => $column) {
-                    $query->orHaving($column, 'LIKE', '%'.$search.'%');
+                    $query->orHaving($column, 'LIKE', '%' . $search . '%');
                 }
             })
             ->paginate($perPage = $request->pageSize ?? 100, $columns = ['*'], $pageName = 'trophies', $request->page ?? 1);
 
-        return Inertia::render('Oficinas/accionFemenil',['trophies' => $trophies]);
+        return Inertia::render('Oficinas/accionFemenil', ['trophies' => $trophies]);
     }
 
     public function trophy($id)
@@ -93,7 +93,7 @@ class TrophyController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+            return redirect()->back()->with('error', "Ocurrió un error inesperado: " . $th->getMessage());
         }
         //falta el log
     }
@@ -156,7 +156,7 @@ class TrophyController extends Controller
             //throw $th;
             dd($th);
             DB::rollBack();
-            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+            return redirect()->back()->with('error', "Ocurrió un error inesperado: " . $th->getMessage());
         }
     }
 
@@ -179,7 +179,7 @@ class TrophyController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            return redirect()->route('accionFemenil')->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+            return redirect()->route('accionFemenil')->with('error', "Ocurrió un error inesperado: " . $th->getMessage());
         }
     }
 }
