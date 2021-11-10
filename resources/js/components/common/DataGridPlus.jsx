@@ -567,7 +567,7 @@ function Toolbar(props) {
                 </Grid>
                 {props.mode == 'client' ?
                     <Grid item xs="auto" container>
-                        <GridToolbarExport />
+                        <GridToolbarExport csvOptions={{ utf8WithBom: true }} />
                     </Grid>
                 :
                     <Grid item xs="auto" container onClick={handleClickOpen}>
