@@ -137,3 +137,22 @@
     color: #263238 !important;
     box-shadow: none;
 }
+.link-add-bd-c{
+    cursor: pointer;
+    font-weight: 500;
+    text-decoration: underline;
+    padding-left: 10px !important;
+}
+.btn-cancelar-op-c{
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 15px;
+    text-align: center;
+    padding: 8px 10px !important;
+    width: auto !important;
+    color: #263238;
+    cursor: pointer;
+}
+
