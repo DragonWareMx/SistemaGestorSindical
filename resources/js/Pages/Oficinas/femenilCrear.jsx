@@ -62,7 +62,7 @@ const useStyles = makeStyles(
 );
 
 
-const femenilCrear = ({ employees, trophies }) => {
+const femenilCrear = ({employees, trophies }) => {
     //errores de la validacion de laravel
     const { errors } = usePage().props
 
@@ -157,9 +157,7 @@ const femenilCrear = ({ employees, trophies }) => {
                                 AGREGAR REGISTRO
                             </div>
 
-                            <div className='col s12'>
-                                <Alertas />
-                            </div>
+                            <Alertas />
                             {/* ----Formulario---- */}
                             <form onSubmit={handleSubmit}>
                                 <div className="row div-form-register" style={{ "padding": "3%" }}>
@@ -190,13 +188,13 @@ const femenilCrear = ({ employees, trophies }) => {
                                             }
                                         </div>
                                         <AgregarCosa
-                                            cosa={'nombre'}
-                                            foto={false}
+                                                    cosa={'trofeo'}
+                                                    foto={false}
                                         ></AgregarCosa>
                                     </div>
                                 </div>
                                 <div className="row container-buttons">
-                                    <button type="button" className=" center-align  btn waves-effect waves-light cancelar" style={{ marginRight: "15px" }} onClick={cancelEditUser}>Cancelar</button>
+                                    <button className=" center-align  btn waves-effect waves-light cancelar" style={{ marginRight: "15px" }} onClick={cancelEditUser}>Cancelar</button>
                                     < button type="submit" className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
                                         Guardar
                                         <i className="material-icons right">save</i>

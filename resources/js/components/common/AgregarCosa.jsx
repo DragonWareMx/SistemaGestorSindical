@@ -18,6 +18,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 import PublishIcon from "@mui/icons-material/Publish";
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
+import '/css/users.css'
 
 const useStyles = makeStyles((theme) => ({
     input: {
@@ -29,6 +30,24 @@ const useStyles = makeStyles((theme) => ({
         "&:not(.Mui-disabled):hover::before": {
             borderColor: "#1DA3A8",
         },
+        '& .MuiInput-underline:before': {
+            borderBottom: `none`,
+        },
+        '& .MuiInput-underline:after': {
+            borderBottom: "none",
+        },
+        '& .MuiInput-underline:focus': {
+            borderBottom: "none",
+        },
+        '& .MuiInput-underline:hover': {
+            borderBottom: "none",
+        },
+        '& .MuiInputBase-root-MuiInput-root:hover:not(.Mui-disabled):before': {
+            borderBottom: "none",
+        },
+        '& .css-ghsjzk-MuiInputBase-root-MuiInput-root:hover:not(.Mui-disabled):before': {
+            borderBottom: "none",
+        },
     },
     formTextLabel: {
         fontFamily: "Atma",
@@ -38,36 +57,6 @@ const useStyles = makeStyles((theme) => ({
     root: {
         width: "100%",
         marginRight: "5%",
-        "& .MuiOutlinedInput-input": {
-            color: "#9c9c9c",
-        },
-        "& .MuiInputLabel-root": {
-            color: "#9c9c9c",
-        },
-        "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-            border: "none",
-            borderRadius: "0px",
-            borderBottom: "1px solid #8b8b8b",
-        },
-        "&:hover .MuiOutlinedInput-input": {
-            color: "#1DA3A8",
-        },
-        "&:hover .MuiInputLabel-root": {
-            color: "#1DA3A8",
-        },
-        "&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-            borderBottom: "1px solid #1DA3A8",
-        },
-        "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
-            color: "#8b8b8b",
-        },
-        "& .MuiInputLabel-root.Mui-focused": {
-            color: "#8b8b8b",
-        },
-        "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-            {
-                borderColor: "#8b8b8b",
-            },
     },
 }));
 
@@ -163,7 +152,7 @@ const AgregarCosa = ({cosa, foto, link}) => {
         return (
             <>
             <Grid
-                className="link-add-bd"
+                className="link-add-bd-c"
                 onClick={handleClickOpenModal}
             >
                 Agregar {cosa}
@@ -188,7 +177,7 @@ const AgregarCosa = ({cosa, foto, link}) => {
                             <Grid
                                 item
                                 xs={12}
-                                style={{ marginBottom: "20px" }}
+                                style={{ marginBottom: "20px", marginTop:'10px' }}
                             >
                                 <TextField
                                     id="newMarca"
@@ -313,19 +302,16 @@ const AgregarCosa = ({cosa, foto, link}) => {
                         }}
                     >
                         <Grid
-                            className="btn-cancelar-op"
+                            className="btn-cancelar-op-c"
                             onClick={handleCloseModal}
                         >
                             CANCELAR
                         </Grid>
-                        <Button
-                            className="button-filter button-update btn-second"
-                            type="button"
-                            startIcon={<ArrowRightAltIcon />}
-                            onClick={handleSubmitCosa}
-                        >
+                        
+                        < button type="button" style={{backgroundColor:'#108058', marginLeft: '10px'}} onClick={handleSubmitCosa} className=" center-align btn waves-effect waves-light guardar" >
                             Agregar
-                        </Button>
+                            <i className="material-icons right">save</i>
+                        </button>
                     </Grid>
                 </DialogActions>
             </form>
