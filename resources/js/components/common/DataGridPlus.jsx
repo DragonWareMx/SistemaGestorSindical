@@ -320,7 +320,6 @@ const DataGridPlus = ({rowsJson, columns, tableName, extra, lazyLoad, mode, disa
 
     //cada vez que cambia el rowsJson significa que ya termino de cargar los datos
     useEffect(() => {
-        console.log(rowsJson)
         if(config == 'server'){
             if(noRowsLoading && rowsJson){
                 setNoRowsLoading(false)
@@ -426,7 +425,6 @@ const DataGridPlus = ({rowsJson, columns, tableName, extra, lazyLoad, mode, disa
     }, [sortModel]);
 
     useEffect(() => {
-        console.log(rowsJson)
         if(lazyLoad)
             Inertia.reload({
                 only: [tableName],
