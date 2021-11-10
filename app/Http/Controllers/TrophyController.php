@@ -24,18 +24,7 @@ class TrophyController extends Controller
             ->leftJoin('employees','employee_trophie.employee_id','employees.id')
             ->select('matricula','employee_trophie.id as id','trophies.nombre as premio','trophies.observaciones as observaciones')
             ->selectRaw("CONCAT_WS(' ', employees.nombre , apellido_p , apellido_m) AS nombre")
-            ->when($request->column && $request->operator, function ($query) use ($request) {
-                return $query->getFilteredRows($request->column, $request->operator, $request->value, 'employee_trophie');
-            })
-            ->when($request->field && $request->sort, function ($query) use ($request) {
-                return $query->orderBy($request->field, $request->sort);
-            })
-            ->when($request->search, function ($query, $search) use ($request, $columns) {
-                foreach ($columns as $id => $column) {
-                    $query->orHaving($column, 'LIKE', '%'.$search.'%');
-                }
-            })
-            ->paginate($perPage = $request->pageSize ?? 100, $columns = ['*'], $pageName = 'trophies', $request->page ?? 1);
+            ->DataGridPlus($request, $columns, 'employee_trophie', 20000);
 
         return Inertia::render('Oficinas/accionFemenil',['trophies' => $trophies]);
     }

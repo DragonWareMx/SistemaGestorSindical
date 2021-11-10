@@ -42,45 +42,21 @@ class UserController extends Controller
             ->when($request->deleted == "true", function ($query, $deleted) {
                 return $query->onlyTrashed();
             })
-            ->when($request->column && $request->operator, function ($query) use ($request) {
-                return $query->getFilteredRows($request->column, $request->operator, $request->value, 'users');
-            })
-            ->when($request->field && $request->sort, function ($query) use ($request) {
-                return $query->orderBy($request->field, $request->sort);
-            })
-            ->when($request->search, function ($query, $search) use ($request, $columns) {
-                foreach ($columns as $id => $column) {
-                    $query->orHaving($column, 'LIKE', '%'.$search.'%');
-                }
-            })
-            ->paginate($perPage = $request->pageSize ?? 100, $columns = ['*'], $pageName = 'users', $request->page ?? 1);
-
+            ->DataGridPlus($request, $columns, 'users', 20000);
         }
         else {
             if(Auth::user()->roles[0]->slug == 'asistHJ' || Auth::user()->roles[0]->slug == 'respHJ') {
                 $users = User::leftJoin('employees', 'users.id', '=', 'employees.user_id')
-            ->select('users.id', 'users.uuid','email', 'matricula', 'users.created_at', 'employees.deleted_at', 'foto')
-            ->selectRaw("CONCAT_WS(' ', nombre , apellido_p , apellido_m) AS nombre")
-            ->where('email', '!=', 'test@dragonware.com.mx')
-            ->whereHas('roles', function (Builder $query) {
-                $query->where('slug', '=', 'asistHJ')->orWhere('slug', '=', 'respHJ');
-            })
-            ->when($request->deleted == "true", function ($query, $deleted) {
-                return $query->onlyTrashed();
-            })
-            ->when($request->column && $request->operator, function ($query) use ($request) {
-                return $query->getFilteredRows($request->column, $request->operator, $request->value, 'users');
-            })
-            ->when($request->field && $request->sort, function ($query) use ($request) {
-                return $query->orderBy($request->field, $request->sort);
-            })
-            ->when($request->search, function ($query, $search) use ($request, $columns) {
-                foreach ($columns as $id => $column) {
-                    $query->orHaving($column, 'LIKE', '%'.$search.'%');
-                }
-            })
-            ->paginate($perPage = $request->pageSize ?? 100, $columns = ['*'], $pageName = 'users', $request->page ?? 1);
-
+                ->select('users.id', 'users.uuid','email', 'matricula', 'users.created_at', 'employees.deleted_at', 'foto')
+                ->selectRaw("CONCAT_WS(' ', nombre , apellido_p , apellido_m) AS nombre")
+                ->where('email', '!=', 'test@dragonware.com.mx')
+                ->whereHas('roles', function (Builder $query) {
+                    $query->where('slug', '=', 'asistHJ')->orWhere('slug', '=', 'respHJ');
+                })
+                ->when($request->deleted == "true", function ($query, $deleted) {
+                    return $query->onlyTrashed();
+                })
+                ->DataGridPlus($request, $columns, 'users', 20000);
             }
             if(Auth::user()->roles[0]->slug == 'asistConflict' || Auth::user()->roles[0]->slug == 'respConflict') {
                 $users = User::leftJoin('employees', 'users.id', '=', 'employees.user_id')
@@ -93,18 +69,7 @@ class UserController extends Controller
                 ->when($request->deleted == "true", function ($query, $deleted) {
                     return $query->onlyTrashed();
                 })
-                ->when($request->column && $request->operator, function ($query) use ($request) {
-                    return $query->getFilteredRows($request->column, $request->operator, $request->value, 'users');
-                })
-                ->when($request->field && $request->sort, function ($query) use ($request) {
-                    return $query->orderBy($request->field, $request->sort);
-                })
-                ->when($request->search, function ($query, $search) use ($request, $columns) {
-                    foreach ($columns as $id => $column) {
-                        $query->orHaving($column, 'LIKE', '%'.$search.'%');
-                    }
-                })
-                ->paginate($perPage = $request->pageSize ?? 100, $columns = ['*'], $pageName = 'users', $request->page ?? 1);
+                ->DataGridPlus($request, $columns, 'users', 20000);
             }
             if(Auth::user()->roles[0]->slug == 'asistST' || Auth::user()->roles[0]->slug == 'respST') {
                 $users = User::leftJoin('employees', 'users.id', '=', 'employees.user_id')
@@ -117,18 +82,7 @@ class UserController extends Controller
                 ->when($request->deleted == "true", function ($query, $deleted) {
                     return $query->onlyTrashed();
                 })
-                ->when($request->column && $request->operator, function ($query) use ($request) {
-                    return $query->getFilteredRows($request->column, $request->operator, $request->value, 'users');
-                })
-                ->when($request->field && $request->sort, function ($query) use ($request) {
-                    return $query->orderBy($request->field, $request->sort);
-                })
-                ->when($request->search, function ($query, $search) use ($request, $columns) {
-                    foreach ($columns as $id => $column) {
-                        $query->orHaving($column, 'LIKE', '%'.$search.'%');
-                    }
-                })
-                ->paginate($perPage = $request->pageSize ?? 100, $columns = ['*'], $pageName = 'users', $request->page ?? 1);
+                ->DataGridPlus($request, $columns, 'users', 20000);
             }
             if(Auth::user()->roles[0]->slug == 'asistSI' || Auth::user()->roles[0]->slug == 'respSI') {
                 $users = User::leftJoin('employees', 'users.id', '=', 'employees.user_id')
@@ -141,18 +95,7 @@ class UserController extends Controller
                 ->when($request->deleted == "true", function ($query, $deleted) {
                     return $query->onlyTrashed();
                 })
-                ->when($request->column && $request->operator, function ($query) use ($request) {
-                    return $query->getFilteredRows($request->column, $request->operator, $request->value, 'users');
-                })
-                ->when($request->field && $request->sort, function ($query) use ($request) {
-                    return $query->orderBy($request->field, $request->sort);
-                })
-                ->when($request->search, function ($query, $search) use ($request, $columns) {
-                    foreach ($columns as $id => $column) {
-                        $query->orHaving($column, 'LIKE', '%'.$search.'%');
-                    }
-                })
-                ->paginate($perPage = $request->pageSize ?? 100, $columns = ['*'], $pageName = 'users', $request->page ?? 1);
+                ->DataGridPlus($request, $columns, 'users', 20000);
             }
             if(Auth::user()->roles[0]->slug == 'asistAF' || Auth::user()->roles[0]->slug == 'respAF') {
                 $users = User::leftJoin('employees', 'users.id', '=', 'employees.user_id')
@@ -165,18 +108,7 @@ class UserController extends Controller
                 ->when($request->deleted == "true", function ($query, $deleted) {
                     return $query->onlyTrashed();
                 })
-                ->when($request->column && $request->operator, function ($query) use ($request) {
-                    return $query->getFilteredRows($request->column, $request->operator, $request->value, 'users');
-                })
-                ->when($request->field && $request->sort, function ($query) use ($request) {
-                    return $query->orderBy($request->field, $request->sort);
-                })
-                ->when($request->search, function ($query, $search) use ($request, $columns) {
-                    foreach ($columns as $id => $column) {
-                        $query->orHaving($column, 'LIKE', '%'.$search.'%');
-                    }
-                })
-                ->paginate($perPage = $request->pageSize ?? 100, $columns = ['*'], $pageName = 'users', $request->page ?? 1);
+                ->DataGridPlus($request, $columns, 'users', 20000);
             }
             if(Auth::user()->roles[0]->slug == 'asistAC' || Auth::user()->roles[0]->slug == 'respAC') {
                 $users = User::leftJoin('employees', 'users.id', '=', 'employees.user_id')
@@ -189,18 +121,7 @@ class UserController extends Controller
                 ->when($request->deleted == "true", function ($query, $deleted) {
                     return $query->onlyTrashed();
                 })
-                ->when($request->column && $request->operator, function ($query) use ($request) {
-                    return $query->getFilteredRows($request->column, $request->operator, $request->value, 'users');
-                })
-                ->when($request->field && $request->sort, function ($query) use ($request) {
-                    return $query->orderBy($request->field, $request->sort);
-                })
-                ->when($request->search, function ($query, $search) use ($request, $columns) {
-                    foreach ($columns as $id => $column) {
-                        $query->orHaving($column, 'LIKE', '%'.$search.'%');
-                    }
-                })
-                ->paginate($perPage = $request->pageSize ?? 100, $columns = ['*'], $pageName = 'users', $request->page ?? 1);
+                ->DataGridPlus($request, $columns, 'users', 20000);
             }
 
         }
