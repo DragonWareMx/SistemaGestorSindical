@@ -694,13 +694,25 @@ class EmployeeController extends Controller
         }
     }
 
-    public function admisionCambios(){
-
+    public function admisionCambios(Request $request){
+        $columns = ['relatives.id','relatives.uuid','nombreRelative','relatives.tel','nombreEmployee','relatives.estatus','categoria','parentesco','er_id'];
         $employees = Employee::join('employee_relative','employees.id','employee_relative.employee_id')
         ->join('employees as relatives','employee_relative.relative_id','relatives.id')
         ->join('categories','relatives.category_id','categories.id')
-        ->select('relatives.id','relatives.uuid','relatives.nombre as nombreRelative','relatives.tel','employees.nombre as nombreEmployee','relatives.estatus','categories.nombre as categoria','employee_relative.parentesco','employee_relative.id as er_id')
-        ->get();
+        ->select('relatives.id','relatives.uuid','relatives.tel','relatives.estatus','categories.nombre as categoria','employee_relative.parentesco','employee_relative.id as er_id')
+        ->selectRaw("CONCAT_WS(' ', employees.nombre , employees.apellido_p , employees.apellido_m) AS nombreEmployee, CONCAT_WS(' ', relatives.nombre , relatives.apellido_p , relatives.apellido_m) AS nombreRelative")
+        ->when($request->column && $request->operator, function ($query) use ($request) {
+            return $query->getFilteredRows($request->column, $request->operator, $request->value, 'relatives');
+        })
+        ->when($request->field && $request->sort, function ($query) use ($request) {
+            return $query->orderBy($request->field, $request->sort);
+        })
+        ->when($request->search, function ($query, $search) use ($request, $columns) {
+            foreach ($columns as $id => $column) {
+                $query->orHaving($column, 'LIKE', '%'.$search.'%');
+            }
+        })
+        ->paginate($perPage = $request->pageSize ?? 100, $columns = ['*'], $pageName = 'employees', $request->page ?? 1);
 
         return Inertia::render('Oficinas/admisionCambios',['employees' => $employees]);
     }
