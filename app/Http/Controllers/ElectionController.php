@@ -99,7 +99,7 @@ class ElectionController extends Controller
             //throw $th;
             DB::rollBack();
             dd($th);
-            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+            return redirect()->back()->with('error', "Ocurrió un error inesperado: " . $th->getMessage());
         }
     }
 
@@ -120,7 +120,7 @@ class ElectionController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+            return redirect()->back()->with('error', "Ocurrió un error inesperado: " . $th->getMessage());
         }
     }
 
@@ -175,7 +175,7 @@ class ElectionController extends Controller
             //throw $th;
             dd($th);
             DB::rollBack();
-            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+            return redirect()->back()->with('error', "Ocurrió un error inesperado: " . $th->getMessage());
         }
     }
 
@@ -198,7 +198,7 @@ class ElectionController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            return redirect()->route('secretariaInterior')->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+            return redirect()->route('secretariaInterior')->with('error', "Ocurrió un error inesperado: " . $th->getMessage());
         }
     }
 }

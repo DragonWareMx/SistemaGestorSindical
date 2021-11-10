@@ -151,7 +151,7 @@ class ConflictController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+            return redirect()->back()->with('error', "Ocurrió un error inesperado: " . $th->getMessage());
         }
         //FALTA LOG
     }
@@ -233,7 +233,6 @@ class ConflictController extends Controller
             $conflicto->uuid = Str::uuid();
             $conflicto->tipo = 'conflictos';
             $conflicto->save();
-
             foreach ($request->empleados as $empleado) {
                 # code...
                 $data = [
@@ -251,8 +250,7 @@ class ConflictController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            // dd($th);
-            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+            return redirect()->back()->with('error', "Ocurrió un error inesperado: " . $th->getMessage());
         }
         //FALTA LOG
     }
@@ -322,7 +320,7 @@ class ConflictController extends Controller
             //throw $th;
             DB::rollBack();
             // dd($th);
-            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+            return redirect()->back()->with('error', "Ocurrió un error inesperado: " . $th->getMessage());
         }
     }
 
@@ -344,7 +342,7 @@ class ConflictController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            return redirect()->route('conflicts')->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+            return redirect()->route('conflicts')->with('error', "Ocurrió un error inesperado: " . $th->getMessage());
         }
     }
 
@@ -360,7 +358,7 @@ class ConflictController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            return redirect()->route('secretariaTrabajo')->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+            return redirect()->route('secretariaTrabajo')->with('error', "Ocurrió un error inesperado: " . $th->getMessage());
         }
     }
 }

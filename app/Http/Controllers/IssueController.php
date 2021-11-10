@@ -124,7 +124,7 @@ class IssueController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+            return redirect()->back()->with('error', "Ocurrió un error inesperado: " . $th->getMessage());
         }
     }
 
@@ -190,7 +190,7 @@ class IssueController extends Controller
             return redirect()->back()->with('success', 'El registro se editó con éxito!');
         } catch (\Throwable $th) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+            return redirect()->back()->with('error', "Ocurrió un error inesperado: " . $th->getMessage());
         }
     }
 
@@ -212,7 +212,7 @@ class IssueController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            return redirect()->route('honor')->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+            return redirect()->route('honor')->with('error', "Ocurrió un error inesperado: " . $th->getMessage());
         }
     }
 }

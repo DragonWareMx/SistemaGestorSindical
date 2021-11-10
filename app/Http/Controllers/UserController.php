@@ -32,9 +32,9 @@ class UserController extends Controller
     public function index(Request $request)
     {
 
-        $columns = ['users.id', 'users.uuid','email', 'matricula', 'users.created_at', 'employees.deleted_at', 'foto', 'nombre'];
+        $columns = ['users.id', 'users.uuid', 'email', 'matricula', 'users.created_at', 'employees.deleted_at', 'foto', 'nombre'];
 
-        if (Auth::user()->roles[0]->slug == 'admin' || Auth::user()->roles[0]->slug == 'secGen' ){
+        if (Auth::user()->roles[0]->slug == 'admin' || Auth::user()->roles[0]->slug == 'secGen') {
             $users = User::leftJoin('employees', 'users.id', '=', 'employees.user_id')
             ->select('users.id', 'users.uuid','email', 'matricula', 'users.created_at', 'employees.deleted_at', 'foto')
             ->selectRaw("CONCAT_WS(' ', nombre , apellido_p , apellido_m) AS nombre")
@@ -63,15 +63,12 @@ class UserController extends Controller
                 ->select('users.id', 'users.uuid','email', 'matricula', 'users.created_at', 'employees.deleted_at', 'foto')
                 ->selectRaw("CONCAT_WS(' ', nombre , apellido_p , apellido_m) AS nombre")
                 ->where('email', '!=', 'test@dragonware.com.mx')
-                ->whereHas('roles', function (Builder $query) {
-                    $query->where('slug', '=', 'asistConflict')->orWhere('slug', '=', 'respConflict');
-                })
                 ->when($request->deleted == "true", function ($query, $deleted) {
                     return $query->onlyTrashed();
                 })
                 ->DataGridPlus($request, $columns, 'users', 20000);
             }
-            if(Auth::user()->roles[0]->slug == 'asistST' || Auth::user()->roles[0]->slug == 'respST') {
+            if (Auth::user()->roles[0]->slug == 'asistConflict' || Auth::user()->roles[0]->slug == 'respConflict') {
                 $users = User::leftJoin('employees', 'users.id', '=', 'employees.user_id')
                 ->select('users.id', 'users.uuid','email', 'matricula', 'users.created_at', 'employees.deleted_at', 'foto')
                 ->selectRaw("CONCAT_WS(' ', nombre , apellido_p , apellido_m) AS nombre")
@@ -84,7 +81,7 @@ class UserController extends Controller
                 })
                 ->DataGridPlus($request, $columns, 'users', 20000);
             }
-            if(Auth::user()->roles[0]->slug == 'asistSI' || Auth::user()->roles[0]->slug == 'respSI') {
+            if (Auth::user()->roles[0]->slug == 'asistST' || Auth::user()->roles[0]->slug == 'respST') {
                 $users = User::leftJoin('employees', 'users.id', '=', 'employees.user_id')
                 ->select('users.id', 'users.uuid','email', 'matricula', 'users.created_at', 'employees.deleted_at', 'foto')
                 ->selectRaw("CONCAT_WS(' ', nombre , apellido_p , apellido_m) AS nombre")
@@ -97,7 +94,7 @@ class UserController extends Controller
                 })
                 ->DataGridPlus($request, $columns, 'users', 20000);
             }
-            if(Auth::user()->roles[0]->slug == 'asistAF' || Auth::user()->roles[0]->slug == 'respAF') {
+            if (Auth::user()->roles[0]->slug == 'asistSI' || Auth::user()->roles[0]->slug == 'respSI') {
                 $users = User::leftJoin('employees', 'users.id', '=', 'employees.user_id')
                 ->select('users.id', 'users.uuid','email', 'matricula', 'users.created_at', 'employees.deleted_at', 'foto')
                 ->selectRaw("CONCAT_WS(' ', nombre , apellido_p , apellido_m) AS nombre")
@@ -110,7 +107,7 @@ class UserController extends Controller
                 })
                 ->DataGridPlus($request, $columns, 'users', 20000);
             }
-            if(Auth::user()->roles[0]->slug == 'asistAC' || Auth::user()->roles[0]->slug == 'respAC') {
+            if (Auth::user()->roles[0]->slug == 'asistAF' || Auth::user()->roles[0]->slug == 'respAF') {
                 $users = User::leftJoin('employees', 'users.id', '=', 'employees.user_id')
                 ->select('users.id', 'users.uuid','email', 'matricula', 'users.created_at', 'employees.deleted_at', 'foto')
                 ->selectRaw("CONCAT_WS(' ', nombre , apellido_p , apellido_m) AS nombre")
@@ -123,7 +120,6 @@ class UserController extends Controller
                 })
                 ->DataGridPlus($request, $columns, 'users', 20000);
             }
-
         }
 
         return Inertia::render('Usuarios/Index', [
@@ -142,10 +138,10 @@ class UserController extends Controller
         //\Gate::authorize('haveaccess', 'admin.perm');
 
         return Inertia::render('Usuarios/Create', [
-            'roles'=> fn () => Role::select('name')->get(),
+            'roles' => fn () => Role::select('name')->get(),
             'employees' => fn () => Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')
-                                            ->whereDoesntHave('user')
-                                            ->get()
+                ->whereDoesntHave('user')
+                ->get()
         ]);
     }
 
@@ -161,7 +157,7 @@ class UserController extends Controller
         // \Gate::authorize('haveaccess', 'admin.perm');
 
         //valida los datos del usuario
-            $validated = $request->validate([
+        $validated = $request->validate([
             //---cuenta---
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:51200',
             'email' => 'required|email:rfc|max:255|unique:users',
@@ -188,10 +184,9 @@ class UserController extends Controller
             //si hay usuario se registra
             $rol = Role::where("name", $request->rol)->get();
 
-            if($rol->isEmpty())
-            {
+            if ($rol->isEmpty()) {
                 DB::rollBack();
-                return \Redirect::back()->with('error','Ha ocurrido un error al intentar registrar el empleado, inténtelo más tarde.');
+                return \Redirect::back()->with('error', 'Ha ocurrido un error al intentar registrar el empleado, inténtelo más tarde.');
             }
 
             $employee = Employee::findOrFail($request->empleado);
@@ -199,8 +194,7 @@ class UserController extends Controller
             $newUser = new User;
 
             // ---se crea el usuario---
-            if($request->foto)
-            {
+            if ($request->foto) {
                 //guarda la foto
                 $foto = $request->file('foto')->store('public/fotos_perfil');
                 $fileName = $request->file('foto')->hashName();
@@ -225,16 +219,14 @@ class UserController extends Controller
             $newUser->roles()->saveMany($rol);
 
 
-            if(!$newUser)
-            {
+            if (!$newUser) {
                 DB::rollBack();
                 //si hay foto se elimina del servidor
-                if($foto)
-                {
+                if ($foto) {
                     \Storage::delete($foto);
                 }
 
-                return \Redirect::back()->with('error','Ha ocurrido un error al intentar registrar el empleado, inténtelo más tarde.');
+                return \Redirect::back()->with('error', 'Ha ocurrido un error al intentar registrar el empleado, inténtelo más tarde.');
             }
 
             //se asigna el empleado al usuario
@@ -248,7 +240,7 @@ class UserController extends Controller
             $newLog->categoria = 'create';
             $newLog->user_id = Auth::id();
             $newLog->accion =
-            '{
+                '{
                 users: {
                     email: ' . $request->email . ',\n
                     rol: ' . $request->rol . ',\n
@@ -256,37 +248,34 @@ class UserController extends Controller
                 }
             }';
 
-            $newLog->descripcion = 'El usuario '.Auth::user()->email.' ha registrado un nuevo usuario con el correo: '. $newUser->email;
+            $newLog->descripcion = 'El usuario ' . Auth::user()->email . ' ha registrado un nuevo usuario con el correo: ' . $newUser->email;
 
             //SE GUARDA EL LOG
             $newLog->save();
 
-            if(!$newLog)
-            {
+            if (!$newLog) {
                 DB::rollBack();
                 //si hay foto se elimina del servidor
-                if($foto)
-                {
+                if ($foto) {
                     \Storage::delete($foto);
                 }
-                return \Redirect::back()->with('error','Ha ocurrido un error al intentar registrar el usuario, inténtelo más tarde.');
+                return \Redirect::back()->with('error', 'Ha ocurrido un error al intentar registrar el usuario, inténtelo más tarde.');
             }
 
             //SE HACE COMMIT
             DB::commit();
 
             //REDIRECCIONA A LA VISTA DE USUARIOS
-            return \Redirect::route('users.index')->with('success','El usuario ha sido registrado con éxito!');
+            return \Redirect::route('users.index')->with('success', 'El usuario ha sido registrado con éxito!');
         } catch (\Exception $e) {
             DB::rollBack();
 
             //si hay foto se elimina del servidor
-            if($foto)
-            {
+            if ($foto) {
                 \Storage::delete($foto);
             }
 
-            return \Redirect::back()->with('error','Ha ocurrido un error al intentar registrar el usuario, inténtelo más tarde.');
+            return \Redirect::back()->with('error', "Ocurrió un error inesperado al intentar registrar el usuario: " . $e->getMessage());
         }
     }
 
@@ -303,19 +292,19 @@ class UserController extends Controller
 
         return Inertia::render('Usuarios/Edit', [
             'user' => User::withTrashed()->with([
-                    'roles:name',
-                    'employee:user_id,matricula,nombre,apellido_p,apellido_m,uuid,unit_id,category_id',
-                    'employee.category:id,nombre',
-                    'employee.unit:id,nombre,regime_id',
-                    'employee.unit.regime:id,nombre'
-                ])
+                'roles:name',
+                'employee:user_id,matricula,nombre,apellido_p,apellido_m,uuid,unit_id,category_id',
+                'employee.category:id,nombre',
+                'employee.unit:id,nombre,regime_id',
+                'employee.unit.regime:id,nombre'
+            ])
                 ->where('uuid', $uuid)
                 ->select('id', 'uuid', 'email', 'foto', 'created_at', 'deleted_at')
                 ->firstOrFail(),
-            'roles'=> fn () => Role::select('name')->get(),
+            'roles' => fn () => Role::select('name')->get(),
             'employees' => fn () => Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')
-                                            ->whereDoesntHave('user')
-                                            ->get()
+                ->whereDoesntHave('user')
+                ->get()
         ]);
     }
 
@@ -337,7 +326,7 @@ class UserController extends Controller
             //---cuenta---
             'cambiar_empleado' => 'required|boolean',
             'empleado' => 'nullable|exists:employees,id',
-            'email' => 'required|email:rfc|max:255|unique:users,email,'.$id,
+            'email' => 'required|email:rfc|max:255|unique:users,email,' . $id,
 
             'cambiar_contrasena' => 'required|boolean',
             'contrasena' => [
@@ -354,18 +343,18 @@ class UserController extends Controller
         // El usuario es valido...
 
         //si hay cambio de contraseña valida que no sea nula
-        if($request->cambiar_contrasena){
-            if(is_null($request->contrasena)){
+        if ($request->cambiar_contrasena) {
+            if (is_null($request->contrasena)) {
                 DB::rollBack();
-                return \Redirect::back()->with('error','La nueva contraseña no ha sido introducida.');
+                return \Redirect::back()->with('error', 'La nueva contraseña no ha sido introducida.');
             }
         }
 
         //si hay cambio de contraseña valida que no sea nula
-        if($request->cambiar_empleado){
-            if(is_null($request->empleado)){
+        if ($request->cambiar_empleado) {
+            if (is_null($request->empleado)) {
                 DB::rollBack();
-                return \Redirect::back()->with('error','No se ha seleccionado el nuevo empleado.');
+                return \Redirect::back()->with('error', 'No se ha seleccionado el nuevo empleado.');
             }
         }
 
@@ -379,25 +368,24 @@ class UserController extends Controller
             //se busca el rol en la bd
             $rol = Role::where("name", $request->rol)->get();
 
-            if($rol->isEmpty())
-            {
+            if ($rol->isEmpty()) {
                 DB::rollBack();
-                return \Redirect::back()->with('error','Ha ocurrido un error al intentar editar el usuario, inténtelo más tarde.');
+                return \Redirect::back()->with('error', 'Ha ocurrido un error al intentar editar el usuario, inténtelo más tarde.');
             }
 
             //SE CREA EL NUEVO USUARIO
             $user = User::findOrFail($id);
 
             //guarda el empleado
-            if(!is_null($request->empleado)){
+            if (!is_null($request->empleado)) {
                 $employee = Employee::findOrFail($request->empleado);
                 $user->employee()->save($employee);
             }
 
             //guarda la foto
-            if(!is_null($request->file('foto'))){
-                if($user->foto){
-                    \Storage::delete('public/fotos_perfil/'.$user->foto);
+            if (!is_null($request->file('foto'))) {
+                if ($user->foto) {
+                    \Storage::delete('public/fotos_perfil/' . $user->foto);
                 }
 
                 //guarda la foto
@@ -418,7 +406,7 @@ class UserController extends Controller
             //---cuenta---
             $user->email = $request->email;
 
-            if($request->cambiar_contrasena){
+            if ($request->cambiar_contrasena) {
                 $user->password = \Hash::make($request->contrasena);
             }
 
@@ -434,61 +422,55 @@ class UserController extends Controller
             $newLog->categoria = 'update';
             $newLog->user_id = Auth::id();
             $newLog->accion =
-            '{
+                '{
                 users: {
-                    email: ' . $request->email .',\n
+                    email: ' . $request->email . ',\n
                     rol: ' . $request->rol . ',\n
                     empleado: ' . $request->empleado .
                 '}
             }';
 
-            $newLog->descripcion = 'El usuario '.Auth::user()->email.' ha actualizado los datos del usuario: '. $user->email;
+            $newLog->descripcion = 'El usuario ' . Auth::user()->email . ' ha actualizado los datos del usuario: ' . $user->email;
 
             //SE GUARDA EL LOG
             $newLog->save();
 
 
-            if(!$user)
-            {
+            if (!$user) {
                 DB::rollBack();
                 //si hay foto se elimina del servidor
-                if($foto)
-                {
+                if ($foto) {
                     \Storage::delete($foto);
                 }
-                return \Redirect::back()->with('error','Ha ocurrido un error al intentar editar el usuario, inténtelo más tarde.');
+                return \Redirect::back()->with('error', 'Ha ocurrido un error al intentar editar el usuario, inténtelo más tarde.');
             }
-            if(!$newLog)
-            {
+            if (!$newLog) {
                 DB::rollBack();
                 //si hay foto se elimina del servidor
-                if($foto)
-                {
+                if ($foto) {
                     \Storage::delete($foto);
                 }
-                return \Redirect::back()->with('error','Ha ocurrido un error al intentar editar el usuario, inténtelo más tarde.');
+                return \Redirect::back()->with('error', 'Ha ocurrido un error al intentar editar el usuario, inténtelo más tarde.');
             }
 
             //SE HACE COMMIT
             DB::commit();
 
             //REDIRECCIONA A LA VISTA DE USUARIOS
-            return \Redirect::back()->with('success','El usuario ha sido editado con éxito!');
+            return \Redirect::back()->with('success', 'El usuario ha sido editado con éxito!');
         } catch (\Exception $e) {
             DB::rollBack();
 
             //si hay foto se elimina del servidor
-            if($foto)
-            {
+            if ($foto) {
                 \Storage::delete($foto);
             }
             //si hay tarjeton se elimina del servidor
-            if($tarjeton_pago)
-            {
+            if ($tarjeton_pago) {
                 \Storage::delete($tarjeton_pago);
             }
 
-            return \Redirect::back()->with('error','Ha ocurrido un error al intentar editar el usuario, inténtelo más tarde.');
+            return \Redirect::back()->with('error', "Ocurrió un error inesperado al intentar editar el usuario: " . $e->getMessage());
         }
     }
 
@@ -504,21 +486,20 @@ class UserController extends Controller
         //\Gate::authorize('haveaccess', 'admin.perm');
 
         DB::beginTransaction();
-        try{
+        try {
             $user = User::findOrFail($id);
 
-            if(!$user){
+            if (!$user) {
                 DB::rollBack();
-                return \Redirect::back()->with('error','Ha ocurrido un error al intentar eliminar el usuario, inténtelo más tarde.');
+                return \Redirect::back()->with('error', 'Ha ocurrido un error al intentar eliminar el usuario, inténtelo más tarde.');
             }
 
-            if($user->id == Auth::id()){
+            if ($user->id == Auth::id()) {
                 DB::rollBack();
-                return \Redirect::back()->with('message','¡No puedes eliminar tu propio usuario!');
+                return \Redirect::back()->with('message', '¡No puedes eliminar tu propio usuario!');
             }
 
-            if(!$user->employee()->get()->isEmpty())
-            {
+            if (!$user->employee()->get()->isEmpty()) {
                 $employee = $user->employee()->firstOrFail();
                 $employee->user()->dissociate();
                 $employee->save();
@@ -532,22 +513,21 @@ class UserController extends Controller
             $newLog->categoria = 'delete';
             $newLog->user_id = Auth::id();
             $newLog->accion =
-            '{
+                '{
                 users: {
                     id: ' . $id .
                 '}
             }';
 
-            $newLog->descripcion = 'El usuario '.Auth::user()->email.' ha eliminado al usuario: '. $user->email;
+            $newLog->descripcion = 'El usuario ' . Auth::user()->email . ' ha eliminado al usuario: ' . $user->email;
 
             $newLog->save();
 
             DB::commit();
-            return \Redirect::back()->with('success','¡Usuario eliminado con éxito!');
-
+            return \Redirect::back()->with('success', '¡Usuario eliminado con éxito!');
         } catch (\Exception $e) {
             DB::rollBack();
-            return \Redirect::back()->with('error','Ha ocurrido un error al intentar eliminar el usuario, inténtelo más tarde.');
+            return \Redirect::back()->with('error', "Ocurrió un error inesperado al intentar eliminar el usuario: " . $e->getMessage());
         }
     }
 
@@ -563,17 +543,17 @@ class UserController extends Controller
         //\Gate::authorize('haveaccess', 'admin.perm');
 
         DB::beginTransaction();
-        try{
+        try {
             $user = User::withTrashed()->find($id);
 
-            if(!$user){
+            if (!$user) {
                 DB::rollBack();
-                return \Redirect::back()->with('error','Ha ocurrido un error al intentar eliminar el usuario, inténtelo más tarde.');
+                return \Redirect::back()->with('error', 'Ha ocurrido un error al intentar eliminar el usuario, inténtelo más tarde.');
             }
 
-            if($user->id == Auth::id()){
+            if ($user->id == Auth::id()) {
                 DB::rollBack();
-                return \Redirect::back()->with('message','¡No puedes eliminar tu propio usuario!');
+                return \Redirect::back()->with('message', '¡No puedes eliminar tu propio usuario!');
             }
 
             $user->restore();
@@ -584,22 +564,21 @@ class UserController extends Controller
             $newLog->categoria = 'restore';
             $newLog->user_id = Auth::id();
             $newLog->accion =
-            '{
+                '{
                 users: {
                     id: ' . $id .
                 '}
             }';
 
-            $newLog->descripcion = 'El usuario '.Auth::user()->email.' ha restaurado al usuario: '. $user->email;
+            $newLog->descripcion = 'El usuario ' . Auth::user()->email . ' ha restaurado al usuario: ' . $user->email;
 
             $newLog->save();
 
             DB::commit();
-            return \Redirect::back()->with('success','¡Usuario restaurado con éxito!');
-
+            return \Redirect::back()->with('success', '¡Usuario restaurado con éxito!');
         } catch (\Exception $e) {
             DB::rollBack();
-            return \Redirect::back()->with('error','Ha ocurrido un error al intentar restaurar el usuario, inténtelo más tarde.');
+            return \Redirect::back()->with('error', "Ocurrió un error inesperado al intentar restaurar el usuario: " . $e->getMessage());
         }
     }
 }

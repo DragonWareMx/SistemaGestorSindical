@@ -36,7 +36,7 @@ const admisionCambios = ({ employees }) => {
     },
     {
       field: 'nombreRelative',
-      headerName: 'NOMBRE DEL EMPLEADO',
+      headerName: 'NOMBRE DEL FAMILIAR',
       editable: false,
       disableColumnSelector: false,
       flex: 0.3,
@@ -61,7 +61,7 @@ const admisionCambios = ({ employees }) => {
     },
     {
       field: 'nombreEmployee',
-      headerName: 'NOMBRE DEL FAMILIAR',
+      headerName: 'NOMBRE DEL EMPLEADO',
       editable: false,
       flex: 0.4,
     },
