@@ -135,4 +135,28 @@ trait Scopes
                 break;
         }
     }
+
+    /**
+     * 
+     */
+    function scopeDataGridPlus($query, $request, $columns, $tableName, $rows = 10000){
+        if($request->modo && $request->modo == 'client')
+            return $query->take($rows)->get();
+        
+        return $query->when($request->column && $request->operator, function ($queryF) use ($request) {
+            return $queryF->getFilteredRows($request->column, $request->operator, $request->value, $tableName);
+        })
+        ->when($request->field && $request->sort, function ($queryF) use ($request) {
+            if($request->field == 'usuario')
+                return $queryF->orderBy('user_id', $request->sort);
+
+            return $queryF->orderBy($request->field, $request->sort);
+        })
+        ->when($request->search, function ($queryF, $search) use ($request, $columns) {
+            foreach ($columns as $id => $column) {
+                $queryF->orHaving($column, 'LIKE', '%'.$search.'%');
+            }
+        })
+        ->paginate($perPage = $request->pageSize ?? 100, $columns = $columns, $pageName = 'page',$request->page ?? 1);
+    }
 }

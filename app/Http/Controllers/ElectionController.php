@@ -24,18 +24,7 @@ class ElectionController extends Controller
             ->leftJoin('employees', 'election_employee.employee_id', 'employees.id')
             ->select('election_employee.id', 'matricula', 'election_employee.num_oficio', 'elections.fecha', 'fecha_voto')
             ->selectRaw("CONCAT_WS(' ', employees.nombre , apellido_p , apellido_m) AS nombre")
-            ->when($request->column && $request->operator, function ($query) use ($request) {
-                return $query->getFilteredRows($request->column, $request->operator, $request->value, 'election_employee');
-            })
-            ->when($request->field && $request->sort, function ($query) use ($request) {
-                return $query->orderBy($request->field, $request->sort);
-            })
-            ->when($request->search, function ($query, $search) use ($request, $columns) {
-                foreach ($columns as $id => $column) {
-                    $query->orHaving($column, 'LIKE', '%' . $search . '%');
-                }
-            })
-            ->paginate($perPage = $request->pageSize ?? 100, $columns = ['*'], $pageName = 'elections', $request->page ?? 1);
+            ->DataGridPlus($request, $columns, 'election_employee', 20000);
 
         return Inertia::render('Oficinas/secretariaInterior', ['elections' => $elections]);
     }

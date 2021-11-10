@@ -30,18 +30,7 @@ class ConflictController extends Controller
             ->leftJoin('employees', 'conflict_employee.employee_id', 'employees.id')
             ->select('num_oficio', 'inicio_sancion', 'termino_sancion', 'matricula', 'conflict_employee.id as id', 'conflicts.uuid as uuid', 'castigado', 'sancion', 'resolutivo')
             ->selectRaw("CONCAT_WS(' ', employees.nombre , apellido_p , apellido_m) AS nombre")
-            ->when($request->column && $request->operator, function ($query) use ($request) {
-                return $query->getFilteredRows($request->column, $request->operator, $request->value, 'conflict_employee');
-            })
-            ->when($request->field && $request->sort, function ($query) use ($request) {
-                return $query->orderBy($request->field, $request->sort);
-            })
-            ->when($request->search, function ($query, $search) use ($request, $columns) {
-                foreach ($columns as $id => $column) {
-                    $query->orHaving($column, 'LIKE', '%' . $search . '%');
-                }
-            })
-            ->paginate($perPage = $request->pageSize ?? 100, $columns = ['*'], $pageName = 'nombre_de_la_tabla', $request->page ?? 1);
+            ->DataGridPlus($request, $columns, 'conflict_employee', 20000);
 
         return Inertia::render('Oficinas/conflictos', ['conflicts' => $conflicts]);
     }
@@ -82,18 +71,7 @@ class ConflictController extends Controller
             ->leftJoin('employees', 'conflict_employee.employee_id', 'employees.id')
             ->select('num_oficio', 'inicio_sancion', 'termino_sancion', 'matricula', 'conflict_employee.id as id', 'conflicts.uuid as uuid', 'castigado', 'sancion', 'resolutivo')
             ->selectRaw("CONCAT_WS(' ', employees.nombre , apellido_p , apellido_m) AS nombre")
-            ->when($request->column && $request->operator, function ($query) use ($request) {
-                return $query->getFilteredRows($request->column, $request->operator, $request->value, 'conflict_employee');
-            })
-            ->when($request->field && $request->sort, function ($query) use ($request) {
-                return $query->orderBy($request->field, $request->sort);
-            })
-            ->when($request->search, function ($query, $search) use ($request, $columns) {
-                foreach ($columns as $id => $column) {
-                    $query->orHaving($column, 'LIKE', '%' . $search . '%');
-                }
-            })
-            ->paginate($perPage = $request->pageSize ?? 100, $columns = ['*'], $pageName = 'nombre_de_la_tabla', $request->page ?? 1);
+            ->DataGridPlus($request, $columns, 'conflict_employee', 20000);
 
         return Inertia::render('Oficinas/secretariaTrabajo', ['conflicts' => $conflicts]);
     }

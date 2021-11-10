@@ -27,18 +27,7 @@ class IssueController extends Controller
             ->leftJoin('employees', 'employee_issue.employee_id', 'employees.id')
             ->select('num_oficio', 'inicio_sancion', 'termino_sancion', 'matricula', 'employee_issue.id as id', 'issues.uuid as uuid', 'sancion', 'castigado')
             ->selectRaw("CONCAT_WS(' ', employees.nombre , apellido_p , apellido_m) AS nombre")
-            ->when($request->column && $request->operator, function ($query) use ($request) {
-                return $query->getFilteredRows($request->column, $request->operator, $request->value, 'employee_issue');
-            })
-            ->when($request->field && $request->sort, function ($query) use ($request) {
-                return $query->orderBy($request->field, $request->sort);
-            })
-            ->when($request->search, function ($query, $search) use ($request, $columns) {
-                foreach ($columns as $id => $column) {
-                    $query->orHaving($column, 'LIKE', '%' . $search . '%');
-                }
-            })
-            ->paginate($perPage = $request->pageSize ?? 100, $columns = ['*'], $pageName = 'issues', $request->page ?? 1);
+            ->DataGridPlus($request, $columns, 'employee_issue', 20000);
 
         return Inertia::render('Oficinas/honorJusticia', ['issues' => $issues]);
     }

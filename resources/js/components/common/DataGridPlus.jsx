@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import {
+    useParams
+} from "react-router-dom";
 import { Inertia } from '@inertiajs/inertia'
 import {
     DataGrid,
@@ -24,6 +27,15 @@ import Grid from '@mui/material/Grid';
 import PropTypes from 'prop-types';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
+import CachedIcon from '@mui/icons-material/Cached';
+
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
 //  Pagination
 import Pagination from '@mui/material/Pagination';
 import PaginationItem from '@mui/material/PaginationItem';
@@ -241,11 +253,28 @@ import SearchIcon from '@mui/icons-material/Search';
  * @param {*} lazyLoad - SOLO ES NECESARIO EN MODO SERVIDOR(true o False) Si es true la tabla se mostrará vacia y esperará al servidor para recibir los datos.
  */
 const DataGridPlus = ({rowsJson, columns, tableName, extra, lazyLoad, mode, disableSelectionOnClick, checkboxSelection}) => {
+    const windowUrl = window.location.search;
+    const params = new URLSearchParams(windowUrl);
+    const paramsMode = params.get('modo')
+
+    const [config, setConfig] = useState(paramsMode ? paramsMode == 'server' ? 'server' : 'client' : mode ?? 'client')
+
+    useEffect(() => {
+        Inertia.reload({
+            only: [tableName],
+            data: {
+                modo: config,
+            },
+            replace: true
+        })
+        setLoading(true)
+    }, [config]);
+
     const [rows, setRows] = useState(
         lazyLoad ?
             []
         :
-            mode && mode == 'server' ?
+            config == 'server' ?
                 rowsJson ?
                     rowsJson.data
                 :
@@ -261,7 +290,7 @@ const DataGridPlus = ({rowsJson, columns, tableName, extra, lazyLoad, mode, disa
         setSearchText(searchValue);
 
         //Server-Side
-        if(mode && mode == 'server'){
+        if(config == 'server'){
             Inertia.reload({
                 only: [tableName],
                 data: {
@@ -291,7 +320,7 @@ const DataGridPlus = ({rowsJson, columns, tableName, extra, lazyLoad, mode, disa
 
     //cada vez que cambia el rowsJson significa que ya termino de cargar los datos
     useEffect(() => {
-        if(mode && mode == 'server'){
+        if(config == 'server'){
             if(noRowsLoading && rowsJson){
                 setNoRowsLoading(false)
                 setLoading(false)
@@ -336,14 +365,14 @@ const DataGridPlus = ({rowsJson, columns, tableName, extra, lazyLoad, mode, disa
     }
 
     useEffect(() => {
-        if(mode && mode == 'server'){
+        if(config == 'server'){
             loadPagedRowsServerSide()
         }
     }, [page]);
 
     useEffect(() => {
         if(page == 0){
-            if(mode && mode == 'server'){
+            if(config == 'server'){
                 loadPagedRowsServerSide()
             }
         }
@@ -359,7 +388,7 @@ const DataGridPlus = ({rowsJson, columns, tableName, extra, lazyLoad, mode, disa
     }, []);
 
     useEffect(() => {
-        if(filter && mode && mode == 'server'){
+        if(filter && config == 'server'){
             Inertia.reload({
                 only: [tableName],
                 data: {
@@ -385,7 +414,7 @@ const DataGridPlus = ({rowsJson, columns, tableName, extra, lazyLoad, mode, disa
     };
 
     useEffect(() => {
-        if(sortModel && mode && mode == 'server'){
+        if(sortModel && config == 'server'){
             Inertia.reload({
                 only: [tableName],
                 data: sortModel[0] ?? {field: null, sort: null},
@@ -401,6 +430,9 @@ const DataGridPlus = ({rowsJson, columns, tableName, extra, lazyLoad, mode, disa
                 only: [tableName],
                 replace: true
             })
+        
+        if(paramsMode && !rowsJson)
+            setRows([])
     }, []);
     
     return (
@@ -409,7 +441,7 @@ const DataGridPlus = ({rowsJson, columns, tableName, extra, lazyLoad, mode, disa
                 <div style={{ display: 'flex', height: '100%' }}>
                     <div style={{ flexGrow: 1 }}>
                             <DataGrid
-                                rows={rows}
+                                rows={rows ?? []}
                                 columns={columns}
 
                                 components={{
@@ -423,7 +455,17 @@ const DataGridPlus = ({rowsJson, columns, tableName, extra, lazyLoad, mode, disa
                                         value: searchText,
                                         onChange: (event) => requestSearch(event.target.value),
                                         clearSearch: () => requestSearch(''),
-                                        extra: extra
+                                        extra: extra,
+                                        onConfigChange: () => {
+                                            if(config == 'server')
+                                                setConfig('client')
+                                            else
+                                                setConfig('server')
+                                            
+                                            setRows([])
+                                            setNoRowsLoading(true)
+                                        },
+                                        mode: config
                                     },
                                     loadingOverlay: {
                                         icon: noRowsLoading
@@ -436,21 +478,24 @@ const DataGridPlus = ({rowsJson, columns, tableName, extra, lazyLoad, mode, disa
                                 onPageChange={(newPage) => setPage(newPage)}
                                 onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
                                 pagination
-                                paginationMode={mode ?? 'client'}      
+                                paginationMode={config}      
                                 rowCount={
-                                    mode && mode == 'server' ?
+                                    config == 'server' ?
                                         rowsJson ?
                                             rowsJson.total
                                         :
                                             0
                                     :
-                                        rows.length
+                                        rows ?
+                                            rows.length
+                                        :
+                                            0
                                 }
 
-                                filterMode={mode ?? 'client'}
+                                filterMode={config}
                                 onFilterModelChange={onFilterChange}
 
-                                sortingMode={mode ?? 'client'}
+                                sortingMode={config}
                                 sortModel={sortModel}
                                 onSortModelChange={handleSortModelChange}
                                 
@@ -467,8 +512,19 @@ const DataGridPlus = ({rowsJson, columns, tableName, extra, lazyLoad, mode, disa
 
 function Toolbar(props) {
     const classes = useStyles();
+    const [open, setOpen] = React.useState(false);
+
+    const onConfigChange = props.onConfigChange
+    const handleClickOpen = () => {
+      setOpen(true);
+    };
+  
+    const handleClose = () => {
+      setOpen(false);
+    };
 
     return (
+        <>
         <Grid container className={classes.toolBarRoot}>
             <Grid item xs={12} md style={{marginBottom: 10, marginLeft: 5, marginTop: 7, marginRight: 7}}>
                 <TextField
@@ -509,21 +565,56 @@ function Toolbar(props) {
                 <Grid item xs="auto" container>
                     <GridToolbarDensitySelector />
                 </Grid>
-                <Grid item xs="auto" container>
-                    <GridToolbarExport />
-                </Grid>
+                {props.mode == 'client' ?
+                    <Grid item xs="auto" container>
+                        <GridToolbarExport />
+                    </Grid>
+                :
+                    <Grid item xs="auto" container onClick={handleClickOpen}>
+                        <Button variant="text" startIcon={<CachedIcon />}>Cargar todo</Button>
+                    </Grid>
+                }
                 
                 {props.extra}
             </Grid>
         </Grid>
+
+        <Dialog
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+        >
+            <DialogTitle id="alert-dialog-title">
+            {"¿Estás seguro?"}
+            </DialogTitle>
+            <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                    Al cargar todos los datos podrá exportarlos como un archivo CSV. Pero puede
+                    tardar un par de minutos.
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleClose}>No</Button>
+                <Button onClick={() => {
+                    handleClose()
+                    onConfigChange()
+                }} autoFocus>
+                    Aceptar
+                </Button>
+            </DialogActions>
+        </Dialog>
+        </>
     );
 }
 
 Toolbar.propTypes = {
     clearSearch: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
+    onConfigChange: PropTypes.func,
     value: PropTypes.string.isRequired,
-    extra: PropTypes.object
+    extra: PropTypes.object,
+    mode: PropTypes.string
 };
 
 function escapeRegExp(value) {
