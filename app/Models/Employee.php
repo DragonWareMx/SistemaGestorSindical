@@ -25,4 +25,14 @@ class Employee extends Model
     {
         return $this->belongsTo(Unit::class);
     }
+
+    public function employees()
+    {
+        return $this->belongsToMany(Employee::class, 'employee_relative', 'employee_id', 'relative_id');
+    }
+
+    public function relatives()
+    {
+        return $this->belongsToMany(Employee::class, 'employee_relative', 'relative_id', 'employee_id');
+    }
 }

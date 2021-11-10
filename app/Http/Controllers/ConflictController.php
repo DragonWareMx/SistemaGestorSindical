@@ -178,7 +178,8 @@ class ConflictController extends Controller
         //FALTA LOG
     }
 
-    public function secretariaTrabajoConflictUpdate(Request $request, $conflicto){
+    public function secretariaTrabajoConflictUpdate(Request $request, $conflicto)
+    {
         // dd($request);
         DB::beginTransaction();
         try {
@@ -189,23 +190,22 @@ class ConflictController extends Controller
             $conflicto->employees()->detach();
             foreach ($request->empleados as $empleado) {
                 # code...
-                if($empleado['pivot']['inicio_sancion'] && $empleado['pivot']['termino_sancion']){
+                if ($empleado['pivot']['inicio_sancion'] && $empleado['pivot']['termino_sancion']) {
                     $data = [
                         'inicio_sancion' => Carbon::parse($empleado['pivot']['inicio_sancion'])->subDays(1),
                         'termino_sancion' => Carbon::parse($empleado['pivot']['termino_sancion'])->subDays(1),
                         'sancion' => $empleado['pivot']['sancion'],
-                        'resolutivo'=>$empleado['pivot']['resolutivo'],
+                        'resolutivo' => $empleado['pivot']['resolutivo'],
                         'castigado' => $empleado['pivot']['castigado']
                     ];
-                }
-                else{
+                } else {
                     $data = [
                         'sancion' => $empleado['pivot']['sancion'],
-                        'resolutivo'=>$empleado['pivot']['resolutivo'],
+                        'resolutivo' => $empleado['pivot']['resolutivo'],
                         'castigado' => $empleado['pivot']['castigado']
                     ];
                 }
-                
+
                 $conflicto->employees()->attach($empleado['id'], $data);
             }
 
@@ -312,30 +312,29 @@ class ConflictController extends Controller
     {
         DB::beginTransaction();
         try {
-            $conflicto =Conflict::where('num_oficio',$conflict)->first();
+            $conflicto = Conflict::where('num_oficio', $conflict)->first();
             $conflicto->observaciones = $request->conflict['observaciones'];
             $conflicto->save();
 
             $conflicto->employees()->detach();
             foreach ($request->empleados as $empleado) {
                 # code...
-                if($empleado['pivot']['inicio_sancion'] && $empleado['pivot']['termino_sancion']){
+                if ($empleado['pivot']['inicio_sancion'] && $empleado['pivot']['termino_sancion']) {
                     $data = [
                         'inicio_sancion' => Carbon::parse($empleado['pivot']['inicio_sancion'])->subDays(1),
                         'termino_sancion' => Carbon::parse($empleado['pivot']['termino_sancion'])->subDays(1),
                         'sancion' => $empleado['pivot']['sancion'],
-                        'resolutivo'=>$empleado['pivot']['resolutivo'],
+                        'resolutivo' => $empleado['pivot']['resolutivo'],
                         'castigado' => $empleado['pivot']['castigado']
                     ];
-                }
-                else{
+                } else {
                     $data = [
                         'sancion' => $empleado['pivot']['sancion'],
-                        'resolutivo'=>$empleado['pivot']['resolutivo'],
+                        'resolutivo' => $empleado['pivot']['resolutivo'],
                         'castigado' => $empleado['pivot']['castigado']
                     ];
                 }
-                
+
                 $conflicto->employees()->attach($empleado['id'], $data);
             }
 
@@ -363,11 +362,27 @@ class ConflictController extends Controller
             $entrada = Conflict::where('uuid', $uuid)->firstOrFail();
             $entrada->delete();
             DB::commit();
-            return redirect()->back()->with('success', 'El registro se eliminó con éxito!');
+            return redirect()->route('conflicts')->with('success', 'El registro se eliminó con éxito!');
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+            return redirect()->route('conflicts')->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+        }
+    }
+
+    public function destroyTrabajo($uuid)
+    {
+        //
+        DB::beginTransaction();
+        try {
+            $entrada = Conflict::where('uuid', $uuid)->firstOrFail();
+            $entrada->delete();
+            DB::commit();
+            return redirect()->route('secretariaTrabajo')->with('success', 'El registro se eliminó con éxito!');
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            return redirect()->route('secretariaTrabajo')->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
         }
     }
 }

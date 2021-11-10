@@ -93,6 +93,7 @@ const useStyles = makeStyles(
 
 const Edit = ({ employees, issue }) => {
     //errores de la validacion de laravel
+    const { auth } = usePage().props;
     const { errors } = usePage().props
 
     const classes = useStyles();
@@ -120,7 +121,7 @@ const Edit = ({ employees, issue }) => {
     function handleSubmit(e) {
         e.preventDefault()
         if (emploInfo.empleados.length > 0) {
-            Inertia.post(route('honor.update',issue.num_oficio), {
+            Inertia.post(route('honor.update', issue.num_oficio), {
                 issue: values,
                 empleados: emploInfo.empleados
             },
@@ -189,8 +190,8 @@ const Edit = ({ employees, issue }) => {
                     // inicio_sancion: '',
                     // termino_sancion: '',
                     // sancion: '',
-                    pivot:{
-                        castigado:false,
+                    pivot: {
+                        castigado: false,
                         inicio_sancion: '',
                         termino_sancion: '',
                         sancion: '',
@@ -276,11 +277,11 @@ const Edit = ({ employees, issue }) => {
         }))
     }
 
-    function editar(){
-        document.getElementById('btn-editar').style.display="none";
-        document.getElementById('btns-form').style.display="flex";
-        document.getElementById('btn-add').style.display="flex";
-        document.getElementById('id-complete').style.display="block";
+    function editar() {
+        document.getElementById('btn-editar').style.display = "none";
+        document.getElementById('btns-form').style.display = "flex";
+        document.getElementById('btn-add').style.display = "flex";
+        document.getElementById('id-complete').style.display = "block";
 
         setValues(values => ({
             ...values,
@@ -313,7 +314,7 @@ const Edit = ({ employees, issue }) => {
                                     <div className="col s12 m12 div-division">
 
                                         <div className="input-field col s12" style={{ marginTop: '15px' }}>
-                                            <input id="num_oficio" type="text" className={errors.num_oficio ? "validate form-control invalid" : "validate form-control"} name="num_oficio" value={values.num_oficio} required onChange={handleChange} disabled/>
+                                            <input id="num_oficio" type="text" className={errors.num_oficio ? "validate form-control invalid" : "validate form-control"} name="num_oficio" value={values.num_oficio} required onChange={handleChange} disabled />
                                             <label htmlFor="num_oficio">Número de oficio</label>
                                             {
                                                 errors.num_oficio &&
@@ -325,13 +326,13 @@ const Edit = ({ employees, issue }) => {
                                             <label for="textarea1">Observaciones</label>
                                         </div>
                                         <div className="col s12" style={{ marginTop: '10px' }}>
-                                            <div className="col s12" style={{display:'none'}} id="id-complete">
-                                            <Autocomplete 
-                                                {...defaultProps}
-                                                renderInput={(params) => (
-                                                    <TextField {...params} id="empleado" className={classes.textField} label="Empleado" variant="standard"  />
-                                                )}
-                                            />
+                                            <div className="col s12" style={{ display: 'none' }} id="id-complete">
+                                                <Autocomplete
+                                                    {...defaultProps}
+                                                    renderInput={(params) => (
+                                                        <TextField {...params} id="empleado" className={classes.textField} label="Empleado" variant="standard" />
+                                                    )}
+                                                />
                                             </div>
                                             {
                                                 errors.empleado &&
@@ -427,7 +428,11 @@ const Edit = ({ employees, issue }) => {
                                 </div>
                                 <div className="row container-buttons" style={{ display: 'none' }} id="btns-form">
                                     <button type="button" className=" center-align  btn waves-effect waves-light cancelar" style={{ marginRight: "15px" }} onClick={cancelEditUser}>Cancelar</button>
-
+                                    {(() => {
+                                        if (auth.user.roles['0'].slug == 'admin' || auth.user.roles['0'].name == 'secGen' || auth.user.roles['0'].name == 'respHJ') {
+                                            return <Eliminar oficina={'Honor y justicia'} ruta={'honor.delete'} id={issue.uuid} />
+                                        }
+                                    })()}
                                     < button type="submit" className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
                                         Guardar
                                         <i className="material-icons right">save</i>

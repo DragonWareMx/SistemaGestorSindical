@@ -112,9 +112,18 @@ class IssueController extends Controller
 
             foreach ($request->empleados as $empleado) {
                 # code...
+                $fechaIni = null;
+                if ($empleado['fecha_inicio']) {
+                    $fechaIni = Carbon::parse($empleado['fecha_inicio']);
+                }
+                $fechaFin = null;
+                if ($empleado['fecha_termino']) {
+                    $fechaFin = Carbon::parse($empleado['fecha_termino']);
+                }
+
                 $data = [
-                    'inicio_sancion' => Carbon::parse($empleado['fecha_inicio'])->subDays(1),
-                    'termino_sancion' => Carbon::parse($empleado['fecha_termino'])->subDays(1),
+                    'inicio_sancion' => $fechaIni,
+                    'termino_sancion' => $fechaFin,
                     'sancion' => $empleado['sancion'],
                     'castigado' => $empleado['sancionado']
                 ];
@@ -171,19 +180,20 @@ class IssueController extends Controller
 
             $honor->employees()->detach();
             foreach ($request->empleados as $empleado) {
-                if ($empleado['pivot']['inicio_sancion'] && $empleado['pivot']['termino_sancion']) {
-                    $data = [
-                        'inicio_sancion' => Carbon::parse($empleado['pivot']['inicio_sancion'])->subDays(1),
-                        'termino_sancion' => Carbon::parse($empleado['pivot']['termino_sancion'])->subDays(1),
-                        'sancion' => $empleado['pivot']['sancion'],
-                        'castigado' => $empleado['pivot']['castigado'],
-                    ];
-                } else {
-                    $data = [
-                        'sancion' => $empleado['pivot']['sancion'],
-                        'castigado' => $empleado['pivot']['castigado'],
-                    ];
+                $fechaIni = null;
+                if ($empleado['pivot']['inicio_sancion']) {
+                    $fechaIni = Carbon::parse($empleado['pivot']['inicio_sancion'])->subDays(1);
                 }
+                $fechaFin = null;
+                if ($empleado['pivot']['termino_sancion']) {
+                    $fechaFin = Carbon::parse($empleado['pivot']['termino_sancion'])->subDays(1);
+                }
+                $data = [
+                    'inicio_sancion' => $fechaIni,
+                    'termino_sancion' => $fechaFin,
+                    'sancion' => $empleado['pivot']['sancion'],
+                    'castigado' => $empleado['pivot']['castigado'],
+                ];
                 $honor->employees()->attach($empleado['id'], $data);
             }
 
@@ -209,11 +219,11 @@ class IssueController extends Controller
             $entrada = Issue::where('uuid', $uuid)->firstOrFail();
             $entrada->delete();
             DB::commit();
-            return redirect()->back()->with('success', 'El registro se eliminó con éxito!');
+            return redirect()->route('honor')->with('success', 'El registro se eliminó con éxito!');
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+            return redirect()->route('honor')->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
         }
     }
 }

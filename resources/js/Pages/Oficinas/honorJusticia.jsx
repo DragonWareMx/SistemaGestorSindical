@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Layout from '../../layouts/Layout';
 import route from 'ziggy-js';
 import { InertiaLink } from '@inertiajs/inertia-react';
+import Alertas from '../../components/common/Alertas';
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
 
@@ -22,7 +23,7 @@ const honorJusticia = ({ issues }) => {
       headerName: "VER",
       renderCell: (params) => (
         <InertiaLink href={route('honor.issue', params.row.num_oficio)} style={{ textDecoration: 'none', color: 'gray' }}><VisibilityIcon /></InertiaLink>
-        ),
+      ),
       flex: 0.2,
       minWidth: 80,
       sortable: false,
@@ -113,12 +114,13 @@ const honorJusticia = ({ issues }) => {
               <InertiaLink className="btn-floating btn-large waves-effect waves-light green-sind button-addUser" href={route('honor.create')}><i className="material-icons">add</i></InertiaLink>
               <div className="card-content">
                 <span className="card-title">Honor y Justicia</span>
-                  <DataGridPlus 
-                    rowsJson={issues}
-                    columns={columns}
-                    tableName={'issues'}
-                    mode='server'
-                  />
+                <Alertas />
+                <DataGridPlus
+                  rowsJson={issues}
+                  columns={columns}
+                  tableName={'issues'}
+                  mode='server'
+                />
               </div>
             </div>
           </div>

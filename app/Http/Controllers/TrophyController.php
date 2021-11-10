@@ -40,19 +40,20 @@ class TrophyController extends Controller
         return Inertia::render('Oficinas/accionFemenil',['trophies' => $trophies]);
     }
 
-    public function trophy($id){
-        $win=DB::table('employee_trophie')->where('id',$id)->first();
-        $employee=Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')->findOrFail($win->employee_id);
-        $trophy=Trophy::findOrFail($win->trophie_id);
-        $employees=Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')->get();
-        $trophies=Trophy::get();
+    public function trophy($id)
+    {
+        $win = DB::table('employee_trophie')->where('id', $id)->first();
+        $employee = Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')->findOrFail($win->employee_id);
+        $trophy = Trophy::findOrFail($win->trophie_id);
+        $employees = Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')->get();
+        $trophies = Trophy::get();
 
         return Inertia::render('Oficinas/femenilEditar', [
-            'win'=>$win,
-            'employee'=>$employee,
-            'trophy'=>$trophy,
-            'employees'=>$employees,
-            'trophies'=>$trophies,
+            'win' => $win,
+            'employee' => $employee,
+            'trophy' => $trophy,
+            'employees' => $employees,
+            'trophies' => $trophies,
         ]);
     }
 
@@ -67,7 +68,7 @@ class TrophyController extends Controller
         return Inertia::render('Oficinas/femenilCrear', [
             'employees' => fn () => Employee::select('matricula', 'nombre', 'apellido_p', 'apellido_m', 'id')
                 ->get(),
-            'trophies' => fn () =>Trophy::select('id','nombre')->get()
+            'trophies' => fn () => Trophy::select('id', 'nombre')->get()
         ]);
     }
 
@@ -85,8 +86,8 @@ class TrophyController extends Controller
         DB::beginTransaction();
         try {
             //code...
-           $trophy->employees()->sync($request->empleado);
-           $trophy->save();
+            $trophy->employees()->attach($request->empleado);
+            $trophy->save();
             DB::commit();
             return redirect()->back()->with('success', 'El registro se creó con éxito!');
         } catch (\Throwable $th) {
@@ -101,8 +102,8 @@ class TrophyController extends Controller
     {
         //FALTA EL LOG Y PONER LA TRANSACTION
         $premio = new Trophy();
-        $premio->nombre=$request->nombre;
-        $premio->observaciones=$request->observaciones;
+        $premio->nombre = $request->nombre;
+        $premio->observaciones = $request->observaciones;
 
         $premio->save();
 
@@ -140,23 +141,23 @@ class TrophyController extends Controller
      */
     public function update(Request $request,  $trophy)
     {
-         DB::beginTransaction();
-         try {
-             //code...
+        DB::beginTransaction();
+        try {
+            //code...
             //falta validar el request
-            $trophy = DB::table('employee_trophie')->where('employee_id',$request->oldempleado)->where('trophie_id',$request->oldnombre)
-            ->update([
-                'trophie_id'=>$request->nombre['id']
-            ]);
+            $trophy = DB::table('employee_trophie')->where('employee_id', $request->oldempleado)->where('trophie_id', $request->oldnombre)
+                ->update([
+                    'trophie_id' => $request->nombre['id']
+                ]);
 
-             DB::commit();
-             return redirect()->back()->with('success', 'El registro se editó con éxito!');
-         } catch (\Throwable $th) {
-             //throw $th;
-             dd($th);
-             DB::rollBack();
-             return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
-         }
+            DB::commit();
+            return redirect()->back()->with('success', 'El registro se editó con éxito!');
+        } catch (\Throwable $th) {
+            //throw $th;
+            dd($th);
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+        }
     }
 
     /**
@@ -165,8 +166,20 @@ class TrophyController extends Controller
      * @param  \App\Models\Trophy  $trophy
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Trophy $trophy)
+    public function destroy($uuid, Request $request)
     {
         //
+        DB::beginTransaction();
+        try {
+            $empleado = Employee::where('matricula', $uuid)->firstOrFail();
+            $trofeo = Trophy::findOrFail($request->trofeo);
+            $trofeo->employees()->detach($empleado);
+            DB::commit();
+            return redirect()->route('accionFemenil')->with('success', 'El registro se eliminó con éxito!');
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            return redirect()->route('accionFemenil')->with('error', 'Ocurrió un error inesperado, por favor inténtalo más tarde!');
+        }
     }
 }

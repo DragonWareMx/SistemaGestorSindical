@@ -32,6 +32,8 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 import { es } from "date-fns/locale";
 
+import Eliminar from '../../components/common/Eliminar'
+
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
     (theme) =>
@@ -77,6 +79,7 @@ const useStyles = makeStyles(
 
 const secretariaIEditar = ({ vote, employee, election, employees, elections }) => {
     //errores de la validacion de laravel
+    const { auth } = usePage().props;
     const { errors } = usePage().props
 
     const classes = useStyles();
@@ -299,6 +302,12 @@ const secretariaIEditar = ({ vote, employee, election, employees, elections }) =
                                 </div>
                                 <div className="row container-buttons" style={{ display: 'none' }} id="btns-form">
                                     <button type="button" className=" center-align  btn waves-effect waves-light cancelar" style={{ marginRight: "15px" }} onClick={cancelEditUser}>Cancelar</button>
+                                    {(() => {
+                                        if (auth.user.roles['0'].slug == 'admin' || auth.user.roles['0'].name == 'secGen' || auth.user.roles['0'].name == 'respSI') {
+                                            return <Eliminar oficina={'Secretaría del Interior'} ruta={'secretariaInterior.delete'} id={employee.matricula} data={{ votacion: election.id }} />
+                                        }
+                                    })()}
+
                                     < button type="submit" className=" center-align btn waves-effect waves-light guardar" style={{ marginRight: "3%", marginLeft: "0" }}>
                                         Guardar
                                         <i className="material-icons right">save</i>

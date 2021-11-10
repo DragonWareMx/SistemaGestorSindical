@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Layout from '../../layouts/Layout';
 import { Inertia } from '@inertiajs/inertia'
 import route from 'ziggy-js';
-import { InertiaLink } from '@inertiajs/inertia-react';
+import { InertiaLink, usePage } from '@inertiajs/inertia-react';
 import { Container } from '@mui/material';
 
 //componentes
@@ -103,6 +103,7 @@ const columns = [
 ];
 
 const Index = ({ users }) => {
+    const { auth } = usePage().props;
     const [checked, setChecked] = React.useState(false);
 
     const handleChange = (event) => {
@@ -111,7 +112,7 @@ const Index = ({ users }) => {
         Inertia.reload({ data: { deleted: event.target.checked } })
     };
 
-    const eliminados = 
+    const eliminados =
     <Grid style={{ margin: 4 }} container>
         <Grid item>
             <FormControlLabel
@@ -134,12 +135,16 @@ const Index = ({ users }) => {
                 <Container>
                     <div className="col contenedor s12">
                         <div className="card darken-1 cardUsers">
+                            {
+                            auth && auth.roles && auth.roles.length > 0 &&
+                            (auth.roles['0'].name == "Administrador" || auth.roles['0'].name == "Secretario General") &&
                             <InertiaLink className="btn-floating btn-large waves-effect waves-light green-sind button-addUser" href={route('users.create')}><i className="material-icons">add</i></InertiaLink>
+                            }
                             <div className="card-content">
                                 <span className="card-title">Comité</span>
                                 <Alertas />
 
-                                <DataGridPlus 
+                                <DataGridPlus
                                     rowsJson={users}
                                     columns={columns}
                                     tableName={'users'}
