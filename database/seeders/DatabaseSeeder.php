@@ -22,12 +22,12 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             PermissionSeeder::class,
             EmployeeSeeder::class,
-            IssueSeeder::class,
-            ConflictSeeder::class,
-            TrophySeeder::class,
-            ElectionSeeder::class,
+            //IssueSeeder::class,
+            //ConflictSeeder::class,
+            //TrophySeeder::class,
+            //ElectionSeeder::class,
         ]);
 
-        Employee::factory()->count(15000)->create();
+        //Employee::factory()->count(15000)->create();
     }
 }
