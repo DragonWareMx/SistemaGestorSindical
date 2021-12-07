@@ -18,7 +18,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
 
 import DataGridPlus from '../../components/common/DataGridPlus';
-import RenderCellExpand from '../../components/Common/RenderCellExpand'
+import RenderCellExpand from '../../components/common/RenderCellExpand'
 
 function dateFormat(date) {
     if (!date)
@@ -113,22 +113,22 @@ const Index = ({ users }) => {
     };
 
     const eliminados =
-    <Grid style={{ margin: 4 }} container>
-        <Grid item>
-            <FormControlLabel
-                control={
-                    <Checkbox
-                        checked={checked}
-                        onChange={handleChange}
-                        name="checkedB"
-                        color="primary"
-                        extra={eliminados}
-                    />
-                }
-                label="Ver eliminados"
-            />
+        <Grid style={{ margin: 4 }} container>
+            <Grid item>
+                <FormControlLabel
+                    control={
+                        <Checkbox
+                            checked={checked}
+                            onChange={handleChange}
+                            name="checkedB"
+                            color="primary"
+                            extra={eliminados}
+                        />
+                    }
+                    label="Ver eliminados"
+                />
+            </Grid>
         </Grid>
-    </Grid>
     return (
         <>
             <div className="row">
@@ -136,9 +136,9 @@ const Index = ({ users }) => {
                     <div className="col contenedor s12">
                         <div className="card darken-1 cardUsers">
                             {
-                            auth && auth.roles && auth.roles.length > 0 &&
-                            (auth.roles['0'].name == "Administrador" || auth.roles['0'].name == "Secretario General") &&
-                            <InertiaLink className="btn-floating btn-large waves-effect waves-light green-sind button-addUser" href={route('users.create')}><i className="material-icons">add</i></InertiaLink>
+                                auth && auth.roles && auth.roles.length > 0 &&
+                                (auth.roles['0'].name == "Administrador" || auth.roles['0'].name == "Secretario General") &&
+                                <InertiaLink className="btn-floating btn-large waves-effect waves-light green-sind button-addUser" href={route('users.create')}><i className="material-icons">add</i></InertiaLink>
                             }
                             <div className="card-content">
                                 <span className="card-title">Comité</span>

@@ -17,7 +17,7 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
 
-import RenderCellExpand from '../../components/Common/RenderCellExpand'
+import RenderCellExpand from '../../components/common/RenderCellExpand'
 import DataGridPlus from '../../components/common/DataGridPlus';
 
 function dateFormat(date) {
@@ -162,37 +162,37 @@ const Index = ({ employees }) => {
         Inertia.reload({ data: { user: event.target.checked } })
     };
 
-    
+
     const botones =
-    <Grid style={{ margin: 4 }} container>
-        <Grid item>
-            <FormControlLabel
-                control={
-                    <Checkbox
-                        checked={checked}
-                        onChange={handleChange}
-                        name="checkedB"
-                        color="primary"
-                    />
-                }
-                label="Ver eliminados"
-            />
+        <Grid style={{ margin: 4 }} container>
+            <Grid item>
+                <FormControlLabel
+                    control={
+                        <Checkbox
+                            checked={checked}
+                            onChange={handleChange}
+                            name="checkedB"
+                            color="primary"
+                        />
+                    }
+                    label="Ver eliminados"
+                />
+            </Grid>
+            <Grid item>
+                <FormControlLabel
+                    control={
+                        <Checkbox
+                            checked={checkedU}
+                            onChange={handleChangeU}
+                            name="checkedB"
+                            color="primary"
+                        />
+                    }
+                    label="Ver empleados con usuario"
+                />
+            </Grid>
         </Grid>
-        <Grid item>
-            <FormControlLabel
-                control={
-                    <Checkbox
-                        checked={checkedU}
-                        onChange={handleChangeU}
-                        name="checkedB"
-                        color="primary"
-                    />
-                }
-                label="Ver empleados con usuario"
-            />
-        </Grid>
-    </Grid>
-    
+
     return (
         <>
             <div className="row">
@@ -203,7 +203,7 @@ const Index = ({ employees }) => {
                             <div className="card-content">
                                 <span className="card-title">Empleados</span>
                                 <Alertas />
-                                <DataGridPlus 
+                                <DataGridPlus
                                     rowsJson={employees}
                                     columns={columns}
                                     tableName={'employees'}

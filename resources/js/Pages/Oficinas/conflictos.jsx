@@ -10,7 +10,7 @@ import '/css/usersStyle.css'
 import '/css/users.css'
 
 import { Container } from '@mui/material';
-import RenderCellExpand from '../../components/Common/RenderCellExpand'
+import RenderCellExpand from '../../components/common/RenderCellExpand'
 import DataGridPlus from '../../components/common/DataGridPlus';
 import Alertas from '../../components/common/Alertas';
 
@@ -132,7 +132,7 @@ const conflictos = ({ conflicts }) => {
               <div className="card-content">
                 <span className="card-title">Conflictos</span>
                 <Alertas />
-                <DataGridPlus 
+                <DataGridPlus
                   rowsJson={conflicts}
                   columns={columns}
                   tableName={'conflicts'}

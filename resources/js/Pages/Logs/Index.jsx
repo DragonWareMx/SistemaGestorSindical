@@ -4,7 +4,7 @@ import { Container } from '@mui/material';
 
 //componentes
 import Alertas from '../../components/common/Alertas';
-import RenderCellExpand from '../../components/Common/RenderCellExpand'
+import RenderCellExpand from '../../components/common/RenderCellExpand'
 
 //estilos
 import '/css/usersStyle.css'
@@ -19,9 +19,10 @@ function getFullName(params) {
 
 const columns = [
     {
-      field: 'id',
-      headerName: 'ID',
-      minidth: 100 },
+        field: 'id',
+        headerName: 'ID',
+        minidth: 100
+    },
     {
         field: 'foto',
         headerName: 'FOTO',
@@ -38,10 +39,10 @@ const columns = [
         disableExport: true
     },
     {
-      field: 'email',
-      headerName: 'CORREO',
-      width: 200,
-      renderCell: RenderCellExpand,
+        field: 'email',
+        headerName: 'CORREO',
+        width: 200,
+        renderCell: RenderCellExpand,
     },
     { field: 'matricula', headerName: 'MATRICULA', width: 120 },
     {
@@ -62,13 +63,13 @@ const columns = [
         headerName: 'CATEGORÍA',
         width: 120,
         valueFormatter: (params) => {
-            if(params.value == 'create')
+            if (params.value == 'create')
                 return 'Registro'
             else if (params.value == 'update')
                 return 'Actualización'
-            else if(params.value == 'delete')
+            else if (params.value == 'delete')
                 return 'Eliminación'
-            else if(params.value == 'restore')
+            else if (params.value == 'restore')
                 return 'Restauración'
         },
         type: 'singleSelect',
@@ -88,11 +89,11 @@ const Index = ({ logs }) => {
                                 <span className="card-title">Bitácora</span>
                                 <Alertas />
 
-                                <DataGridPlus 
-                                  rowsJson={logs}
-                                  columns={columns}
-                                  tableName={'logs'}
-                                  mode='server'
+                                <DataGridPlus
+                                    rowsJson={logs}
+                                    columns={columns}
+                                    tableName={'logs'}
+                                    mode='server'
                                 />
                             </div>
                         </div>

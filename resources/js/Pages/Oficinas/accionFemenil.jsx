@@ -10,7 +10,7 @@ import '/css/usersStyle.css'
 import '/css/users.css'
 
 
-import RenderCellExpand from '../../components/Common/RenderCellExpand'
+import RenderCellExpand from '../../components/common/RenderCellExpand'
 import Alertas from '../../components/common/Alertas';
 import DataGridPlus from '../../components/common/DataGridPlus';
 import { Container } from '@mui/material';
@@ -76,11 +76,11 @@ const accionFemenil = ({ trophies }) => {
               <div className="card-content">
                 <span className="card-title">Acción Femenil</span>
                 <Alertas />
-                <DataGridPlus 
-                    rowsJson={trophies}
-                    columns={columns}
-                    tableName={'trophies'}
-                    mode='server'
+                <DataGridPlus
+                  rowsJson={trophies}
+                  columns={columns}
+                  tableName={'trophies'}
+                  mode='server'
                 />
               </div>
             </div>

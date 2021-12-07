@@ -9,7 +9,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import '/css/usersStyle.css'
 import '/css/users.css'
 
-import RenderCellExpand from '../../components/Common/RenderCellExpand'
+import RenderCellExpand from '../../components/common/RenderCellExpand'
 import DataGridPlus from '../../components/common/DataGridPlus';
 import { Container } from '@mui/material';
 import Alertas from '../../components/common/Alertas';
@@ -128,15 +128,15 @@ const secretariaTrabajo = ({ conflicts }) => {
         <Container>
           <div className="col contenedor s12">
             <div className="card darken-1 cardUsers">
-            <InertiaLink className="btn-floating btn-large waves-effect waves-light green-sind button-addUser" href={route('secretariaTrabajo.create')}><i className="material-icons">add</i></InertiaLink>
+              <InertiaLink className="btn-floating btn-large waves-effect waves-light green-sind button-addUser" href={route('secretariaTrabajo.create')}><i className="material-icons">add</i></InertiaLink>
               <div className="card-content">
                 <span className="card-title">Secretaria del Trabajo</span>
                 <Alertas />
-                <DataGridPlus 
-                    rowsJson={conflicts}
-                    columns={columns}
-                    tableName={'conflicts'}
-                    mode='server'
+                <DataGridPlus
+                  rowsJson={conflicts}
+                  columns={columns}
+                  tableName={'conflicts'}
+                  mode='server'
                 />
               </div>
             </div>
