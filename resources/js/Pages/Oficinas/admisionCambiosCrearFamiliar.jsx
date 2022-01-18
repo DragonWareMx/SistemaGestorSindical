@@ -224,7 +224,7 @@ const Create = ({ categories, regimes, units, roles }) => {
                                     </div>
 
                                     <div className="input-field col s6 input-50-re">
-                                        <input id="fecha_de_nacimiento" type="text" className={errors.fecha_de_nacimiento ? "validate datepicker invalid" : "validate datepicker"} name="fecha_de_nacimiento" required autoComplete="fecha_de_nacimiento" value={values.fecha_de_nacimiento} readOnly />
+                                        <input id="fecha_de_nacimiento" type="text" className={errors.fecha_de_nacimiento ? "validate datepicker invalid" : "validate datepicker"} name="fecha_de_nacimiento" required autoComplete="fecha_de_nacimiento" value={values.fecha_de_nacimiento} />
                                         <label htmlFor="fecha_de_nacimiento">Fec. Nacimiento</label>
                                         {
                                             errors.fecha_de_nacimiento &&
@@ -247,7 +247,7 @@ const Create = ({ categories, regimes, units, roles }) => {
                                     </div>
 
                                     <div className="input-field col s12 input-50-re">
-                                        <input id="antiguedad" type="text" className={errors.antiguedad ? "validate datepicker2 invalid" : "validate datepicker2"} required name="antiguedad" autoComplete="antiguedad" value={values.antiguedad} readOnly />
+                                        <input id="antiguedad" type="text" className={errors.antiguedad ? "validate datepicker2 invalid" : "validate datepicker2"} required name="antiguedad" autoComplete="antiguedad" value={values.antiguedad} />
                                         <label htmlFor="antiguedad">Antigüedad</label>
                                         {
                                             errors.antiguedad &&

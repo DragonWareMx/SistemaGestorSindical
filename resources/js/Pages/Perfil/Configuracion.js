@@ -232,7 +232,7 @@ const Configuracion = ({ user }) => {
                                         </div>
 
                                         <div className="input-field col s12 input-50-re">
-                                            <input id="fecha_de_nacimiento" className={errors.fecha_de_nacimiento ? "validate datepicker invalid" : "validate datepicker"} type="text" name="fecha_de_nacimiento" required autoComplete="fecha_de_nacimiento" value={values.fecha_de_nacimiento} readOnly />
+                                            <input id="fecha_de_nacimiento" className={errors.fecha_de_nacimiento ? "validate datepicker invalid" : "validate datepicker"} type="text" name="fecha_de_nacimiento" required autoComplete="fecha_de_nacimiento" value={values.fecha_de_nacimiento} />
                                             <label htmlFor="fecha_de_nacimiento">Fecha de Nacimiento</label>
                                             {
                                                 errors.fecha_de_nacimiento &&
