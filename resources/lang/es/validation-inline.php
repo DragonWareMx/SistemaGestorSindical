@@ -13,6 +13,7 @@
 
 return [
     'accepted'             => 'Este campo debe ser aceptado.',
+    'accepted_if'          => 'Este campo debe ser aceptado cuando :other sea :value.',
     'active_url'           => 'Esta no es una URL válida.',
     'after'                => 'Debe ser una fecha después de :date.',
     'after_or_equal'       => 'Debe ser una fecha después o igual a :date.',
@@ -20,7 +21,6 @@ return [
     'alpha_dash'           => 'Este campo solo puede contener letras, números, guiones y guiones bajos.',
     'alpha_num'            => 'Este campo solo puede contener letras y números.',
     'array'                => 'Este campo debe ser un array (colección).',
-    'attached'             => 'Este campo ya se adjuntó.',
     'before'               => 'Debe ser una fecha antes de :date.',
     'before_or_equal'      => 'Debe ser una fecha anterior o igual a :date.',
     'between'              => [
@@ -31,9 +31,12 @@ return [
     ],
     'boolean'              => 'El campo debe ser verdadero o falso.',
     'confirmed'            => 'La confirmación no coincide.',
+    'current_password'     => 'La contraseña es incorrecta.',
     'date'                 => 'Esta no es una fecha válida.',
     'date_equals'          => 'El campo debe ser una fecha igual a :date.',
     'date_format'          => 'El campo no corresponde al formato :format.',
+    'declined'             => 'Este campo debe ser rechazado.',
+    'declined_if'          => 'Este campo debe ser rechazado cuando :other sea :value.',
     'different'            => 'Este valor deben ser diferente de :other.',
     'digits'               => 'Debe tener :digits dígitos.',
     'digits_between'       => 'Debe tener entre :min y :max dígitos.',
@@ -41,6 +44,7 @@ return [
     'distinct'             => 'El campo tiene un valor duplicado.',
     'email'                => 'No es un correo válido.',
     'ends_with'            => 'Debe finalizar con uno de los siguientes valores: :values.',
+    'enum'                 => 'El valor seleccionado es inválido.',
     'exists'               => 'El valor seleccionado es inválido.',
     'file'                 => 'El campo debe ser un archivo.',
     'filled'               => 'Este campo debe tener un valor.',
@@ -76,6 +80,7 @@ return [
         'numeric' => 'El valor debe ser menor o igual que :value.',
         'string'  => 'El texto debe ser menor o igual de :value caracteres.',
     ],
+    'mac_address'          => 'El valor debe ser una dirección MAC válida.',
     'max'                  => [
         'array'   => 'El contenido no debe tener más de :max elementos.',
         'file'    => 'El tamaño del archivo no debe ser mayor a :max kilobytes.',
@@ -99,9 +104,10 @@ return [
     'prohibited'           => 'Este campo está prohibido',
     'prohibited_if'        => 'Este campo está prohibido cuando :other es :value.',
     'prohibited_unless'    => 'Este campo está prohibido a menos que :other sea :values.',
+    'prohibits'            => 'Este campo prohibe que :other esté presente.',
     'regex'                => 'Este formato es inválido.',
-    'relatable'            => 'Este campo no se puede asociar con este recurso.',
     'required'             => 'Este campo es requerido.',
+    'required_array_keys'  => 'Este campo debe contener entradas para: :values.',
     'required_if'          => 'Este campo es requerido cuando :other es :value.',
     'required_unless'      => 'Este campo es requerido a menos que :other esté en :values.',
     'required_with'        => 'Este campo es requerido cuando :values está presente.',
@@ -120,12 +126,11 @@ return [
     'timezone'             => 'Debe ser de una zona horaria válida.',
     'unique'               => 'Este campo ya ha sido tomado.',
     'uploaded'             => 'Falló al subir.',
-    'url'                  => 'Este formato es inválido.',
+    'url'                  => 'Debe ser una URL válida.',
     'uuid'                 => 'Debe ser un UUID válido.',
     'custom'               => [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
     ],
-    'attributes'           => [],
 ];
