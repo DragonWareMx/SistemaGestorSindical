@@ -202,7 +202,7 @@ class UserController extends Controller
 
                 $image = Image::make(Storage::get($foto));
 
-                $image->resize(1280, null, function ($constraint) {
+                $image->resize(500, null, function ($constraint) {
                     $constraint->aspectRatio();
                     $constraint->upsize();
                 });
@@ -398,7 +398,7 @@ class UserController extends Controller
 
                 $image = Image::make(Storage::get($foto));
 
-                $image->resize(1280, null, function ($constraint) {
+                $image->resize(500, null, function ($constraint) {
                     $constraint->aspectRatio();
                     $constraint->upsize();
                 });

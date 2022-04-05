@@ -314,12 +314,19 @@ class PerfilController extends Controller
             $employee->tel = $request->telefono;
 
             //guarda la foto
-            if (!is_null($request->file('foto'))) {
-                if ($user->foto) {
-                    \Storage::delete('public/fotos_perfil/' . $user->foto);
-                }
-                $foto = $request->file('foto')->store('public/fotos_perfil');
-                $user->foto = $request->file('foto')->hashName();
+            if(!is_null($request->file('foto'))){
+                //guarda la foto comprimida
+                $image = $request->file('foto');
+                $input['imagename'] = pathinfo($image->getClientOriginalName(),PATHINFO_FILENAME).'_'.time().'.'.$image->getClientOriginalExtension();
+                
+                $destinationPath = public_path('storage/fotos_perfil');
+                $img = Image::make($image->getRealPath());
+                $img->resize(500, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                })->save($destinationPath.'/'.$input['imagename']);
+                    
+                $newUser->foto=$img->basename;
+                $foto=$destinationPath.'/'.$input['imagename'];
             }
 
             //---cuenta---
