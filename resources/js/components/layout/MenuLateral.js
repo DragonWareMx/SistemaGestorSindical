@@ -123,7 +123,7 @@ export default function MenuLateral() {
 
           {/* CONFLICTOS */}
           {auth && auth.roles && auth.roles.length > 0 &&
-            (auth.roles['0'].name == "Administrador" || auth.roles['0'].name == "Secretario General" || auth.roles['0'].name == "Responsable de Oficina de Conflictos " || auth.roles['0'].name == "Asistente de Oficina de Conflictos") &&
+            (auth.roles['0'].name == "Administrador" || auth.roles['0'].name == "Secretario General" || auth.roles['0'].name == "Responsable de Oficina de Conflictos" || auth.roles['0'].name == "Asistente de Oficina de Conflictos") &&
 
             <li>
               <InertiaLink href={route('conflicts')} className={isUrl("solicitudes") ? "icono-menu current-menu-text" : "icono-menu"}>
